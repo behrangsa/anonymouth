@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import javax.swing.JOptionPane;
 import net.miginfocom.swing.MigLayout;
 
@@ -285,7 +286,14 @@ public class MenuDriver {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					Logger.logln(NAME + "Fullscreen menu item clicked");
-					ThePresident.app.requestToggleFullScreen(main);
+					try {
+						// Use reflection to call requestToggleFullScreen on the Apple Application object
+						Method requestToggleFullScreenMethod = ThePresident.app.getClass()
+								.getMethod("requestToggleFullScreen", java.awt.Window.class);
+						requestToggleFullScreenMethod.invoke(ThePresident.app, main);
+					} catch (Exception ex) {
+						Logger.logln(NAME + "Failed to toggle fullscreen: " + ex.getMessage());
+					}
 				}
 			};
 			main.viewEnterFullScreenMenuItem.addActionListener(fullScreenListener);

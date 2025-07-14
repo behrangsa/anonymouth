@@ -1,7 +1,7 @@
 package edu.drexel.psal.anonymouth.gooie;
 
-import com.apple.eawt.AppEvent.FullScreenEvent;
-import com.apple.eawt.FullScreenListener;
+// Apple-specific imports removed for cross-platform compatibility
+// Full-screen functionality is accessed via reflection
 import com.jgaap.generics.Document;
 import edu.drexel.psal.ANONConstants;
 import edu.drexel.psal.anonymouth.engine.Clipboard;
@@ -25,7 +25,9 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.*;
@@ -879,34 +881,52 @@ public class GUIMain extends JFrame {
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public void enableOSXFullscreen(Window window) {
 		try {
-			Class util = Class.forName("com.apple.eawt.FullScreenUtilities");
-			Class params[] = new Class[]{Window.class, Boolean.TYPE};
-			Method method = util.getMethod("setWindowCanFullScreen", params);
-			method.invoke(util, window, true);
+			// Enable full-screen capability using reflection
+			Class<?> fullScreenUtilities = Class.forName("com.apple.eawt.FullScreenUtilities");
+			Class<?>[] params = new Class[]{Window.class, Boolean.TYPE};
+			Method setWindowCanFullScreenMethod = fullScreenUtilities.getMethod("setWindowCanFullScreen", params);
+			setWindowCanFullScreenMethod.invoke(null, window, true);
 
-			com.apple.eawt.FullScreenUtilities.addFullScreenListenerTo(window, new FullScreenListener() {
-				@Override
-				public void windowEnteredFullScreen(FullScreenEvent arg0) {
+			// Create full-screen listener using reflection and proxy
+			Class<?> fullScreenListenerClass = Class.forName("com.apple.eawt.FullScreenListener");
+			Object listener = Proxy.newProxyInstance(
+					fullScreenListenerClass.getClassLoader(),
+					new Class[]{fullScreenListenerClass},
+					new FullScreenHandler()
+			);
+
+			// Add the full-screen listener
+			Method addFullScreenListenerMethod = fullScreenUtilities.getMethod("addFullScreenListenerTo", Window.class, fullScreenListenerClass);
+			addFullScreenListenerMethod.invoke(null, window, listener);
+
+			Logger.logln(NAME + "macOS full-screen support enabled");
+		} catch (ClassNotFoundException e1) {
+			Logger.logln(NAME + "macOS full-screen classes not available (expected on non-Mac platforms)");
+		} catch (Exception e) {
+			Logger.logln(NAME + "Failed initializing full-screen support: " + e.getMessage());
+		}
+	}
+
+	/**
+	 * Handler for Apple full-screen events using reflection and proxy pattern.
+	 */
+	private class FullScreenHandler implements InvocationHandler {
+		@Override
+		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+			String methodName = method.getName();
+
+			try {
+				if ("windowEnteredFullScreen".equals(methodName)) {
 					main.viewEnterFullScreenMenuItem.setText("Exit Full Screen");
-				}
-
-				@Override
-				public void windowEnteringFullScreen(FullScreenEvent arg0) {
-				}
-
-				@Override
-				public void windowExitedFullScreen(FullScreenEvent arg0) {
+				} else if ("windowExitedFullScreen".equals(methodName)) {
 					main.viewEnterFullScreenMenuItem.setText("Enter Full Screen");
 				}
+				// windowEnteringFullScreen and windowExitingFullScreen don't need handling
+			} catch (Exception e) {
+				Logger.logln(NAME + "Error handling full-screen event: " + e.getMessage());
+			}
 
-				@Override
-				public void windowExitingFullScreen(FullScreenEvent arg0) {
-				}
-			});
-		} catch (ClassNotFoundException e1) {
-			Logger.logln(NAME + "Failed initializing Anonymouth for full-screen", LogOut.STDERR);
-		} catch (Exception e) {
-			Logger.logln(NAME + "Failed initializing Anonymouth for full-screen", LogOut.STDERR);
+			return null;
 		}
 	}
 }
