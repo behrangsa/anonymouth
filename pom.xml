@@ -54,11 +54,9 @@
 
         <!-- JAMA for matrix computations -->
         <dependency>
-            <groupId>jama</groupId>
+            <groupId>gov.nist.math</groupId>
             <artifactId>jama</artifactId>
             <version>1.0.3</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/Jama-1.0.3.jar</systemPath>
         </dependency>
 
         <!-- TreeTagger for Java -->
@@ -66,8 +64,6 @@
             <groupId>org.annolab.tt4j</groupId>
             <artifactId>tt4j</artifactId>
             <version>1.0.15</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/org.annolab.tt4j-1.0.15.jar</systemPath>
         </dependency>
 
         <!-- Stanford POS Tagger -->
@@ -75,8 +71,6 @@
             <groupId>edu.stanford.nlp</groupId>
             <artifactId>stanford-postagger</artifactId>
             <version>2012-01-06</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/stanford-postagger-2012-01-06.jar</systemPath>
         </dependency>
 
         <!-- Microsoft Translator API -->
@@ -84,8 +78,6 @@
             <groupId>com.memetix</groupId>
             <artifactId>microsoft-translator-java-api</artifactId>
             <version>0.6.1</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/microsoft-translator-java-api-0.6.1-jar-with-dependencies.jar</systemPath>
         </dependency>
 
         <!-- Local JAR dependencies that need to be installed manually -->
@@ -97,27 +89,21 @@
         </dependency>
 
         <dependency>
-            <groupId>fasttag</groupId>
+            <groupId>edu.upenn.cis</groupId>
             <artifactId>fasttag</artifactId>
             <version>2.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/fasttag_v2.jar</systemPath>
         </dependency>
 
         <dependency>
-            <groupId>jaws</groupId>
-            <artifactId>jaws-bin</artifactId>
+            <groupId>edu.princeton.wordnet</groupId>
+            <artifactId>jaws</artifactId>
             <version>1.3</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/jaws-bin.jar</systemPath>
         </dependency>
 
         <dependency>
-            <groupId>ui</groupId>
+            <groupId>edu.drexel.psal</groupId>
             <artifactId>ui</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/ui.jar</systemPath>
         </dependency>
     </dependencies>
 
@@ -255,6 +241,104 @@
                             <groupId>edu.drexel.psal</groupId>
                             <artifactId>jgaap</artifactId>
                             <version>5.2.0</version>
+                            <packaging>jar</packaging>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-microsoft-translator</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.basedir}/lib/microsoft-translator-java-api-0.6.1-jar-with-dependencies.jar</file>
+                            <groupId>com.memetix</groupId>
+                            <artifactId>microsoft-translator-java-api</artifactId>
+                            <version>0.6.1</version>
+                            <packaging>jar</packaging>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-tt4j</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.basedir}/lib/org.annolab.tt4j-1.0.15.jar</file>
+                            <groupId>org.annolab.tt4j</groupId>
+                            <artifactId>tt4j</artifactId>
+                            <version>1.0.15</version>
+                            <packaging>jar</packaging>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-jama</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.basedir}/lib/Jama-1.0.3.jar</file>
+                            <groupId>gov.nist.math</groupId>
+                            <artifactId>jama</artifactId>
+                            <version>1.0.3</version>
+                            <packaging>jar</packaging>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-stanford-postagger</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.basedir}/lib/stanford-postagger-2012-01-06.jar</file>
+                            <groupId>edu.stanford.nlp</groupId>
+                            <artifactId>stanford-postagger</artifactId>
+                            <version>2012-01-06</version>
+                            <packaging>jar</packaging>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-fasttag</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.basedir}/lib/fasttag_v2.jar</file>
+                            <groupId>edu.upenn.cis</groupId>
+                            <artifactId>fasttag</artifactId>
+                            <version>2.0</version>
+                            <packaging>jar</packaging>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-jaws</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.basedir}/lib/jaws-bin.jar</file>
+                            <groupId>edu.princeton.wordnet</groupId>
+                            <artifactId>jaws</artifactId>
+                            <version>1.3</version>
+                            <packaging>jar</packaging>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-ui</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.basedir}/lib/ui.jar</file>
+                            <groupId>edu.drexel.psal</groupId>
+                            <artifactId>ui</artifactId>
+                            <version>1.0</version>
                             <packaging>jar</packaging>
                         </configuration>
                     </execution>
