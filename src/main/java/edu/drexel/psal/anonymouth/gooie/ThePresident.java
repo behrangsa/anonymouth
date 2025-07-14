@@ -3,6 +3,7 @@ package edu.drexel.psal.anonymouth.gooie;
 // Apple-specific imports removed for cross-platform compatibility
 // All Apple functionality is accessed via reflection
 import edu.drexel.psal.ANONConstants;
+import edu.drexel.psal.anonymouth.helpers.FileHelper;
 import edu.drexel.psal.anonymouth.helpers.ImageLoader;
 import edu.drexel.psal.anonymouth.utils.About;
 import edu.drexel.psal.jstylo.generics.Logger;
@@ -70,6 +71,12 @@ public class ThePresident {
 	public ThePresident() {
 		splash = new SplashScreen();
 		splash.showSplashScreen();
+
+		// Validate required resources before continuing
+		if (!FileHelper.validateRequiredResources()) {
+			Logger.logln(NAME + "Required resources missing - exiting application");
+			System.exit(1);
+		}
 
 		logo = ImageLoader.getImage(ANONYMOUTH_LOGO_LARGE);
 		aboutLogo = ImageLoader.getImageIcon(ANONYMOUTH_LOGO);
@@ -140,8 +147,9 @@ public class ThePresident {
 	}
 
 	/**
-	 * Initialize Apple-specific integration using reflection for cross-platform compatibility.
-	 * This method safely handles macOS-specific features without causing issues on other platforms.
+	 * Initialize Apple-specific integration using reflection for cross-platform
+	 * compatibility. This method safely handles macOS-specific features without
+	 * causing issues on other platforms.
 	 */
 	private void initializeAppleIntegration(Image logo) {
 		try {
@@ -156,18 +164,17 @@ public class ThePresident {
 
 			// Create application listener using reflection and proxy
 			Class<?> applicationListenerClass = Class.forName("com.apple.eawt.ApplicationListener");
-			Object listener = Proxy.newProxyInstance(
-					applicationListenerClass.getClassLoader(),
-					new Class[]{applicationListenerClass},
-					new AppleApplicationHandler()
-			);
+			Object listener = Proxy.newProxyInstance(applicationListenerClass.getClassLoader(),
+					new Class[]{applicationListenerClass}, new AppleApplicationHandler());
 
 			// Add the application listener
-			Method addApplicationListenerMethod = applicationClass.getMethod("addApplicationListener", applicationListenerClass);
+			Method addApplicationListenerMethod = applicationClass.getMethod("addApplicationListener",
+					applicationListenerClass);
 			addApplicationListenerMethod.invoke(app, listener);
 
 			// Enable preferences menu
-			Method setEnabledPreferencesMenuMethod = applicationClass.getMethod("setEnabledPreferencesMenu", boolean.class);
+			Method setEnabledPreferencesMenuMethod = applicationClass.getMethod("setEnabledPreferencesMenu",
+					boolean.class);
 			setEnabledPreferencesMenuMethod.invoke(app, true);
 
 			// Request foreground
@@ -177,7 +184,8 @@ public class ThePresident {
 			Logger.logln(NAME + "Apple integration initialized successfully");
 		} catch (Exception e) {
 			Logger.logln(NAME + "Failed to initialize Apple integration: " + e.getMessage());
-			// This is expected on non-Mac platforms and should not cause the application to fail
+			// This is expected on non-Mac platforms and should not cause the application to
+			// fail
 		}
 	}
 
@@ -185,6 +193,7 @@ public class ThePresident {
 	 * Handler for Apple application events using reflection and proxy pattern.
 	 */
 	private class AppleApplicationHandler implements InvocationHandler {
+
 		@Override
 		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 			String methodName = method.getName();

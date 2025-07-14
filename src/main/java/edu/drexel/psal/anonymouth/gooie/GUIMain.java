@@ -889,14 +889,12 @@ public class GUIMain extends JFrame {
 
 			// Create full-screen listener using reflection and proxy
 			Class<?> fullScreenListenerClass = Class.forName("com.apple.eawt.FullScreenListener");
-			Object listener = Proxy.newProxyInstance(
-					fullScreenListenerClass.getClassLoader(),
-					new Class[]{fullScreenListenerClass},
-					new FullScreenHandler()
-			);
+			Object listener = Proxy.newProxyInstance(fullScreenListenerClass.getClassLoader(),
+					new Class[]{fullScreenListenerClass}, new FullScreenHandler());
 
 			// Add the full-screen listener
-			Method addFullScreenListenerMethod = fullScreenUtilities.getMethod("addFullScreenListenerTo", Window.class, fullScreenListenerClass);
+			Method addFullScreenListenerMethod = fullScreenUtilities.getMethod("addFullScreenListenerTo", Window.class,
+					fullScreenListenerClass);
 			addFullScreenListenerMethod.invoke(null, window, listener);
 
 			Logger.logln(NAME + "macOS full-screen support enabled");

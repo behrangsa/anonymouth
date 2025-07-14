@@ -491,22 +491,31 @@ public class PreProcessAdvancedDriver {
 		if (!allParamsNull) {
 			for (Pair<String, ParamTag> param : params)
 				tm.addRow(new String[]{fullname.substring(fullname.lastIndexOf(".") + 1), param.getFirst(),
-						p.getParameter(param.getFirst())});
+						p.getParameter(param.getFirst()),});
 		} else {
-			tm.addRow(new String[]{fullname.substring(fullname.lastIndexOf(".") + 1), "N/A", "N/A"});
+			tm.addRow(new String[]{fullname.substring(fullname.lastIndexOf(".") + 1), "N/A", "N/A",});
 		}
 	}
 
 	/** Updates the "Feature Set" tab to reflect a newly selected feature set. */
 	protected void updateFeatureSetTab() {
-		cfd = advancedWindow.presetCFDs.get(advancedWindow.featureChoice.getSelectedIndex());
+		int selectedIndex = advancedWindow.featureChoice.getSelectedIndex();
+
+		// Check if feature choice has valid selection
+		if (selectedIndex == -1 || advancedWindow.presetCFDs == null
+				|| selectedIndex >= advancedWindow.presetCFDs.size()) {
+			Logger.logln(NAME + "No valid feature set selected - skipping feature set tab update");
+			return;
+		}
+
+		cfd = advancedWindow.presetCFDs.get(selectedIndex);
 		Logger.logln(NAME + "Successfully loaded feature set: " + cfd.getName());
 
 		clearFeatureView();
 		advancedWindow.featureDescPane.setText(cfd.getDescription() == null ? "" : cfd.getDescription());
 
 		String feature = (String) advancedWindow.featureChoice.getSelectedItem();
-		if (!PropertiesUtil.getFeature().equals(feature)) {
+		if (feature != null && !PropertiesUtil.getFeature().equals(feature)) {
 			PropertiesUtil.setFeature(feature);
 		}
 

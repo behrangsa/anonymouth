@@ -287,7 +287,8 @@ public class MenuDriver {
 				public void actionPerformed(ActionEvent e) {
 					Logger.logln(NAME + "Fullscreen menu item clicked");
 					try {
-						// Use reflection to call requestToggleFullScreen on the Apple Application object
+						// Use reflection to call requestToggleFullScreen on the Apple Application
+						// object
 						Method requestToggleFullScreenMethod = ThePresident.app.getClass()
 								.getMethod("requestToggleFullScreen", java.awt.Window.class);
 						requestToggleFullScreenMethod.invoke(ThePresident.app, main);

@@ -5,6 +5,7 @@ import edu.drexel.psal.jstylo.generics.Logger.LogOut;
 import java.awt.FileDialog;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -44,6 +45,55 @@ public class FileHelper {
 	public static FileDialog goodLoad; // Whenever you want to load something, use this
 
 	public static FileDialog goodSave; // Whenever you want to save something, use this
+
+	/**
+	 * Validates that the required jsan_resources directory and critical files
+	 * exist. Shows user-friendly error message and exits if resources are missing.
+	 *
+	 * @return true if all required resources exist, false otherwise
+	 */
+	public static boolean validateRequiredResources() {
+		String[] requiredFiles = {"./jsan_resources/words.txt", "./jsan_resources/abbreviations.txt",
+				"./jsan_resources/feature_sets", "./jsan_resources/corpora",};
+
+		ArrayList<String> missingFiles = new ArrayList<String>();
+
+		for (String filePath : requiredFiles) {
+			File file = new File(filePath);
+			if (!file.exists()) {
+				missingFiles.add(filePath);
+			}
+		}
+
+		if (!missingFiles.isEmpty()) {
+			StringBuilder errorMessage = new StringBuilder();
+			errorMessage.append("Anonymouth cannot start because required resources are missing:\n\n");
+
+			for (String missingFile : missingFiles) {
+				errorMessage.append("• ").append(missingFile).append("\n");
+			}
+
+			errorMessage.append("\nPlease ensure you are running Anonymouth from the correct directory\n");
+			errorMessage.append("where the 'jsan_resources' folder is located.\n\n");
+			errorMessage.append("Expected structure:\n");
+			errorMessage.append("  your-directory/\n");
+			errorMessage.append("  ├── anonymouth-0.5.0-jar-with-dependencies.jar\n");
+			errorMessage.append("  └── jsan_resources/\n");
+			errorMessage.append("      ├── words.txt\n");
+			errorMessage.append("      ├── abbreviations.txt\n");
+			errorMessage.append("      ├── feature_sets/\n");
+			errorMessage.append("      └── corpora/\n");
+
+			Logger.logln(NAME + "Missing required resources - application cannot continue", LogOut.STDERR);
+
+			JOptionPane.showMessageDialog(null, errorMessage.toString(), "Missing Required Resources",
+					JOptionPane.ERROR_MESSAGE, UIManager.getIcon("OptionPane.errorIcon"));
+
+			return false;
+		}
+
+		return true;
+	}
 
 	/**
 	 * Creates and returns a ready BufferedReader instance to read. Returns null if
