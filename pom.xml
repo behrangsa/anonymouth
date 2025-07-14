@@ -26,11 +26,9 @@
         
         <!-- Weka for machine learning -->
         <dependency>
-            <groupId>weka</groupId>
-            <artifactId>weka</artifactId>
+            <groupId>nz.ac.waikato.cms.weka</groupId>
+            <artifactId>weka-stable</artifactId>
             <version>3.7.9</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/weka_3_7_9.jar</systemPath>
         </dependency>
 
         <!-- JFreeChart for data visualization -->
@@ -38,8 +36,6 @@
             <groupId>org.jfree</groupId>
             <artifactId>jfreechart</artifactId>
             <version>1.0.14</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/jfreechart-1.0.14.jar</systemPath>
         </dependency>
 
         <!-- JCommon (required by JFreeChart) -->
@@ -47,17 +43,13 @@
             <groupId>org.jfree</groupId>
             <artifactId>jcommon</artifactId>
             <version>1.0.17</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/jcommon-1.0.17.jar</systemPath>
         </dependency>
 
         <!-- MigLayout for GUI layout -->
         <dependency>
             <groupId>com.miglayout</groupId>
-            <artifactId>miglayout</artifactId>
+            <artifactId>miglayout-swing</artifactId>
             <version>4.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/miglayout-4.0-swing.jar</systemPath>
         </dependency>
 
         <!-- JAMA for matrix computations -->
@@ -102,8 +94,6 @@
             <groupId>edu.drexel.psal</groupId>
             <artifactId>jgaap</artifactId>
             <version>5.2.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/jgaap-5.2.0-lite.jar</systemPath>
         </dependency>
 
         <dependency>
@@ -214,6 +204,58 @@
                             <overWriteReleases>false</overWriteReleases>
                             <overWriteSnapshots>false</overWriteSnapshots>
                             <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Maven Install Plugin - Install local JARs to repository -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <!-- Install local JARs to Maven repo before compile -->
+                    <execution>
+                        <id>install-miglayout</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.basedir}/lib/miglayout-4.0-swing.jar</file>
+                            <groupId>com.miglayout</groupId>
+                            <artifactId>miglayout-swing</artifactId>
+                            <version>4.0</version>
+                            <packaging>jar</packaging>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-weka</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.basedir}/lib/weka_3_7_9.jar</file>
+                            <groupId>nz.ac.waikato.cms.weka</groupId>
+                            <artifactId>weka-stable</artifactId>
+                            <version>3.7.9</version>
+                            <packaging>jar</packaging>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-jgaap</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.basedir}/lib/jgaap-5.2.0-lite.jar</file>
+                            <groupId>edu.drexel.psal</groupId>
+                            <artifactId>jgaap</artifactId>
+                            <version>5.2.0</version>
+                            <packaging>jar</packaging>
                         </configuration>
                     </execution>
                 </executions>
