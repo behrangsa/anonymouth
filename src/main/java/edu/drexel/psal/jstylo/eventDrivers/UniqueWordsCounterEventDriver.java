@@ -5,34 +5,26 @@ import com.jgaap.generics.*;
 
 public class UniqueWordsCounterEventDriver extends SingleNumericEventDriver {
 
-	/* ======
-	 * fields
-	 * ======
+	/*
+	 * ====== fields ======
 	 */
-	
-	/**
-	 * Event driver to be used for word count.
-	 */
+
+	/** Event driver to be used for word count. */
 	private EventDriver wordCounter;
-	
-	
-	/* ============
-	 * constructors
-	 * ============
+
+	/*
+	 * ============ constructors ============
 	 */
-	
-	/**
-	 * Default unique words counter event driver constructor.
-	 */
+
+	/** Default unique words counter event driver constructor. */
 	public UniqueWordsCounterEventDriver() {
 		wordCounter = new NaiveWordEventDriver();
 	}
-	
-	/* ==================
-	 * overriding methods
-	 * ==================
+
+	/*
+	 * ================== overriding methods ==================
 	 */
-	
+
 	public String displayName() {
 		return "Unique words count";
 	}
@@ -46,7 +38,7 @@ public class UniqueWordsCounterEventDriver extends SingleNumericEventDriver {
 	}
 
 	public double getValue(Document doc) throws EventGenerationException {
-		EventSet words = wordCounter.createEventSet(doc);		
+		EventSet words = wordCounter.createEventSet(doc);
 		return (new EventHistogram(words)).getNTypes();
 	}
 }

@@ -1,38 +1,33 @@
 package edu.drexel.psal.jstylo.GUI;
 
+import com.jgaap.generics.*;
 import edu.drexel.psal.ANONConstants;
 import edu.drexel.psal.jstylo.generics.FeatureDriver;
 import edu.drexel.psal.jstylo.generics.NormBaselineEnum;
-
 import java.awt.*;
 import java.util.*;
 import java.util.List;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.tree.*;
 
-import com.jgaap.generics.*;
-
 /**
-* This code was edited or generated using CloudGarden's Jigloo
-* SWT/Swing GUI Builder, which is free for non-commercial
-* use. If Jigloo is being used commercially (ie, by a corporation,
-* company or business for any purpose whatever) then you
-* should purchase a license for each developer using Jigloo.
-* Please visit www.cloudgarden.com for details.
-* Use of Jigloo implies acceptance of these licensing terms.
-* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED FOR
-* THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
-* LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
-*/
-@SuppressWarnings({ "unchecked", "rawtypes" })
+ * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI
+ * Builder, which is free for non-commercial use. If Jigloo is being used
+ * commercially (ie, by a corporation, company or business for any purpose
+ * whatever) then you should purchase a license for each developer using Jigloo.
+ * Please visit www.cloudgarden.com for details. Use of Jigloo implies
+ * acceptance of these licensing terms. A COMMERCIAL LICENSE HAS NOT BEEN
+ * PURCHASED FOR THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED LEGALLY FOR
+ * ANY CORPORATE OR COMMERCIAL PURPOSE.
+ */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class FeatureWizard extends javax.swing.JFrame {
 	private static final long serialVersionUID = 1L;
-	protected Font defaultLabelFont = new Font("Verdana",0,14); 
+	protected Font defaultLabelFont = new Font("Verdana", 0, 14);
 	protected static int cellPadding = 5;
 	protected static Border defaultBorder = BorderFactory.createLineBorder(Color.BLACK);
-	
+
 	// data
 	protected static String[] normTitles = NormBaselineEnum.getAllTitles();
 	protected java.util.List<JPanel> canonParamList = new ArrayList<JPanel>();
@@ -42,10 +37,10 @@ public class FeatureWizard extends javax.swing.JFrame {
 	protected GUIMain parent;
 	protected boolean editMode;
 	protected int originalIndex;
-	
+
 	// main tabbed pane
 	protected JTabbedPane mainJTabbedPane;
-	
+
 	// name and description tab
 	protected JPanel nameTab;
 	protected JLabel nameIntroJLabel;
@@ -55,7 +50,7 @@ public class FeatureWizard extends javax.swing.JFrame {
 	protected JLabel nameJLabel;
 	protected JLabel descJLabel;
 	protected JTextPane descJTextPane;
-	
+
 	// canonicizers tab
 	protected JPanel canonTab;
 	protected JScrollPane selCanonJScrollPane;
@@ -74,7 +69,7 @@ public class FeatureWizard extends javax.swing.JFrame {
 	protected JButton avCanonAddJButton;
 	protected JList avCanonJList;
 	protected JScrollPane avCanonJScrollPane;
-	
+
 	// features tab
 	protected JPanel featuresTab;
 	protected JLabel featuresJLabel;
@@ -109,8 +104,7 @@ public class FeatureWizard extends javax.swing.JFrame {
 	protected JButton avCullAddJButton;
 	protected JList avCullJList;
 	protected JScrollPane avCullJScrollPane;
-	
-	
+
 	// normalization tab
 	protected JPanel normTab;
 	protected JLabel normJLabel;
@@ -120,10 +114,8 @@ public class FeatureWizard extends javax.swing.JFrame {
 	protected JButton normBackJButton;
 	protected JButton normCancelJButton;
 	protected JButton normAddFeatureJButton;
-	
-	/**
-	* Auto-generated main method to display this JFrame
-	*/
+
+	/** Auto-generated main method to display this JFrame */
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -138,20 +130,16 @@ public class FeatureWizard extends javax.swing.JFrame {
 			}
 		});
 	}
-	
-	/**
-	 * Default constructor.
-	 */
+
+	/** Default constructor. */
 	public FeatureWizard(GUIMain parent) {
 		super();
 		this.parent = parent;
 		initGUI();
 		setLocationRelativeTo(parent);
 	}
-	
-	/**
-	 * Constructor for editing a selected feature driver.
-	 */
+
+	/** Constructor for editing a selected feature driver. */
 	public FeatureWizard(GUIMain parent, FeatureDriver fd, int originalIndex) {
 		super();
 		this.parent = parent;
@@ -159,25 +147,25 @@ public class FeatureWizard extends javax.swing.JFrame {
 		this.originalIndex = originalIndex;
 		initGUI();
 		setLocationRelativeTo(parent);
-		
+
 		// set view to given feature driver
 		// ================================
 		// name and description
 		nameJTextField.setText(fd.getName());
 		descJTextPane.setText(fd.getDescription());
-		
+
 		// canonicizers
 		List<Canonicizer> canons = fd.getCanonicizers();
 		if (canons != null) {
-			for (Canonicizer c: canons) {
+			for (Canonicizer c : canons) {
 				selCanonJListModel.addElement(c.displayName());
 				String className = c.getClass().getName();
-				JPanel paramPanel = FeatureWizardDriver.getConfigPanel(this,1,className);
+				JPanel paramPanel = FeatureWizardDriver.getConfigPanel(this, 1, className);
 				canonParamList.add(paramPanel);
 
 				// update parameter values
 				if (paramPanel != null) {
-					for (Component paramComp: paramPanel.getComponents()) {
+					for (Component paramComp : paramPanel.getComponents()) {
 						JPanel param = (JPanel) paramComp;
 						String name = ((JLabel) param.getComponent(0)).getText();
 						String value = c.getParameter(name);
@@ -188,27 +176,26 @@ public class FeatureWizard extends javax.swing.JFrame {
 						}
 					}
 				}
-
 			}
 		}
-		
+
 		// feature extractor
 		EventDriver ed = fd.getUnderlyingEventDriver();
-		for (int i=0; i<featuresJTree.getRowCount(); i++) {
+		for (int i = 0; i < featuresJTree.getRowCount(); i++) {
 			featuresJTree.setSelectionRow(i);
 			Object[] path = featuresJTree.getSelectionPath().getPath();
-			String elem = ((DefaultMutableTreeNode) path[path.length-1]).toString();
+			String elem = ((DefaultMutableTreeNode) path[path.length - 1]).toString();
 			if (elem.equals(ed.displayName()))
 				break;
 		}
 		// update parameter values
 		String edClassName = ed.getClass().getName();
-		JPanel edParamPanel = FeatureWizardDriver.getConfigPanel(this,1,edClassName);
+		JPanel edParamPanel = FeatureWizardDriver.getConfigPanel(this, 1, edClassName);
 		edParamList = edParamPanel;
 
 		// update parameter values
 		if (edParamPanel != null) {
-			for (Component paramComp: edParamPanel.getComponents()) {
+			for (Component paramComp : edParamPanel.getComponents()) {
 				JPanel param = (JPanel) paramComp;
 				String name = ((JLabel) param.getComponent(0)).getText();
 				String value = ed.getParameter(name);
@@ -216,7 +203,7 @@ public class FeatureWizard extends javax.swing.JFrame {
 					((JTextField) param.getComponent(1)).setText(value);
 				} else if (param.getComponent(1) instanceof JComboBox) {
 					JComboBox cb = ((JComboBox) param.getComponent(1));
-					for (int i=0; i<cb.getModel().getSize(); i++) {
+					for (int i = 0; i < cb.getModel().getSize(); i++) {
 						cb.setSelectedIndex(i);
 						if (((String) cb.getSelectedItem()).equals(value))
 							break;
@@ -229,15 +216,15 @@ public class FeatureWizard extends javax.swing.JFrame {
 		// cullers
 		List<EventCuller> cullers = fd.getCullers();
 		if (cullers != null) {
-			for (EventCuller ec: cullers) {
+			for (EventCuller ec : cullers) {
 				selCullJListModel.addElement(ec.displayName());
 				String className = ec.getClass().getName();
-				JPanel paramPanel = FeatureWizardDriver.getConfigPanel(this,1,className);
+				JPanel paramPanel = FeatureWizardDriver.getConfigPanel(this, 1, className);
 				cullParamList.add(paramPanel);
 
 				// update parameter values
 				if (paramPanel != null) {
-					for (Component paramComp: paramPanel.getComponents()) {
+					for (Component paramComp : paramPanel.getComponents()) {
 						JPanel param = (JPanel) paramComp;
 						String name = ((JLabel) param.getComponent(0)).getText();
 						String value = ec.getParameter(name);
@@ -248,38 +235,38 @@ public class FeatureWizard extends javax.swing.JFrame {
 						}
 					}
 				}
-
 			}
 		}
-		
+
 		// normalization
 		normChooserJComboBox.setSelectedItem(fd.getNormBaseline().getTitle());
 		normFactorJTextField.setText(fd.getNormFactor().toString());
-		
+
 		// set add feature button text
 		normAddFeatureJButton.setText("Update Feature");
 	}
-	
+
 	protected void initGUI() {
-		
+
 		try {
 			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			{
 				setTitle("Feature Configuration");
-				setIconImage(new ImageIcon(Thread.currentThread().getClass().getResource(ANONConstants.GRAPHICS_PREFIX+"icon32.jpg")).getImage());
-				
+				setIconImage(new ImageIcon(
+						Thread.currentThread().getClass().getResource(ANONConstants.GRAPHICS_PREFIX + "icon32.jpg"))
+								.getImage());
+
 				mainJTabbedPane = new JTabbedPane();
 				setPreferredSize(new Dimension(800, 500));
 				getContentPane().add(mainJTabbedPane);
-				
-				/* ========
-				 * name tab
-				 * ========
+
+				/*
+				 * ======== name tab ========
 				 */
 				{
-					nameTab = new JPanel(new GridLayout(2,1,cellPadding,cellPadding));
+					nameTab = new JPanel(new GridLayout(2, 1, cellPadding, cellPadding));
 					mainJTabbedPane.addTab("Feature Name and Description", nameTab);
-					
+
 					{
 						// top - description of wizard
 						{
@@ -287,58 +274,53 @@ public class FeatureWizard extends javax.swing.JFrame {
 							JScrollPane scrollPane = new JScrollPane();
 							scrollPane.setViewportView(nameIntroJLabel);
 							nameTab.add(scrollPane);
-							nameIntroJLabel.setBorder(BorderFactory.createCompoundBorder(
-									defaultBorder,BorderFactory.createEmptyBorder(cellPadding,cellPadding,cellPadding,cellPadding)));
+							nameIntroJLabel.setBorder(BorderFactory.createCompoundBorder(defaultBorder, BorderFactory
+									.createEmptyBorder(cellPadding, cellPadding, cellPadding, cellPadding)));
 							nameIntroJLabel.setVerticalAlignment(JLabel.TOP);
-							nameIntroJLabel.setText(
-									"<html><p>" +
-											"<font size=12pt><b>Creating a Feature</b></font><br>" +
-											"To create a feature the following need to be set:" +
-											"<ul>" +
-											"	<li><b>Name</b>: The name of the feature. Should be unique among all other configured features.</li>" +
-											"	<li><b>Description</b>: The description of the feature.</li>" +
-											"	<li><b>Text Pre-processing</b> (optional): Pre-processing to apply on the documents prior to feature extraction<br>" +
-											"(e.g. lowering case, stripping punctuation etc.).</li>" +
-											"	<li><b>Feature Extractors</b>: The feature extractor to be used for parsing. Determines which features are to be extracted<br>" +
-											"(e.g. letter bigrams, function words etc.).</li>" +
-											"	<li><b>Feature Post-processing</b> (optional): Post processing to apply on the sets of extracted features across all documents<br>" +
-											"(e.g. taking only the most n frequent features in the entire training set).</li>" +
-											"	<li><b>Normalization</b> (optional): determine a normalization baseline, i.e. some value to divide the absolute frequencies by<br>" +
-											"(e.g. the sum of frequencies of the feature across all documents, the number of words in the document etc.). Default is none (i.e.<br>" +
-											"non-normalized absolute values). Another optional value is the factoring - a value to multiply the results by for better accuracy. Default is 1.</li>" +
-											"</ul>" +
-											"</p></html>"
-									);
+							nameIntroJLabel.setText("<html><p>" + "<font size=12pt><b>Creating a Feature</b></font><br>"
+									+ "To create a feature the following need to be set:" + "<ul>"
+									+ "	<li><b>Name</b>: The name of the feature. Should be unique among all other configured features.</li>"
+									+ "	<li><b>Description</b>: The description of the feature.</li>"
+									+ "	<li><b>Text Pre-processing</b> (optional): Pre-processing to apply on the documents prior to feature extraction<br>"
+									+ "(e.g. lowering case, stripping punctuation etc.).</li>"
+									+ "	<li><b>Feature Extractors</b>: The feature extractor to be used for parsing. Determines which features are to be extracted<br>"
+									+ "(e.g. letter bigrams, function words etc.).</li>"
+									+ "	<li><b>Feature Post-processing</b> (optional): Post processing to apply on the sets of extracted features across all documents<br>"
+									+ "(e.g. taking only the most n frequent features in the entire training set).</li>"
+									+ "	<li><b>Normalization</b> (optional): determine a normalization baseline, i.e. some value to divide the absolute frequencies by<br>"
+									+ "(e.g. the sum of frequencies of the feature across all documents, the number of words in the document etc.). Default is none (i.e.<br>"
+									+ "non-normalized absolute values). Another optional value is the factoring - a value to multiply the results by for better accuracy. Default is 1.</li>"
+									+ "</ul>" + "</p></html>");
 						}
 					}
-					
+
 					{
 						// bottom - feature name and description
 						JPanel bottom = new JPanel(new BorderLayout());
 						nameTab.add(bottom);
 						{
-							JPanel panel = new JPanel(new BorderLayout(cellPadding,cellPadding));
-							bottom.add(panel,BorderLayout.NORTH);
+							JPanel panel = new JPanel(new BorderLayout(cellPadding, cellPadding));
+							bottom.add(panel, BorderLayout.NORTH);
 							{
 								nameJLabel = new JLabel();
-								panel.add(nameJLabel,BorderLayout.WEST);
+								panel.add(nameJLabel, BorderLayout.WEST);
 								nameJLabel.setText("Feature Name");
 								nameJLabel.setFont(defaultLabelFont);
 								nameJLabel.setPreferredSize(new java.awt.Dimension(150, 18));
 							}
 							{
 								nameJTextField = new JTextField();
-								panel.add(nameJTextField,BorderLayout.CENTER);
+								panel.add(nameJTextField, BorderLayout.CENTER);
 								nameJTextField.setPreferredSize(new java.awt.Dimension(247, 18));
 							}
 						}
 						{
-							JPanel panel = new JPanel(new BorderLayout(cellPadding,cellPadding));
-							bottom.add(panel,BorderLayout.CENTER);
+							JPanel panel = new JPanel(new BorderLayout(cellPadding, cellPadding));
+							bottom.add(panel, BorderLayout.CENTER);
 							{
 								descJLabel = new JLabel();
 								descJLabel.setVerticalAlignment(JLabel.TOP);
-								panel.add(descJLabel,BorderLayout.WEST);
+								panel.add(descJLabel, BorderLayout.WEST);
 								descJLabel.setText("Feature Description");
 								descJLabel.setFont(defaultLabelFont);
 								descJLabel.setPreferredSize(new java.awt.Dimension(150, 18));
@@ -347,13 +329,13 @@ public class FeatureWizard extends javax.swing.JFrame {
 								descJTextPane = new JTextPane();
 								JScrollPane scrollPane = new JScrollPane();
 								scrollPane.setViewportView(descJTextPane);
-								panel.add(scrollPane,BorderLayout.CENTER);
+								panel.add(scrollPane, BorderLayout.CENTER);
 								descJTextPane.setPreferredSize(new java.awt.Dimension(452, 133));
 							}
 						}
 						{
 							JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-							bottom.add(panel,BorderLayout.SOUTH);
+							bottom.add(panel, BorderLayout.SOUTH);
 							{
 								nameCancelJButton = new JButton();
 								panel.add(nameCancelJButton);
@@ -365,45 +347,42 @@ public class FeatureWizard extends javax.swing.JFrame {
 								nameNextJButton.setText("Next ->");
 							}
 						}
-						
 					}
 				}
-				
-				/* ================
-				 * canonicizers tab
-				 * ================
+
+				/*
+				 * ================ canonicizers tab ================
 				 */
 				{
-					canonTab = new JPanel(new GridLayout(2,1,cellPadding,cellPadding));
+					canonTab = new JPanel(new GridLayout(2, 1, cellPadding, cellPadding));
 					mainJTabbedPane.addTab("Text Pre-processing", canonTab);
 
 					{
-						JPanel topPanel = new JPanel(new GridLayout(1,3,cellPadding,cellPadding));
+						JPanel topPanel = new JPanel(new GridLayout(1, 3, cellPadding, cellPadding));
 						canonTab.add(topPanel);
-						
+
 						// available canonicizers
 						// ======================
 						{
-							JPanel panel = new JPanel(new BorderLayout(cellPadding,cellPadding));
+							JPanel panel = new JPanel(new BorderLayout(cellPadding, cellPadding));
 							topPanel.add(panel);
 							{
 								avCanonJLabel = new JLabel();
-								panel.add(avCanonJLabel,BorderLayout.NORTH);
+								panel.add(avCanonJLabel, BorderLayout.NORTH);
 								avCanonJLabel.setText("Available Text Pre-Processing");
 								avCanonJLabel.setFont(defaultLabelFont);
 							}
 							{
 								avCanonJScrollPane = new JScrollPane();
-								panel.add(avCanonJScrollPane,BorderLayout.CENTER);
+								panel.add(avCanonJScrollPane, BorderLayout.CENTER);
 								{
 									Set<String> canonSet = FeatureWizardDriver.getCanonicizers().keySet();
 									String[] avCanonArr = new String[canonSet.size()];
-									int i=0;
-									for (String displayName: canonSet) {
+									int i = 0;
+									for (String displayName : canonSet) {
 										avCanonArr[i++] = displayName;
 									}
-									ListModel avCanonJListModel = 
-											new DefaultComboBoxModel(avCanonArr);
+									ListModel avCanonJListModel = new DefaultComboBoxModel(avCanonArr);
 									avCanonJList = new JList();
 									avCanonJScrollPane.setViewportView(avCanonJList);
 									avCanonJList.setModel(avCanonJListModel);
@@ -411,11 +390,11 @@ public class FeatureWizard extends javax.swing.JFrame {
 								}
 							}
 							{
-								JPanel btnPanel = new JPanel(new GridLayout(1,1,cellPadding,0));
-								panel.add(btnPanel,BorderLayout.SOUTH);
+								JPanel btnPanel = new JPanel(new GridLayout(1, 1, cellPadding, 0));
+								panel.add(btnPanel, BorderLayout.SOUTH);
 								{
 									avCanonAddJButton = new JButton();
-									btnPanel.add(avCanonAddJButton,BorderLayout.SOUTH);
+									btnPanel.add(avCanonAddJButton, BorderLayout.SOUTH);
 									avCanonAddJButton.setText("Add->");
 								}
 							}
@@ -424,20 +403,19 @@ public class FeatureWizard extends javax.swing.JFrame {
 						// selected canonicizers
 						// =====================
 						{
-							JPanel panel = new JPanel(new BorderLayout(cellPadding,cellPadding));
+							JPanel panel = new JPanel(new BorderLayout(cellPadding, cellPadding));
 							topPanel.add(panel);
 							{
 								selCanonJLabel = new JLabel();
-								panel.add(selCanonJLabel,BorderLayout.NORTH);
+								panel.add(selCanonJLabel, BorderLayout.NORTH);
 								selCanonJLabel.setText("Selected Text Pre-Processing");
 								selCanonJLabel.setFont(defaultLabelFont);
 							}
 							{
 								selCanonJScrollPane = new JScrollPane();
-								panel.add(selCanonJScrollPane,BorderLayout.CENTER);
+								panel.add(selCanonJScrollPane, BorderLayout.CENTER);
 								{
-									selCanonJListModel = 
-											new DefaultComboBoxModel(new String[] {});
+									selCanonJListModel = new DefaultComboBoxModel(new String[]{});
 									selCanonJList = new JList();
 									selCanonJScrollPane.setViewportView(selCanonJList);
 									selCanonJList.setModel(selCanonJListModel);
@@ -445,8 +423,8 @@ public class FeatureWizard extends javax.swing.JFrame {
 								}
 							}
 							{
-								JPanel btnPanel = new JPanel(new GridLayout(1,1,cellPadding,0));
-								panel.add(btnPanel,BorderLayout.SOUTH);
+								JPanel btnPanel = new JPanel(new GridLayout(1, 1, cellPadding, 0));
+								panel.add(btnPanel, BorderLayout.SOUTH);
 								{
 									selCanonRemoveJButton = new JButton();
 									btnPanel.add(selCanonRemoveJButton);
@@ -458,24 +436,24 @@ public class FeatureWizard extends javax.swing.JFrame {
 						// canonicizer configuration
 						// =========================
 						{
-							JPanel panel = new JPanel(new BorderLayout(cellPadding,cellPadding));
+							JPanel panel = new JPanel(new BorderLayout(cellPadding, cellPadding));
 							topPanel.add(panel);
 							{
 								canonConfigJLabel = new JLabel();
-								panel.add(canonConfigJLabel,BorderLayout.NORTH);
+								panel.add(canonConfigJLabel, BorderLayout.NORTH);
 								canonConfigJLabel.setText("Configuration");
 								canonConfigJLabel.setFont(defaultLabelFont);
 							}
 							{
 								canonConfigJScrollPane = new JScrollPane();
-								panel.add(canonConfigJScrollPane,BorderLayout.CENTER);
+								panel.add(canonConfigJScrollPane, BorderLayout.CENTER);
 								canonConfigJScrollPane.setBorder(defaultBorder);
 							}
 						}
 					}
-					
+
 					{
-						JPanel bottomPanel = new JPanel(new BorderLayout(cellPadding,cellPadding));
+						JPanel bottomPanel = new JPanel(new BorderLayout(cellPadding, cellPadding));
 						canonTab.add(bottomPanel);
 						{
 							canonDescJLabel = new JLabel();
@@ -505,51 +483,50 @@ public class FeatureWizard extends javax.swing.JFrame {
 								canonNextJButton = new JButton();
 								btnPanel.add(canonNextJButton);
 								canonNextJButton.setText("Next ->");
-								
 							}
 							bottomPanel.add(btnPanel, BorderLayout.SOUTH);
 						}
 					}
 				}
 
-				/* ============
-				 * features tab
-				 * ============
+				/*
+				 * ============ features tab ============
 				 */
 				{
-					featuresTab = new JPanel(new GridLayout(2,1,cellPadding,cellPadding));
+					featuresTab = new JPanel(new GridLayout(2, 1, cellPadding, cellPadding));
 					mainJTabbedPane.addTab("Feature Extractors", featuresTab);
 
 					{
-						JPanel topPanel = new JPanel(new GridLayout(1,2,cellPadding,cellPadding));
+						JPanel topPanel = new JPanel(new GridLayout(1, 2, cellPadding, cellPadding));
 						featuresTab.add(topPanel);
 
 						// features
 						// ========
 						{
-							JPanel panel = new JPanel(new BorderLayout(cellPadding,cellPadding));
+							JPanel panel = new JPanel(new BorderLayout(cellPadding, cellPadding));
 							topPanel.add(panel);
 							{
 								featuresJLabel = new JLabel();
-								panel.add(featuresJLabel,BorderLayout.NORTH);
+								panel.add(featuresJLabel, BorderLayout.NORTH);
 								featuresJLabel.setText("Feature Extractor");
 								featuresJLabel.setFont(defaultLabelFont);
 							}
 							{
 								featuresJScrollPane = new JScrollPane();
-								panel.add(featuresJScrollPane,BorderLayout.CENTER);
+								panel.add(featuresJScrollPane, BorderLayout.CENTER);
 								{
 									featuresJTree = new JTree();
-									featuresJTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+									featuresJTree.getSelectionModel()
+											.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 									featuresJScrollPane.setViewportView(featuresJTree);
-									
+
 									DefaultMutableTreeNode root = new DefaultMutableTreeNode("Feature Extractors");
-									Map<String,Map<String,String>> edMap = FeatureWizardDriver.getEventDrivers();
+									Map<String, Map<String, String>> edMap = FeatureWizardDriver.getEventDrivers();
 									DefaultMutableTreeNode typeNode, edNode;
-									for (String type: edMap.keySet()) {
+									for (String type : edMap.keySet()) {
 										typeNode = new DefaultMutableTreeNode(type);
 										root.add(typeNode);
-										for (String ed: edMap.get(type).keySet()){
+										for (String ed : edMap.get(type).keySet()) {
 											edNode = new DefaultMutableTreeNode(ed);
 											typeNode.add(edNode);
 										}
@@ -566,11 +543,11 @@ public class FeatureWizard extends javax.swing.JFrame {
 						// feature configuration
 						// =====================
 						{
-							JPanel panel = new JPanel(new BorderLayout(cellPadding,cellPadding));
+							JPanel panel = new JPanel(new BorderLayout(cellPadding, cellPadding));
 							topPanel.add(panel);
 							{
 								featuresConfigJLabel = new JLabel();
-								panel.add(featuresConfigJLabel,BorderLayout.NORTH);
+								panel.add(featuresConfigJLabel, BorderLayout.NORTH);
 								featuresConfigJLabel.setText("Configuration");
 								featuresConfigJLabel.setFont(defaultLabelFont);
 							}
@@ -581,9 +558,9 @@ public class FeatureWizard extends javax.swing.JFrame {
 							}
 						}
 					}
-					
+
 					{
-						JPanel bottomPanel = new JPanel(new BorderLayout(cellPadding,cellPadding));
+						JPanel bottomPanel = new JPanel(new BorderLayout(cellPadding, cellPadding));
 						featuresTab.add(bottomPanel);
 						{
 							featureDescJLabel = new JLabel();
@@ -618,42 +595,40 @@ public class FeatureWizard extends javax.swing.JFrame {
 						}
 					}
 				}
-				
-				/* ===========
-				 * cullers tab
-				 * ===========
+
+				/*
+				 * =========== cullers tab ===========
 				 */
 				{
-					cullersTab = new JPanel(new GridLayout(2,1,cellPadding,cellPadding));
+					cullersTab = new JPanel(new GridLayout(2, 1, cellPadding, cellPadding));
 					mainJTabbedPane.addTab("Feature Post-Processing", cullersTab);
 
 					{
-						JPanel topPanel = new JPanel(new GridLayout(1,3,cellPadding,cellPadding));
+						JPanel topPanel = new JPanel(new GridLayout(1, 3, cellPadding, cellPadding));
 						cullersTab.add(topPanel);
 
 						// available cullers
 						// =================
 						{
-							JPanel panel = new JPanel(new BorderLayout(cellPadding,cellPadding));
+							JPanel panel = new JPanel(new BorderLayout(cellPadding, cellPadding));
 							topPanel.add(panel);
 							{
 								avCullJLabel = new JLabel();
-								panel.add(avCullJLabel,BorderLayout.NORTH);
+								panel.add(avCullJLabel, BorderLayout.NORTH);
 								avCullJLabel.setText("Available Feature Post-Processing");
 								avCullJLabel.setFont(defaultLabelFont);
 							}
 							{
 								avCullJScrollPane = new JScrollPane();
-								panel.add(avCullJScrollPane,BorderLayout.CENTER);
+								panel.add(avCullJScrollPane, BorderLayout.CENTER);
 								{
 									Set<String> cullSet = FeatureWizardDriver.getCullers().keySet();
 									String[] avCullArr = new String[cullSet.size()];
-									int i=0;
-									for (String displayName: cullSet) {
+									int i = 0;
+									for (String displayName : cullSet) {
 										avCullArr[i++] = displayName;
 									}
-									ListModel avCullJListModel = 
-											new DefaultComboBoxModel(avCullArr);
+									ListModel avCullJListModel = new DefaultComboBoxModel(avCullArr);
 									avCullJList = new JList();
 									avCullJScrollPane.setViewportView(avCullJList);
 									avCullJList.setModel(avCullJListModel);
@@ -661,11 +636,11 @@ public class FeatureWizard extends javax.swing.JFrame {
 								}
 							}
 							{
-								JPanel btnPanel = new JPanel(new GridLayout(1,1,cellPadding,0));
-								panel.add(btnPanel,BorderLayout.SOUTH);
+								JPanel btnPanel = new JPanel(new GridLayout(1, 1, cellPadding, 0));
+								panel.add(btnPanel, BorderLayout.SOUTH);
 								{
 									avCullAddJButton = new JButton();
-									btnPanel.add(avCullAddJButton,BorderLayout.SOUTH);
+									btnPanel.add(avCullAddJButton, BorderLayout.SOUTH);
 									avCullAddJButton.setText("Add->");
 								}
 							}
@@ -674,20 +649,19 @@ public class FeatureWizard extends javax.swing.JFrame {
 						// selected cullers
 						// ================
 						{
-							JPanel panel = new JPanel(new BorderLayout(cellPadding,cellPadding));
+							JPanel panel = new JPanel(new BorderLayout(cellPadding, cellPadding));
 							topPanel.add(panel);
 							{
 								selCullJLabel = new JLabel();
-								panel.add(selCullJLabel,BorderLayout.NORTH);
+								panel.add(selCullJLabel, BorderLayout.NORTH);
 								selCullJLabel.setText("Selected Feature Post-Processing");
 								selCullJLabel.setFont(defaultLabelFont);
 							}
 							{
 								selCullJScrollPane = new JScrollPane();
-								panel.add(selCullJScrollPane,BorderLayout.CENTER);
+								panel.add(selCullJScrollPane, BorderLayout.CENTER);
 								{
-									selCullJListModel = 
-											new DefaultComboBoxModel();
+									selCullJListModel = new DefaultComboBoxModel();
 									selCullJList = new JList();
 									selCullJScrollPane.setViewportView(selCullJList);
 									selCullJList.setModel(selCullJListModel);
@@ -695,8 +669,8 @@ public class FeatureWizard extends javax.swing.JFrame {
 								}
 							}
 							{
-								JPanel btnPanel = new JPanel(new GridLayout(1,1,cellPadding,0));
-								panel.add(btnPanel,BorderLayout.SOUTH);
+								JPanel btnPanel = new JPanel(new GridLayout(1, 1, cellPadding, 0));
+								panel.add(btnPanel, BorderLayout.SOUTH);
 								{
 									selCullRemoveJButton = new JButton();
 									btnPanel.add(selCullRemoveJButton);
@@ -708,24 +682,24 @@ public class FeatureWizard extends javax.swing.JFrame {
 						// cullers configuration
 						// =====================
 						{
-							JPanel panel = new JPanel(new BorderLayout(cellPadding,cellPadding));
+							JPanel panel = new JPanel(new BorderLayout(cellPadding, cellPadding));
 							topPanel.add(panel);
 							{
 								cullConfigJLabel = new JLabel();
-								panel.add(cullConfigJLabel,BorderLayout.NORTH);
+								panel.add(cullConfigJLabel, BorderLayout.NORTH);
 								cullConfigJLabel.setText("Configuration");
 								cullConfigJLabel.setFont(defaultLabelFont);
 							}
 							{
 								cullConfigJScrollPane = new JScrollPane();
-								panel.add(cullConfigJScrollPane,BorderLayout.CENTER);
+								panel.add(cullConfigJScrollPane, BorderLayout.CENTER);
 								cullConfigJScrollPane.setBorder(defaultBorder);
 							}
 						}
 					}
 
 					{
-						JPanel bottomPanel = new JPanel(new BorderLayout(cellPadding,cellPadding));
+						JPanel bottomPanel = new JPanel(new BorderLayout(cellPadding, cellPadding));
 						cullersTab.add(bottomPanel);
 						{
 							cullDescJLabel = new JLabel();
@@ -760,18 +734,17 @@ public class FeatureWizard extends javax.swing.JFrame {
 						}
 					}
 				}
-				
-				/* =================
-				 * normalization tab
-				 * =================
+
+				/*
+				 * ================= normalization tab =================
 				 */
 				{
-					normTab = new JPanel(new BorderLayout(cellPadding,cellPadding));
+					normTab = new JPanel(new BorderLayout(cellPadding, cellPadding));
 					mainJTabbedPane.addTab("Normalization", normTab);
 
 					{
-						JPanel topPanel = new JPanel(new GridLayout(1,2,cellPadding,cellPadding));
-						normTab.add(topPanel,BorderLayout.NORTH);
+						JPanel topPanel = new JPanel(new GridLayout(1, 2, cellPadding, cellPadding));
+						normTab.add(topPanel, BorderLayout.NORTH);
 
 						// normalization
 						// =============
@@ -785,8 +758,7 @@ public class FeatureWizard extends javax.swing.JFrame {
 								normJLabel.setFont(defaultLabelFont);
 							}
 							{
-								ComboBoxModel normChooserJComboBoxModel = 
-										new DefaultComboBoxModel(normTitles);
+								ComboBoxModel normChooserJComboBoxModel = new DefaultComboBoxModel(normTitles);
 								normChooserJComboBox = new JComboBox();
 								panel.add(normChooserJComboBox);
 								normChooserJComboBox.setModel(normChooserJComboBoxModel);
@@ -807,13 +779,12 @@ public class FeatureWizard extends javax.swing.JFrame {
 								normFactorJTextField.setText("1");
 								normFactorJTextField.setPreferredSize(new java.awt.Dimension(200, 20));
 							}
-
 						}
 					}
-					
+
 					{
-						JPanel bottomPanel = new JPanel(new BorderLayout(cellPadding,cellPadding));
-						normTab.add(bottomPanel,BorderLayout.CENTER);
+						JPanel bottomPanel = new JPanel(new BorderLayout(cellPadding, cellPadding));
+						normTab.add(bottomPanel, BorderLayout.CENTER);
 						{
 							normDescJLabel = new JLabel();
 							normDescJLabel.setFont(defaultLabelFont);
@@ -821,9 +792,11 @@ public class FeatureWizard extends javax.swing.JFrame {
 							normDescJLabel.setText("Description");
 						}
 						{
-							normDescContentJLabel = new JLabel("<html><p>"+NormBaselineEnum.NONE.getDescription()+"</p></html>");
-							normDescContentJLabel.setBorder(BorderFactory.createCompoundBorder(
-									defaultBorder,BorderFactory.createEmptyBorder(cellPadding,cellPadding,cellPadding,cellPadding)));
+							normDescContentJLabel = new JLabel(
+									"<html><p>" + NormBaselineEnum.NONE.getDescription() + "</p></html>");
+							normDescContentJLabel
+									.setBorder(BorderFactory.createCompoundBorder(defaultBorder, BorderFactory
+											.createEmptyBorder(cellPadding, cellPadding, cellPadding, cellPadding)));
 							normDescContentJLabel.setVerticalAlignment(JLabel.TOP);
 							bottomPanel.add(normDescContentJLabel, BorderLayout.CENTER);
 						}
@@ -848,15 +821,14 @@ public class FeatureWizard extends javax.swing.JFrame {
 						}
 					}
 				}
-				
 			}
-			
+
 			// initialzie listeners
 			FeatureWizardDriver.initListeners(this);
-			
+
 			pack();
 		} catch (Exception e) {
-		    //add your error handling code here
+			// add your error handling code here
 			e.printStackTrace();
 		}
 	}

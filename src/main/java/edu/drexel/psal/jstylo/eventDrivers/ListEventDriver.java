@@ -1,44 +1,39 @@
 package edu.drexel.psal.jstylo.eventDrivers;
 
+import com.jgaap.eventDrivers.NaiveWordEventDriver;
+import com.jgaap.generics.*;
+import edu.drexel.psal.jstylo.eventCullers.FrequencyEventsExtended;
 import java.io.*;
 import java.util.*;
 
-import com.jgaap.eventDrivers.NaiveWordEventDriver;
-import com.jgaap.generics.*;
-
-import edu.drexel.psal.jstylo.eventCullers.FrequencyEventsExtended;
-
-
 /**
- * Modification of the White / Black list event driver:
- * <br>
- * Given a filename to be used as lexicon and an event driver, it extracts all events using the given driver
- * and then removes all events extracted that appear / don't appear in the lexicon, based on whether it's a white
- * list or black list, accordingly.
+ * Modification of the White / Black list event driver: <br>
+ * Given a filename to be used as lexicon and an event driver, it extracts all
+ * events using the given driver and then removes all events extracted that
+ * appear / don't appear in the lexicon, based on whether it's a white list or
+ * black list, accordingly.
+ *
  * <p>
  * <u>Parameters</u>:<br>
+ *
  * <ul>
- * 	<li>
- * 	<b>whiteList</b>: set to <i>true</i> for white-list and <i>false</i> for black-list. Default is <i>false</i>.
- * 	</li>
- * 	<li>
- * 	<b>underlyingEvents</b>: set to the full name of the base event driver to be used. Can also use <i>setUnderlyingEvents(EventDriver)</i> with
- * 	an EventDriver instance instead. Default is <i>NaiveWordEventDriver</i>. 
- * 	</li>
- * 	<li>
- * 	<b>filename</b>: set to the file path of the lexicon to be used. Default is empty, in that case will return all events extracted with no filtering.
- * 	</li>
- * 	<li>
- * 	<b>sort</b>: set to <i>true</i> to have the extracted events sorted before lexicon lookup. Increases performance when have a large lexicon, as it reduces
- * 	the number of event list plus lexicon lookup to linear, but requires the lexicon file to be <b>sorted</b> and additional sorting time for the extracted event set.
- * 	Default is <i>false</i>.
- * 	</li>
- * 	<li>
- * 	<b>KeepLexiconInMem</b>: set to <i>true</i> to have the extracted lexicon kept in memory, instead of extracting it from the file for each document.
- * 	Can reduce running time for a large set of documents, but increases memory usage. 
- * 	</li>
+ * <li><b>whiteList</b>: set to <i>true</i> for white-list and <i>false</i> for
+ * black-list. Default is <i>false</i>.
+ * <li><b>underlyingEvents</b>: set to the full name of the base event driver to
+ * be used. Can also use <i>setUnderlyingEvents(EventDriver)</i> with an
+ * EventDriver instance instead. Default is <i>NaiveWordEventDriver</i>.
+ * <li><b>filename</b>: set to the file path of the lexicon to be used. Default
+ * is empty, in that case will return all events extracted with no filtering.
+ * <li><b>sort</b>: set to <i>true</i> to have the extracted events sorted
+ * before lexicon lookup. Increases performance when have a large lexicon, as it
+ * reduces the number of event list plus lexicon lookup to linear, but requires
+ * the lexicon file to be <b>sorted</b> and additional sorting time for the
+ * extracted event set. Default is <i>false</i>.
+ * <li><b>KeepLexiconInMem</b>: set to <i>true</i> to have the extracted lexicon
+ * kept in memory, instead of extracting it from the file for each document. Can
+ * reduce running time for a large set of documents, but increases memory usage.
  * </ul>
- * 
+ *
  * @author Ariel Stolerman
  */
 public class ListEventDriver extends EventDriver {
@@ -52,38 +47,25 @@ public class ListEventDriver extends EventDriver {
 	public String tooltipText() {
 		return "Filtered Event Set with Named Events Kept";
 	}
-	
+
 	@Override
 	public String longDescription() {
-		String res = 
-				"<html>" +
-				"Given a filename to be used as lexicon and an event driver, it extracts all events using the given driver " +
-				"and then removes all events extracted that appear / don't appear in the lexicon, based on whether it's a white " +
-				"list or black list, accordingly." +
-				"<p>" +
-				"<u>Parameters</u>:<br>" +
-				"<ul>" +
-				"	<li>" +
-				"	<b>whiteList</b>: set to <i>true</i> for white-list and <i>false</i> for black-list. Default is <i>false</i>." +
-				"	</li>" +
-				"	<li>" +
-				"	<b>underlyingEvents</b>: set to the full name of the base event driver to be used. Can also use <i>setUnderlyingEvents(EventDriver)</i> with" +
-				"	an EventDriver instance instead. Default is <i>NaiveWordEventDriver</i>." + 
-				"	</li>" +
-				"	<li>" +
-				"	<b>filename</b>: set to the file path of the lexicon to be used. Default is empty, in that case will return all events extracted with no filtering." +
-				"	</li>" +
-				"	<li>" +
-				"	<b>sort</b>: set to <i>true</i> to have the extracted events sorted before lexicon lookup. Increases performance when have a large lexicon, as it reduces" +
-				"	the number of event list plus lexicon lookup to linear, but requires the lexicon file to be <b>sorted</b> and additional sorting time for the extracted event set." +
-				"	Default is <i>false</i>." +
-				"	</li>" +
-				"	<li>" +
-				"	<b>KeepLexiconInMem</b>: set to <i>true</i> to have the extracted lexicon kept in memory, instead of extracting it from the file for each document." +
-				"	Can reduce running time for a large set of documents, but increases memory usage." + 
-				"	</li>" +
-				"</ul>" +
-				"</html>";
+		String res = "<html>"
+				+ "Given a filename to be used as lexicon and an event driver, it extracts all events using the given driver "
+				+ "and then removes all events extracted that appear / don't appear in the lexicon, based on whether it's a white "
+				+ "list or black list, accordingly." + "<p>" + "<u>Parameters</u>:<br>" + "<ul>" + "	<li>"
+				+ "	<b>whiteList</b>: set to <i>true</i> for white-list and <i>false</i> for black-list. Default is <i>false</i>."
+				+ "	</li>" + "	<li>"
+				+ "	<b>underlyingEvents</b>: set to the full name of the base event driver to be used. Can also use <i>setUnderlyingEvents(EventDriver)</i> with"
+				+ "	an EventDriver instance instead. Default is <i>NaiveWordEventDriver</i>." + "	</li>" + "	<li>"
+				+ "	<b>filename</b>: set to the file path of the lexicon to be used. Default is empty, in that case will return all events extracted with no filtering."
+				+ "	</li>" + "	<li>"
+				+ "	<b>sort</b>: set to <i>true</i> to have the extracted events sorted before lexicon lookup. Increases performance when have a large lexicon, as it reduces"
+				+ "	the number of event list plus lexicon lookup to linear, but requires the lexicon file to be <b>sorted</b> and additional sorting time for the extracted event set."
+				+ "	Default is <i>false</i>." + "	</li>" + "	<li>"
+				+ "	<b>KeepLexiconInMem</b>: set to <i>true</i> to have the extracted lexicon kept in memory, instead of extracting it from the file for each document."
+				+ "	Can reduce running time for a large set of documents, but increases memory usage." + "	</li>"
+				+ "</ul>" + "</html>";
 		return res;
 	}
 
@@ -95,18 +77,18 @@ public class ListEventDriver extends EventDriver {
 	private EventDriver underlyingEvents;
 
 	private String filename;
-	
+
 	private boolean sort;
-	
+
 	private boolean whiteList;
-	
+
 	private boolean keepLexiconInMem;
-	
+
 	private List<String> lexicon;
 
 	@Override
 	public EventSet createEventSet(Document ds) throws EventGenerationException {
-		
+
 		String param;
 
 		if (!(param = (getParameter("sort"))).equals(""))
@@ -114,7 +96,7 @@ public class ListEventDriver extends EventDriver {
 
 		if (!(param = (getParameter("whiteList"))).equals(""))
 			whiteList = Boolean.parseBoolean(param);
-		
+
 		if (!(param = (getParameter("keepListInMem"))).equals(""))
 			keepLexiconInMem = Boolean.parseBoolean(param);
 
@@ -142,11 +124,11 @@ public class ListEventDriver extends EventDriver {
 				try {
 					try {
 						// look in file system
-						//System.out.println(filename);
+						// System.out.println(filename);
 						br = new BufferedReader(new FileReader(filename));
 					} catch (IOException e) {
 						// look in resources
-						
+
 						InputStream in = getClass().getClassLoader().getResourceAsStream(filename);
 						br = new BufferedReader(new InputStreamReader(in));
 					}
@@ -156,9 +138,9 @@ public class ListEventDriver extends EventDriver {
 					}
 
 				} catch (IOException e) {
-					System.err.println("Error reading file "+filename);
+					System.err.println("Error reading file " + filename);
 					e.printStackTrace();
-					
+
 				} finally {
 					// if the file opened okay, make sure we close it
 					if (br != null) {
@@ -172,41 +154,41 @@ public class ListEventDriver extends EventDriver {
 				lexicon = null;
 			}
 		}
-		
+
 		// extract event set and filter
 		EventSet es = underlyingEvents.createEventSet(ds);
 		if (lexicon == null)
 			return es;
-		
+
 		EventSet newEs = new EventSet();
 		newEs.setAuthor(es.getAuthor());
 		newEs.setNewEventSetID(es.getAuthor());
 
 		// if needs to sort
-		if (sort) {			
+		if (sort) {
 			// find frequencies of all events and sort list of unique events
 			List<EventSet> tmpList = new ArrayList<EventSet>(1);
 			tmpList.add(es);
-			Map<String,Integer> numEvents = (new Freq()).getFrequency(tmpList);
+			Map<String, Integer> numEvents = (new Freq()).getFrequency(tmpList);
 			List<String> eventList = new ArrayList<String>(numEvents.keySet().size());
-			for (String s: numEvents.keySet())
+			for (String s : numEvents.keySet())
 				eventList.add(s);
 			Collections.sort(eventList);
-			
+
 			int i = 0, j = 0, c;
 			String e1, e2;
-			
+
 			// first handle all events < list[0]
-			for (; i<eventList.size() && j<lexicon.size() ;) {
-				
+			for (; i < eventList.size() && j < lexicon.size();) {
+
 				e1 = eventList.get(i);
 				e2 = lexicon.get(j);
 				c = e1.compareTo(e2);
-				
+
 				if (c < 0) {
 					// if blacklist, add events
 					if (!whiteList) {
-						for (int k=0; k<numEvents.get(e1); k++)
+						for (int k = 0; k < numEvents.get(e1); k++)
 							newEs.addEvent(new Event(e1));
 					}
 					// anyway advance index
@@ -214,7 +196,7 @@ public class ListEventDriver extends EventDriver {
 				} else if (c == 0) {
 					// if whitelist, add events
 					if (whiteList) {
-						for (int k=0; k<numEvents.get(e1); k++)
+						for (int k = 0; k < numEvents.get(e1); k++)
 							newEs.addEvent(new Event(e1));
 					}
 					// anyway advance index and lexicon
@@ -225,16 +207,16 @@ public class ListEventDriver extends EventDriver {
 					j++;
 				}
 			}
-			
+
 			// if blacklist and have anything left, add them too
 			if (!whiteList) {
-				for (; i<eventList.size(); i++) {
+				for (; i < eventList.size(); i++) {
 					e1 = eventList.get(i);
-					for (int k=0; k<numEvents.get(e1); k++)
+					for (int k = 0; k < numEvents.get(e1); k++)
 						newEs.addEvent(new Event(e1));
 				}
 			}
-			
+
 		} else {
 			// unsorted
 			for (Event e : es) {
@@ -248,11 +230,11 @@ public class ListEventDriver extends EventDriver {
 				}
 			}
 		}
-		
+
 		// clear list of memory if required
 		if (!keepLexiconInMem)
 			lexicon = null;
-		
+
 		return newEs;
 	}
 
@@ -287,18 +269,21 @@ public class ListEventDriver extends EventDriver {
 	public void setKeepLexiconInMem(boolean keepListInMem) {
 		this.keepLexiconInMem = keepListInMem;
 	}
-	
+
 	// used only to get frequencies
 	protected class Freq extends FrequencyEventsExtended {
 		public List<EventSet> cull(List<EventSet> arg0) {
 			return null;
 		}
+
 		public String displayName() {
 			return null;
 		}
+
 		public boolean showInGUI() {
 			return false;
 		}
+
 		public String tooltipText() {
 			return null;
 		}

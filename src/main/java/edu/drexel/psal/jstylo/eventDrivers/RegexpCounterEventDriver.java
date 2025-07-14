@@ -1,23 +1,20 @@
 package edu.drexel.psal.jstylo.eventDrivers;
 
-import java.util.regex.*;
-
 import com.jgaap.generics.*;
+import java.util.regex.*;
 
 public class RegexpCounterEventDriver extends SingleNumericEventDriver {
 
-	/* ======
-	 * fields
-	 * ======
+	/*
+	 * ====== fields ======
 	 */
-	
+
 	private String regexp;
-	
-	/* ==================
-	 * overriding methods
-	 * ==================
+
+	/*
+	 * ================== overriding methods ==================
 	 */
-	
+
 	public String displayName() {
 		return "Regular expression match counter";
 	}
@@ -35,13 +32,13 @@ public class RegexpCounterEventDriver extends SingleNumericEventDriver {
 		regexp = getParameter("regexp");
 		if (regexp.equals(""))
 			regexp = ".";
-		
+
 		Pattern p = Pattern.compile(regexp);
 		Matcher m = p.matcher(doc.stringify());
 		int count = 0;
 		while (m.find())
 			count++;
-		
+
 		return count;
 	}
 }

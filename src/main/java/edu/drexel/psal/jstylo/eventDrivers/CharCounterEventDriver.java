@@ -5,34 +5,26 @@ import com.jgaap.generics.*;
 
 public class CharCounterEventDriver extends SingleNumericEventDriver {
 
-	/* ======
-	 * fields
-	 * ======
+	/*
+	 * ====== fields ======
 	 */
-	
-	/**
-	 * Event driver to be used for character count.
-	 */
+
+	/** Event driver to be used for character count. */
 	private CharacterEventDriver charDriver;
-	
-	
-	/* ============
-	 * constructors
-	 * ============
+
+	/*
+	 * ============ constructors ============
 	 */
-	
-	/**
-	 * Default sentence counter event driver constructor.
-	 */
+
+	/** Default sentence counter event driver constructor. */
 	public CharCounterEventDriver() {
 		charDriver = new CharacterEventDriver();
 	}
-	
-	/* ==================
-	 * overriding methods
-	 * ==================
+
+	/*
+	 * ================== overriding methods ==================
 	 */
-	
+
 	public String displayName() {
 		return "Character count";
 	}

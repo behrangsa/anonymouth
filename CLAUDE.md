@@ -19,6 +19,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Package**: `mvn package` (creates JAR in `target/`)
 - **Clean**: `mvn clean`
 - **Run**: `java -jar target/anonymouth-0.5.0-jar-with-dependencies.jar`
+- **Format Code**: `mvn spotless:apply` (applies Eclipse formatter for Java 8)
+- **Check Formatting**: `mvn spotless:check` (validates code formatting)
 
 ### Maven Structure
 - **Source**: `src/main/java/`
@@ -90,5 +92,6 @@ Located in `/lib/` directory:
 - **Naming Convention**: UI components split into `[Class]Panel/Window` and `[Class]Driver` classes
 - **Instance Management**: `GUIMain` serves as central instance hub for nearly all classes
 - **Mavenized project**: Now includes standard Maven structure and build system
+- **Code Formatting**: Spotless plugin configured with Eclipse formatter 4.7.3a (Java 8 compatible)
 - **No modern dev infrastructure**: No CI/CD, code quality tools, or automated testing
 - **Academic Research Tool**: Mature codebase but lacks modern development practices

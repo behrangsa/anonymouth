@@ -1,13 +1,12 @@
 package edu.drexel.psal.jstylo.canonicizers;
 
-import java.util.*;
-
 import com.jgaap.generics.Canonicizer;
 import com.jgaap.generics.Document;
+import java.util.*;
 
-/** 
- * Applies special keys from the text onto it.
- * Special keys are represented by unique Greek letters.
+/**
+ * Applies special keys from the text onto it. Special keys are represented by
+ * unique Greek letters.
  */
 public class ApplySpecialKeys extends Canonicizer {
 
@@ -33,14 +32,12 @@ public class ApplySpecialKeys extends Canonicizer {
 	private static char INSERT;
 	private static char VOLUME_UP;
 	private static char VOLUME_DOWN;
-	
-	private SortedMap<String,String> map = null;
+
+	private SortedMap<String, String> map = null;
 	private boolean applyShifts = false;
 
-	public ApplySpecialKeys()
-	{
-		if (map == null)
-		{
+	public ApplySpecialKeys() {
+		if (map == null) {
 			RemoveSpecialKeys rsk = new RemoveSpecialKeys();
 			map = rsk.map;
 			CAPSLOCK = map.get("CAPSLOCK").charAt(0);
@@ -67,42 +64,41 @@ public class ApplySpecialKeys extends Canonicizer {
 			VOLUME_DOWN = map.get("VOLUME_DOWN").charAt(0);
 		}
 	}
-	
-	public ApplySpecialKeys(boolean applyShifts)
-	{
+
+	public ApplySpecialKeys(boolean applyShifts) {
 		this();
 		this.applyShifts = applyShifts;
 	}
 
 	@Override
-	public String displayName(){
-		return "Apply special keys (" + (applyShifts ? "in" : "ex") + 
-				"cluding shifts)";
+	public String displayName() {
+		return "Apply special keys (" + (applyShifts ? "in" : "ex") + "cluding shifts)";
 	}
 
 	@Override
-	public String tooltipText(){
-		String res = "Apply all special keystokes in the document onto it, " +
-				"like backspace, return, delete, page-up etc., represented by " +
-				"unique greek letter identifiers as follows:\n";
+	public String tooltipText() {
+		String res = "Apply all special keystokes in the document onto it, "
+				+ "like backspace, return, delete, page-up etc., represented by "
+				+ "unique greek letter identifiers as follows:\n";
 		if (map == null)
 			res += "unable to load map; do not use this event driver.";
-		else
-		{
-			for (String key: map.keySet())
+		else {
+			for (String key : map.keySet())
 				res += key + " -> " + map.get(key) + "\n";
 		}
 		return res;
 	}
 
 	@Override
-	public boolean showInGUI(){
+	public boolean showInGUI() {
 		return true;
 	}
 
 	/**
 	 * Remove all special keys from input characters
-	 * @param procText Array of characters to be processed.
+	 *
+	 * @param procText
+	 *            Array of characters to be processed.
 	 * @return Array of processed characters.
 	 */
 	@Override
@@ -110,9 +106,8 @@ public class ApplySpecialKeys extends Canonicizer {
 		// map initialization error
 		if (map == null)
 			return procText;
-		
-		LinkedList<Character> res =
-				new LinkedList<Character>();
+
+		LinkedList<Character> res = new LinkedList<Character>();
 		String s;
 
 		// position indicators
@@ -125,131 +120,77 @@ public class ApplySpecialKeys extends Canonicizer {
 		boolean insert = false;
 		boolean shift = false;
 
-		for (char c: procText)
-		{
-			if (c == CAPSLOCK)
-			{
+		for (char c : procText) {
+			if (c == CAPSLOCK) {
 				capslock = !capslock;
-			}
-			else if (c == ENTER)
-			{
+			} else if (c == ENTER) {
 				res.add('\n');
 				len++;
 				pos++;
-			}
-			else if (c == SPACE)
-			{
+			} else if (c == SPACE) {
 				res.add(' ');
 				len++;
 				pos++;
-			}
-			else if (c == BACKSPACE)
-			{
-				if (pos > 0)
-				{
+			} else if (c == BACKSPACE) {
+				if (pos > 0) {
 					pos--;
 					res.remove(pos);
 					len--;
 				}
-			}
-			else if (c == TAB)
-			{
+			} else if (c == TAB) {
 				res.add('\t');
 				len++;
 				pos++;
-			}
-			else if (c == DEL)
-			{
-				if (pos < len)
-				{
+			} else if (c == DEL) {
+				if (pos < len) {
 					res.remove(pos);
 					len--;
 				}
-			}
-			else if (c == LEFT)
-			{
+			} else if (c == LEFT) {
 				if (pos > 0)
 					pos--;
-			}
-			else if (c == RIGHT)
-			{
+			} else if (c == RIGHT) {
 				if (pos < len)
 					pos++;
-			}
-			else if (c == UP)
-			{
+			} else if (c == UP) {
 				// ignore
-			}
-			else if (c == DOWN)
-			{
+			} else if (c == DOWN) {
 				// ignore
-			}
-			else if (c == ESC)
-			{
+			} else if (c == ESC) {
 				// ignore
-			}
-			else if (c == SHIFT)
-			{
+			} else if (c == SHIFT) {
 				shift = !shift;
-			}
-			else if (c == ALT)
-			{
+			} else if (c == ALT) {
 				// ignore
-			}
-			else if (c == CTRL)
-			{
+			} else if (c == CTRL) {
 				// ignore
-			}
-			else if (c == PRINTSCREEN)
-			{
+			} else if (c == PRINTSCREEN) {
 				// ignore
-			}
-			else if (c == HOME)
-			{
-				// ignore 
-				/*
-				while (0 < pos && pos < len && res.get(pos) != '\n')
-					pos--;
-				if (pos > 0)
-					pos++;
-				*/
-			}
-			else if (c == END)
-			{
+			} else if (c == HOME) {
 				// ignore
 				/*
-				while (pos < len && res.get(pos) != '\n')
-					pos++;
-				if (pos < len)
-					pos++;
-				*/
-			}
-			else if (c == PGUP)
-			{
+				 * while (0 < pos && pos < len && res.get(pos) != '\n') pos--; if (pos > 0)
+				 * pos++;
+				 */
+			} else if (c == END) {
 				// ignore
-			}
-			else if (c == PGDN)
-			{
+				/*
+				 * while (pos < len && res.get(pos) != '\n') pos++; if (pos < len) pos++;
+				 */
+			} else if (c == PGUP) {
 				// ignore
-			}
-			else if (c == INSERT)
-			{
+			} else if (c == PGDN) {
+				// ignore
+			} else if (c == INSERT) {
 				insert = !insert;
-			}
-			else if (c == VOLUME_UP)
-			{
+			} else if (c == VOLUME_UP) {
 				// ignore
-			}
-			else if (c == VOLUME_DOWN)
-			{
+			} else if (c == VOLUME_DOWN) {
 				// ignore
-			}
-			else
-			{
+			} else {
 				s = c + "";
 				// shift
-				if (shift && applyShifts)
-				{
+				if (shift && applyShifts) {
 					s = switchCase(s);
 					shift = false;
 				}
@@ -260,62 +201,55 @@ public class ApplySpecialKeys extends Canonicizer {
 				if (pos < len)
 					if (insert)
 						res.set(pos, c);
-					else
-					{
+					else {
 						res.add(c);
 						len++;
 					}
-				else
-				{
+				else {
 					res.add(pos, c);
 					len++;
 				}
 				pos++;
 			}
-			if (pos > len)
-			{
+			if (pos > len) {
 				System.out.println(">>> pos: " + pos + ", len: " + len + ", c: " + c);
 			}
 		}
 
 		return toCharArr(res);
 	}
-	
+
 	/**
 	 * Switches lower case to upper and vice versa.
+	 *
 	 * @param s
 	 * @return
 	 */
-	private static String switchCase(String s)
-	{
+	private static String switchCase(String s) {
 		if (s.equals(s.toLowerCase()))
 			return s.toUpperCase();
 		else
 			return s.toLowerCase();
 	}
-	
-	private static char[] toCharArr(List<Character> list)
-	{
+
+	private static char[] toCharArr(List<Character> list) {
 		char[] res = new char[list.size()];
 		int i = 0;
-		for (char c: list)
-		{
+		for (char c : list) {
 			res[i] = c;
 			i++;
 		}
 		return res;
 	}
 
-
 	/*
 	 * Main for testing
 	 */
-	public static void main(String[] args) throws Exception
-	{
+	public static void main(String[] args) throws Exception {
 		ApplySpecialKeys a = new ApplySpecialKeys();
 		Document d = new Document(
-				"d:\\dev\\active-auth\\data_redivided\\" +
-				"timed_ks_3600000-ms-windows\\user02\\user02_day3_28800000","");
+				"d:\\dev\\active-auth\\data_redivided\\" + "timed_ks_3600000-ms-windows\\user02\\user02_day3_28800000",
+				"");
 		d.load();
 		String text = d.stringify();
 		System.out.println("before");
@@ -325,14 +259,3 @@ public class ApplySpecialKeys extends Canonicizer {
 		System.out.println(new String(a.process(text.toCharArray())));
 	}
 }
-
-
-
-
-
-
-
-
-
-
-

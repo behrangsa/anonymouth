@@ -1,22 +1,19 @@
 package edu.drexel.psal.anonymouth.gooie;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import javax.swing.*;
-
-import net.miginfocom.swing.MigLayout;
-
 import edu.drexel.psal.anonymouth.engine.Attribute;
 import edu.drexel.psal.anonymouth.engine.Cluster;
 import edu.drexel.psal.anonymouth.engine.ClusterAnalyzer;
 import edu.drexel.psal.anonymouth.engine.ClusterGroup;
 import edu.drexel.psal.jstylo.generics.Logger;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import javax.swing.*;
+import net.miginfocom.swing.MigLayout;
 
 public class ClustersDriver {
-	
-	private final static String NAME = "( ClustersDriver ) - ";
+
+	private static final String NAME = "( ClustersDriver ) - ";
 
 	private static int lenJPanels;
 	public static boolean clusterGroupReady = false;
@@ -40,8 +37,8 @@ public class ClustersDriver {
 	}
 
 	public static boolean setClusterGroup() {
-		Logger.logln(NAME+"Cluster group array retrieved from ClusterAnalyzer and brought to ClusterViewerDriver");
-		if(clusterGroupReady) {
+		Logger.logln(NAME + "Cluster group array retrieved from ClusterAnalyzer and brought to ClusterViewerDriver");
+		if (clusterGroupReady) {
 			clusterGroupRay = ClusterAnalyzer.getClusterGroupArray();
 			lenCGR = clusterGroupRay.length;
 			return true;
@@ -50,9 +47,10 @@ public class ClustersDriver {
 	}
 
 	public static void makePanels(Attribute[] theOnesYouWantToSee) {
-		//System.out.println("length of theOnesYouWantToSee: "+theOnesYouWantToSee.length);
+		// System.out.println("length of theOnesYouWantToSee:
+		// "+theOnesYouWantToSee.length);
 		int numFeatures = theOnesYouWantToSee.length;
-		double[] minimums = new double[numFeatures]; 
+		double[] minimums = new double[numFeatures];
 		double[] maximums = new double[numFeatures];
 		double[] authorMin = new double[numFeatures];
 		double[] authorMax = new double[numFeatures];
@@ -66,71 +64,71 @@ public class ClustersDriver {
 		String dashes;
 		selectedClustersByFeature = new int[numFeatures];
 		double tempAuthorMinMax;
-		
-		for (i=0; i< numFeatures;i++) {
+
+		for (i = 0; i < numFeatures; i++) {
 			selectedClustersByFeature[i] = -1; // initialize with no clusters selected;
-			everySingleCluster.add(i,theOnesYouWantToSee[i].getOrderedClusters());
+			everySingleCluster.add(i, theOnesYouWantToSee[i].getOrderedClusters());
 			authorMin[i] = theOnesYouWantToSee[i].getAuthorAvg() - theOnesYouWantToSee[i].getAuthorConfidence();
-			if(authorMin[i] <  0)
+			if (authorMin[i] < 0)
 				authorMin[i] = 0;
-			authorMax[i] = theOnesYouWantToSee[i].getAuthorAvg() + theOnesYouWantToSee[i].getAuthorConfidence();	
+			authorMax[i] = theOnesYouWantToSee[i].getAuthorAvg() + theOnesYouWantToSee[i].getAuthorConfidence();
 			presentValues[i] = theOnesYouWantToSee[i].getToModifyValue();
 			tempMinMax = theOnesYouWantToSee[i].getTrainMax();
 			tempAuthorMinMax = authorMax[i];
 
-			if(tempAuthorMinMax < presentValues[i])
+			if (tempAuthorMinMax < presentValues[i])
 				tempAuthorMinMax = presentValues[i];
 
-			if(tempAuthorMinMax > tempMinMax)
+			if (tempAuthorMinMax > tempMinMax)
 				maximums[i] = tempAuthorMinMax;
 			else
-				maximums[i] = tempMinMax; 
+				maximums[i] = tempMinMax;
 			tempMinMax = theOnesYouWantToSee[i].getTrainMin();
 			tempAuthorMinMax = authorMin[i];
 
-			if(tempAuthorMinMax > presentValues[i])
+			if (tempAuthorMinMax > presentValues[i])
 				tempAuthorMinMax = presentValues[i];
 
-			if(tempAuthorMinMax < tempMinMax)
+			if (tempAuthorMinMax < tempMinMax)
 				minimums[i] = tempAuthorMinMax;
 			else
 				minimums[i] = tempMinMax;
-			//System.out.println(presentValues[i]);
+			// System.out.println(presentValues[i]);
 			tempString = theOnesYouWantToSee[i].getStringInBraces();
-			if(tempString == "")
+			if (tempString == "")
 				dashes = "";
 			else
 				dashes = "--";
-			names[i] = theOnesYouWantToSee[i].getGenericName()+dashes+tempString;
+			names[i] = theOnesYouWantToSee[i].getGenericName() + dashes + tempString;
 		}
 
 		Iterator<Cluster[]> outerLevel = everySingleCluster.iterator();
-		clusterPanels = new JPanel[numFeatures];// everySingleCluster.size()
+		clusterPanels = new JPanel[numFeatures]; // everySingleCluster.size()
 		nameLabels = new JLabel[numFeatures];
 		finalPanels = new JPanel[numFeatures];
 		i = 0;
 		int[] initialLayoverVals = new int[numFeatures];
 		String[] usedNames = new String[numFeatures];
-		
-		while(outerLevel.hasNext()) {
+
+		while (outerLevel.hasNext()) {
 			nameLabels[i] = new JLabel(names[i]); // for if you want to edit the label in any way
 			usedNames[i] = names[i];
 
-			//if (authorMax[i] != 0 && presentValues[i] != 0 && authorMin[i] != 0) {
-				//System.out.println(i + ", " + minimums[i] + ", " + maximums[i] + ", " + authorMin[i] + ", " + authorMax[i] + ", " + presentValues[i]);
-				JPanel clusterPanel = new ClusterPainter(outerLevel.next(),i,minimums[i],maximums[i], authorMin[i],authorMax[i],presentValues[i]);
-				clusterPanels[i] = clusterPanel;
+			// if (authorMax[i] != 0 && presentValues[i] != 0 && authorMin[i] != 0) {
+			// System.out.println(i + ", " + minimums[i] + ", " + maximums[i] + ", " +
+			// authorMin[i] + ", "
+			// + authorMax[i] + ", " + presentValues[i]);
+			JPanel clusterPanel = new ClusterPainter(outerLevel.next(), i, minimums[i], maximums[i], authorMin[i],
+					authorMax[i], presentValues[i]);
+			clusterPanels[i] = clusterPanel;
 
-				MigLayout layout = new MigLayout(
-						"fill, wrap, ins 0",
-						"fill, grow",
-						"[20]0[grow, fill]");
-				finalPanels[i] = new JPanel(layout);
-				finalPanels[i].add(nameLabels[i], "grow");
-				finalPanels[i].add(clusterPanels[i], "grow");
-			//} else {
-			//	outerLevel.next();
-			//}
+			MigLayout layout = new MigLayout("fill, wrap, ins 0", "fill, grow", "[20]0[grow, fill]");
+			finalPanels[i] = new JPanel(layout);
+			finalPanels[i].add(nameLabels[i], "grow");
+			finalPanels[i].add(clusterPanels[i], "grow");
+			// } else {
+			// outerLevel.next();
+			// }
 
 			initialLayoverVals[i] = 1;
 			i++;
@@ -141,10 +139,10 @@ public class ClustersDriver {
 		Logger.logln("Initializing ClusterViewer");
 		int numPanels = clusterPanels.length;
 		for (int i = 0; i < numPanels; i++) {
-			//if (clusterPanels[i] == null) {
-			//	continue;
-			//}
-			
+			// if (clusterPanels[i] == null) {
+			// continue;
+			// }
+
 			if (i == 0 || i % 2 == 0) {
 				nameLabels[i].setBackground(Color.WHITE);
 				clusterPanels[i].setBackground(Color.WHITE);
@@ -156,33 +154,33 @@ public class ClustersDriver {
 			}
 			nameLabels[i].setHorizontalAlignment(SwingConstants.CENTER);
 			nameLabels[i].setOpaque(true);
-			clusterPanels[i].setPreferredSize(new Dimension(800,40));
-			finalPanels[i].setPreferredSize(new Dimension(800,60));
+			clusterPanels[i].setPreferredSize(new Dimension(800, 40));
+			finalPanels[i].setPreferredSize(new Dimension(800, 60));
 			main.clustersWindow.clusterHolderPanel.add(finalPanels[i]);
 		}
 
 		setClusterGroup();
 
 		intRepresentation = new int[lenCGR][clusterGroupRay[0].getGroupKey().length()];
-		stringRepresentation = new String[1+lenCGR];
+		stringRepresentation = new String[1 + lenCGR];
 		stringRepresentation[0] = "Select Targets";
 		for (int i = 0; i < lenCGR; i++) {
 			intRepresentation[i] = clusterGroupRay[i].getGroupKey().toIntArray();
-			stringRepresentation[i+1] = clusterGroupRay[i].getGroupKey().toString();
+			stringRepresentation[i + 1] = clusterGroupRay[i].getGroupKey().toString();
 		}
 
 		int[] theOne = intRepresentation[0];
 		selectedClustersByFeature = theOne;
 		lenJPanels = clusterPanels.length;
 		for (int i = 0; i < lenJPanels; i++) {
-			//if (clusterPanels[i] == null) {
-			//	continue;
-			//}
+			// if (clusterPanels[i] == null) {
+			// continue;
+			// }
 			clusterPanels[i].revalidate();
 			clusterPanels[i].repaint();
 		}
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	public static class alignListRenderer implements ListCellRenderer {
 
@@ -194,15 +192,15 @@ public class ClustersDriver {
 			alignValue = value;
 		}
 
-		public Component getListCellRendererComponent(JList list, Object value, int index,
-	      boolean isSelected, boolean cellHasFocus) {
+		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
+				boolean cellHasFocus) {
 
-		    JLabel renderer = (JLabel) defaultRenderer.getListCellRendererComponent(list, value, index,
-		        isSelected, cellHasFocus);
+			JLabel renderer = (JLabel) defaultRenderer.getListCellRendererComponent(list, value, index, isSelected,
+					cellHasFocus);
 
-		    renderer.setHorizontalAlignment(alignValue);
+			renderer.setHorizontalAlignment(alignValue);
 
-		    return renderer;
-	    }
+			return renderer;
+		}
 	}
 }

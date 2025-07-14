@@ -5,22 +5,17 @@ import com.jgaap.generics.*;
 
 public class EventsCounterEventDriver extends SingleNumericEventDriver {
 
-	/* ======
-	 * fields
-	 * ======
+	/*
+	 * ====== fields ======
 	 */
-	
-	/**
-	 * Event driver to be used for extracting events to be counted.
-	 */
+
+	/** Event driver to be used for extracting events to be counted. */
 	private EventDriver underlyingEvents;
-	
-	
-	/* ==================
-	 * overriding methods
-	 * ==================
+
+	/*
+	 * ================== overriding methods ==================
 	 */
-	
+
 	public String displayName() {
 		return "Event counter";
 	}
@@ -46,10 +41,10 @@ public class EventsCounterEventDriver extends SingleNumericEventDriver {
 				underlyingEvents = new NaiveWordEventDriver();
 			}
 		}
-		
-		return underlyingEvents.createEventSet(doc).size(); 
+
+		return underlyingEvents.createEventSet(doc).size();
 	}
-	
+
 	public EventDriver getUnderlyingEvents() {
 		return underlyingEvents;
 	}

@@ -5,34 +5,26 @@ import com.jgaap.generics.*;
 
 public class SyllableCounterEventDriver extends SingleNumericEventDriver {
 
-	/* ======
-	 * fields
-	 * ======
+	/*
+	 * ====== fields ======
 	 */
-	
-	/**
-	 * Event driver to be used for syllable count.
-	 */
+
+	/** Event driver to be used for syllable count. */
 	private EventDriver syllablesDriver;
-	
-	
-	/* ============
-	 * constructors
-	 * ============
+
+	/*
+	 * ============ constructors ============
 	 */
-	
-	/**
-	 * Default syllables counter event driver constructor.
-	 */
+
+	/** Default syllables counter event driver constructor. */
 	public SyllableCounterEventDriver() {
 		syllablesDriver = new WordSyllablesEventDriver();
 	}
-	
-	/* ==================
-	 * overriding methods
-	 * ==================
+
+	/*
+	 * ================== overriding methods ==================
 	 */
-	
+
 	public String displayName() {
 		return "Syllables count";
 	}
@@ -47,9 +39,9 @@ public class SyllableCounterEventDriver extends SingleNumericEventDriver {
 
 	public double getValue(Document doc) throws EventGenerationException {
 		EventSet syllables = syllablesDriver.createEventSet(doc);
-		int i,sum = 0;
-		for (i=0; i<syllables.size(); i++)
+		int i, sum = 0;
+		for (i = 0; i < syllables.size(); i++)
 			sum += Integer.parseInt(syllables.eventAt(i).toString());
-		return sum; 
+		return sum;
 	}
 }

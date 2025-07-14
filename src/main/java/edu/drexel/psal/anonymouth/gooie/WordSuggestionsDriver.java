@@ -18,25 +18,26 @@ import edu.drexel.psal.anonymouth.utils.ConsolidationStation;
 import edu.drexel.psal.jstylo.generics.Logger;
 
 /**
- * Handles (nearly) all listeners relating to the Suggestions tab, as well as handles the big update method "placeSuggestions()", which
- * refreshes both the words to add and words to remove table's contents.
+ * Handles (nearly) all listeners relating to the Suggestions tab, as well as
+ * handles the big update method "placeSuggestions()", which refreshes both the
+ * words to add and words to remove table's contents.
  * 
  * @author ? (Most likely Andrew McDonald or Jeff Ulman)
  * @author Marc Barrowclift
  */
 public class WordSuggestionsDriver {
 
-	//Constants
+	// Constants
 	private final static String NAME = "( WordSuggestionsDriver ) - ";
 	private final String PUNCTUATION = "?!,.\"`'";
-	private final String DICTIONARY = ANONConstants.EXTERNAL_RESOURCE_PACKAGE+"words.txt";
+	private final String DICTIONARY = ANONConstants.EXTERNAL_RESOURCE_PACKAGE + "words.txt";
 
-	//Listeners
+	// Listeners
 	private ListSelectionListener elementsToAddListener;
 	private ActionListener clearRemoveListener;
 	private ActionListener highlightAllRemoveListener;
-	
-	//Instances and misc. variables
+
+	// Instances and misc. variables
 	private GUIMain main;
 	private DocumentMagician magician;
 	private ArrayList<String[]> topToRemove;
@@ -49,15 +50,16 @@ public class WordSuggestionsDriver {
 	 * Constructor
 	 * 
 	 * @param main
-	 * 		GUIMain instance
+	 *            GUIMain instance
 	 */
 	public WordSuggestionsDriver(GUIMain main) {
 		this.main = main;
-		
-		//We want this to be a Hashset because we want looking up to see if a single word's a dictionary word to be constant time
+
+		// We want this to be a Hashset because we want looking up to see if a single
+		// word's a dictionary word to be constant time
 		words = FileHelper.hashSetFromFile(DICTIONARY);
 		setFilterWordsToAdd(PropertiesUtil.getFilterAddSuggestions());
-		
+
 		initListeners();
 	}
 
@@ -70,14 +72,15 @@ public class WordSuggestionsDriver {
 	 * </ul>
 	 * 
 	 * @param filter
-	 * 		Whether or not to turn the filter on
+	 *            Whether or not to turn the filter on
 	 */
 	public void setFilterWordsToAdd(boolean filter) {
 		filterWordsToAdd = filter;
 	}
-	
+
 	/**
 	 * Gets and returns the words to remove
+	 * 
 	 * @return
 	 */
 	public ArrayList<String[]> getTopToRemove() {
@@ -86,6 +89,7 @@ public class WordSuggestionsDriver {
 
 	/**
 	 * Gets and returns the words to add size
+	 * 
 	 * @return
 	 */
 	public int getAddSize() {
@@ -94,6 +98,7 @@ public class WordSuggestionsDriver {
 
 	/**
 	 * Gets and returns the words to remove size
+	 * 
 	 * @return
 	 */
 	public int getRemoveSize() {
@@ -104,36 +109,40 @@ public class WordSuggestionsDriver {
 	 * Sets the DocumentMagician instance used to obtain words to remove/add
 	 * 
 	 * @param magician
-	 * 		DOcumentMagician instance
+	 *            DOcumentMagician instance
 	 */
 	public void setMagician(DocumentMagician magician) {
 		this.magician = magician;
 	}
-	
+
 	/**
 	 * Updates the lists of words to remove and words to add and then refreshes both
 	 * components in GUIMain to reflect the new values
 	 */
 	public void placeSuggestions() {
-		//We must first clear any existing highlights the user has and remove all existing suggestions		
+		// We must first clear any existing highlights the user has and remove all
+		// existing suggestions
 		main.editorDriver.highlighterEngine.removeAllAddHighlights();
 		main.editorDriver.highlighterEngine.removeAllRemoveHighlights();
 
-		//If the user had a word highlighted and we're updating the list, we want to keep the word highlighted if it's in the updated list
+		// If the user had a word highlighted and we're updating the list, we want to
+		// keep the word highlighted if it's in the updated list
 		String prevSelectedElement = "";
 		if (main.elementsToAddPane.getSelectedValue() != null)
 			prevSelectedElement = main.elementsToAddPane.getSelectedValue();
 		if (main.elementsToRemoveTable.getSelectedRow() != -1)
-			prevSelectedElement = (String)main.elementsToRemoveTable.getModel().getValueAt(main.elementsToRemoveTable.getSelectedRow(), 0);
+			prevSelectedElement = (String) main.elementsToRemoveTable.getModel()
+					.getValueAt(main.elementsToRemoveTable.getSelectedRow(), 0);
 
 		if (main.elementsToRemoveTable.getRowCount() > 0)
 			main.elementsToRemoveTable.removeAllElements();
 		if (main.elementsToAdd.getSize() > 0)
 			main.elementsToAdd.clear();
 
-		//Adding new suggestions
-		List<Document> documents = magician.getDocumentSets().get(1); //all the user's sample documents (written by them)
-		documents.add(magician.getDocumentSets().get(2).get(0)); //we also want to count the user's test document
+		// Adding new suggestions
+		List<Document> documents = magician.getDocumentSets().get(1); // all the user's sample documents (written by
+																		// them)
+		documents.add(magician.getDocumentSets().get(2).get(0)); // we also want to count the user's test document
 
 		topToRemove = ConsolidationStation.getPriorityWordsToRemove(documents, .1);
 		try {
@@ -142,20 +151,20 @@ public class WordSuggestionsDriver {
 			else
 				topToAdd = ConsolidationStation.getPriorityWordsToAdd(ConsolidationStation.otherSampleTaggedDocs, .06);
 
-			//-----------------HANDLING WORDS TO REMOVE-------------------
+			// -----------------HANDLING WORDS TO REMOVE-------------------
 			removeSize = topToRemove.size();
 
 			for (int i = 0; i < removeSize; i++) {
 				if (!topToRemove.get(i).equals("''") && !topToRemove.get(i).equals("``")) {
 					String left, right;
 
-					//The element to remove
+					// The element to remove
 					if (PUNCTUATION.contains(topToRemove.get(i)[0].trim()))
 						left = "Reduce " + topToRemove.get(i)[0] + "'s";
 					else
 						left = topToRemove.get(i)[0];
 
-					//The number of occurrences
+					// The number of occurrences
 					if (topToRemove.get(i)[1].equals("0"))
 						right = "None";
 					else if (topToRemove.get(i)[1].equals("1"))
@@ -163,15 +172,15 @@ public class WordSuggestionsDriver {
 					else
 						right = topToRemove.get(i)[1] + " times";
 
-					main.elementsToRemoveModel.insertRow(i, new String[] {left, right});
+					main.elementsToRemoveModel.insertRow(i, new String[]{left, right});
 
 					if (topToRemove.get(i)[0].trim().equals(prevSelectedElement)) {
 						main.elementsToRemoveTable.setRowSelectionInterval(i, i);
 					}
-				}		
+				}
 			}
 
-			//-----------------HANDLING WORDS TO ADD-------------------
+			// -----------------HANDLING WORDS TO ADD-------------------
 			addSize = topToAdd.size();
 			int tableIndex = 0;
 			ArrayList<String> good = new ArrayList<String>();
@@ -180,23 +189,24 @@ public class WordSuggestionsDriver {
 			for (int i = 0; i < addSize; i++) {
 				boolean add = false;
 				String curWord = topToAdd.get(i);
-				
+
 				if (filterWordsToAdd) {
 					if (words.contains(curWord)) {
-						//If the word's a word, don't even question it, just add it.
+						// If the word's a word, don't even question it, just add it.
 						add = true;
-					} else if (curWord.matches("^[a-z-'A-Z\\.]*$")) { //^[A-Z][a-zA-Z]*$
-						//If the word's sane, basically like We'd, need-based, but may not exactly show up in a dictionary, add it
-						//This also accounts for made up words.
+					} else if (curWord.matches("^[a-z-'A-Z\\.]*$")) { // ^[A-Z][a-zA-Z]*$
+						// If the word's sane, basically like We'd, need-based, but may not exactly show
+						// up in a dictionary, add it
+						// This also accounts for made up words.
 						add = true;
 					} else if (curWord.equals("...")) {
-						//We don't want to leave this out as a suggestion if possible
+						// We don't want to leave this out as a suggestion if possible
 						add = true;
 					}
 				} else {
 					add = true;
 				}
-				
+
 				if (add) {
 					good.add(topToAdd.get(i));
 					main.elementsToAdd.add(tableIndex, topToAdd.get(i));
@@ -210,7 +220,7 @@ public class WordSuggestionsDriver {
 				}
 			}
 		} catch (Exception e) {
-			Logger.logln(NAME+"An error occured while obtaining and placing Word Suggestions");
+			Logger.logln(NAME + "An error occured while obtaining and placing Word Suggestions");
 			Logger.logln(e);
 		}
 	}
@@ -223,7 +233,7 @@ public class WordSuggestionsDriver {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				if (!e.getValueIsAdjusting()) {
-					Logger.logln(NAME+"Elements to add value changed");
+					Logger.logln(NAME + "Elements to add value changed");
 
 					if (main.elementsToAddPane.getSelectedIndex() != -1) {
 						main.editorDriver.highlighterEngine.removeAllAddHighlights();
@@ -231,7 +241,8 @@ public class WordSuggestionsDriver {
 						if (main.elementsToAddPane.getSelectedIndex() == -1)
 							return;
 
-						main.editorDriver.highlighterEngine.addAllAddHighlights(main.elementsToAddPane.getSelectedValue());
+						main.editorDriver.highlighterEngine
+								.addAllAddHighlights(main.elementsToAddPane.getSelectedValue());
 					}
 				}
 			}
@@ -240,13 +251,13 @@ public class WordSuggestionsDriver {
 
 		clearRemoveListener = new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {	
+			public void actionPerformed(ActionEvent e) {
 				main.editorDriver.highlighterEngine.removeAllRemoveHighlights();
 				main.elementsToRemoveTable.clearSelection();
 			}
 		};
 		main.clearRemoveHighlights.addActionListener(clearRemoveListener);
-		
+
 		highlightAllRemoveListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

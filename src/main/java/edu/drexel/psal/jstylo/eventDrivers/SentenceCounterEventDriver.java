@@ -5,34 +5,26 @@ import com.jgaap.generics.*;
 
 public class SentenceCounterEventDriver extends SingleNumericEventDriver {
 
-	/* ======
-	 * fields
-	 * ======
+	/*
+	 * ====== fields ======
 	 */
-	
-	/**
-	 * Event driver to be used for word count.
-	 */
+
+	/** Event driver to be used for word count. */
 	private EventDriver sentencesDriver;
-	
-	
-	/* ============
-	 * constructors
-	 * ============
+
+	/*
+	 * ============ constructors ============
 	 */
-	
-	/**
-	 * Default sentence counter event driver constructor.
-	 */
+
+	/** Default sentence counter event driver constructor. */
 	public SentenceCounterEventDriver() {
 		sentencesDriver = new SentenceEventDriver();
 	}
-	
-	/* ==================
-	 * overriding methods
-	 * ==================
+
+	/*
+	 * ================== overriding methods ==================
 	 */
-	
+
 	public String displayName() {
 		return "Sentence count";
 	}

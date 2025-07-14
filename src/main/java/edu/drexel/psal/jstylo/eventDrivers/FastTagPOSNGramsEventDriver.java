@@ -4,16 +4,15 @@ import com.jgaap.generics.*;
 import com.jgaap.generics.Document;
 import com.knowledgebooks.nlp.fasttag.FastTag;
 import com.knowledgebooks.nlp.util.Tokenizer;
-
 import java.io.*;
 import java.util.*;
 
 /**
- * This changes words into their parts of speech in a document, based on FastTag.
- * 
+ * This changes words into their parts of speech in a document, based on
+ * FastTag.
+ *
  * @author Ariel Stolerman
  */
-
 public class FastTagPOSNGramsEventDriver extends EventDriver {
 
 	@Override
@@ -32,7 +31,7 @@ public class FastTagPOSNGramsEventDriver extends EventDriver {
 	}
 
 	private FastTag tagger = null;
-	
+
 	@Override
 	public EventSet createEventSet(Document doc) {
 		EventSet es = new EventSet(doc.getAuthor());
@@ -50,37 +49,32 @@ public class FastTagPOSNGramsEventDriver extends EventDriver {
 			words.addAll(Tokenizer.wordsToList(line));
 		}
 		tags = tagger.tag(words);
-		
-		int i,j,n;
+
+		int i, j, n;
 		try {
 			n = Integer.parseInt(getParameter("N"));
 		} catch (NumberFormatException e) {
 			n = 2;
 		}
 		String curr;
-		for (i=0; i<tags.size()-n+1; i++) {
-			curr = "("+tags.get(i)+")";
-			for (j=1; j<n; j++) {
-				curr += "-("+tags.get(i+j)+")";
+		for (i = 0; i < tags.size() - n + 1; i++) {
+			curr = "(" + tags.get(i) + ")";
+			for (j = 1; j < n; j++) {
+				curr += "-(" + tags.get(i + j) + ")";
 			}
 			es.addEvent(new Event(curr));
 		}
-		
+
 		return es;
 	}
-	
+
 	/*
-	// main for testing
-	public static void main(String[] args) throws Exception {
-		Document doc = new Document("./corpora/drexel_1/a/a_01.txt","a","a_01.txt");
-		doc.load();
-		FastTagPOSNGramsEventDriver m = new FastTagPOSNGramsEventDriver();
-		m.setParameter("N", 2);
-		EventSet es = m.createEventSet(doc);
-		for (int i=0; i<es.size(); i++) {
-			System.out.print(es.eventAt(i)+" ");
-			if (i % 30 == 0) System.out.println();
-		}
-	}
-	*/
+	 * // main for testing public static void main(String[] args) throws Exception {
+	 * Document doc = new Document("./corpora/drexel_1/a/a_01.txt","a","a_01.txt");
+	 * doc.load(); FastTagPOSNGramsEventDriver m = new
+	 * FastTagPOSNGramsEventDriver(); m.setParameter("N", 2); EventSet es =
+	 * m.createEventSet(doc); for (int i=0; i<es.size(); i++) {
+	 * System.out.print(es.eventAt(i)+" "); if (i % 30 == 0) System.out.println(); }
+	 * }
+	 */
 }

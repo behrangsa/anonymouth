@@ -5,40 +5,32 @@ import com.jgaap.generics.*;
 
 public class GunningFogIndexEventDriver extends SingleNumericEventDriver {
 
-	/* ======
-	 * fields
-	 * ======
+	/*
+	 * ====== fields ======
 	 */
-	
-	/**
-	 * Event drivers to be used.
-	 */
+
+	/** Event drivers to be used. */
 	private SingleNumericEventDriver wordCounter;
-	
+
 	private SingleNumericEventDriver sentenceCounter;
-	
+
 	private EventDriver syllablesDriver;
-	
-	
-	/* ============
-	 * constructors
-	 * ============
+
+	/*
+	 * ============ constructors ============
 	 */
-	
-	/**
-	 * Default Gunning-Fog readability index event driver constructor.
-	 */
+
+	/** Default Gunning-Fog readability index event driver constructor. */
 	public GunningFogIndexEventDriver() {
 		wordCounter = new WordCounterEventDriver();
 		sentenceCounter = new SentenceCounterEventDriver();
 		syllablesDriver = new WordSyllablesEventDriver();
 	}
-	
-	/* ==================
-	 * overriding methods
-	 * ==================
+
+	/*
+	 * ================== overriding methods ==================
 	 */
-	
+
 	public String displayName() {
 		return "Gunning-Fog Readability Index";
 	}
@@ -55,12 +47,12 @@ public class GunningFogIndexEventDriver extends SingleNumericEventDriver {
 		double wordCount = wordCounter.getValue(doc);
 		double sentenceCount = sentenceCounter.getValue(doc);
 		EventSet syllables = syllablesDriver.createEventSet(doc);
-		for (int i=syllables.size()-1; i>=0; i--) {
-			if (Integer.parseInt(syllables.eventAt(i).toString()) < 3){
+		for (int i = syllables.size() - 1; i >= 0; i--) {
+			if (Integer.parseInt(syllables.eventAt(i).toString()) < 3) {
 				syllables.removeEvent(syllables.eventAt(i));
 			}
 		}
 		double complexWordsCount = syllables.size();
-		return 0.4*(wordCount/sentenceCount + 100*complexWordsCount/wordCount);
+		return 0.4 * (wordCount / sentenceCount + 100 * complexWordsCount / wordCount);
 	}
 }

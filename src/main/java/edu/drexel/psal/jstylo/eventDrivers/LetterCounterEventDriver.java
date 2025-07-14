@@ -5,34 +5,26 @@ import com.jgaap.generics.*;
 
 public class LetterCounterEventDriver extends SingleNumericEventDriver {
 
-	/* ======
-	 * fields
-	 * ======
+	/*
+	 * ====== fields ======
 	 */
-	
-	/**
-	 * Event driver to be used for character count.
-	 */
-	private EventDriver charDriver;
-	
 
-	/* ============
-	 * constructors
-	 * ============
+	/** Event driver to be used for character count. */
+	private EventDriver charDriver;
+
+	/*
+	 * ============ constructors ============
 	 */
-	
-	/**
-	 * Default sentence counter event driver constructor.
-	 */
+
+	/** Default sentence counter event driver constructor. */
 	public LetterCounterEventDriver() {
 		charDriver = new CharacterEventDriver();
 	}
-	
-	/* ==================
-	 * overriding methods
-	 * ==================
+
+	/*
+	 * ================== overriding methods ==================
 	 */
-	
+
 	public String displayName() {
 		return "Letter count";
 	}
@@ -47,7 +39,7 @@ public class LetterCounterEventDriver extends SingleNumericEventDriver {
 
 	public double getValue(Document doc) throws EventGenerationException {
 		EventSet chars = charDriver.createEventSet(doc);
-		for (int i=chars.size()-1; i>=0; i--) {
+		for (int i = chars.size() - 1; i >= 0; i--) {
 			Event e = chars.eventAt(i);
 			if (!e.toString().matches("[A-Za-z]"))
 				chars.removeEvent(e);

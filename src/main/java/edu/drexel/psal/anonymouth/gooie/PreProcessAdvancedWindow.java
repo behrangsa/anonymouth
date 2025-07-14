@@ -1,5 +1,10 @@
 package edu.drexel.psal.anonymouth.gooie;
 
+import edu.drexel.psal.ANONConstants;
+import edu.drexel.psal.anonymouth.helpers.ColumnsAutoSizer;
+import edu.drexel.psal.jstylo.generics.CumulativeFeatureDriver;
+import edu.drexel.psal.jstylo.generics.Logger;
+import edu.drexel.psal.jstylo.generics.Logger.LogOut;
 import java.awt.BorderLayout;
 import java.awt.Dialog;
 import java.awt.Dimension;
@@ -12,19 +17,12 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-
-import edu.drexel.psal.ANONConstants;
-import edu.drexel.psal.jstylo.generics.CumulativeFeatureDriver;
-import edu.drexel.psal.jstylo.generics.Logger;
-import edu.drexel.psal.jstylo.generics.Logger.LogOut;
-import edu.drexel.psal.anonymouth.helpers.ColumnsAutoSizer;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.*;
-
+import net.miginfocom.swing.MigLayout;
 import weka.classifiers.Classifier;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.bayes.NaiveBayesMultinomial;
@@ -35,45 +33,45 @@ import weka.classifiers.lazy.IBk;
 import weka.classifiers.rules.ZeroR;
 import weka.classifiers.trees.J48;
 
-import net.miginfocom.swing.MigLayout;
-
 /**
- * The "Advanced" parts of the PreProcess frame. The Advanced parts are anything relating to feature set and classification selection, as
- * any casual user who would want to use Anonymouth will have no idea what these things are and throwing these options at them will most
- * likely scare them away or confuse them. Thus, we want to obscure it from the normal view so the functionality's still there for research
- * purposes or advanced users but it won't get in the way for casual users.
- * 
- * This is the "Window" class for advanced preProcessing, which just handles creating and adding swing components and
- * "isSomething"/"hasSomething" methods pertaining to the problem set. As a guideline, any sort of "update" methods should be handled in
- * the corresponding "Driver" class though as a rule ALL listeners/events should be handled in the "Driver" class.
- * 
- * @author Marc Barrowclift
+ * The "Advanced" parts of the PreProcess frame. The Advanced parts are anything
+ * relating to feature set and classification selection, as any casual user who
+ * would want to use Anonymouth will have no idea what these things are and
+ * throwing these options at them will most likely scare them away or confuse
+ * them. Thus, we want to obscure it from the normal view so the functionality's
+ * still there for research purposes or advanced users but it won't get in the
+ * way for casual users.
  *
+ * <p>
+ * This is the "Window" class for advanced preProcessing, which just handles
+ * creating and adding swing components and "isSomething"/"hasSomething" methods
+ * pertaining to the problem set. As a guideline, any sort of "update" methods
+ * should be handled in the corresponding "Driver" class though as a rule ALL
+ * listeners/events should be handled in the "Driver" class.
+ *
+ * @author Marc Barrowclift
  */
 public class PreProcessAdvancedWindow extends JDialog {
 
-	//Constants
+	// Constants
 	private static final long serialVersionUID = 1L;
-	private final String NAME = "( "+ this.getClass().getSimpleName() +" ) - ";
+	private final String NAME = "( " + this.getClass().getSimpleName() + " ) - ";
 	private final int WINDOW_WIDTH = 480;
 	private final int WINDOW_HEIGHT = 280;
-	private final String[] WEKACLASSNAMES = new String[] {
-			//Bayes
-			"weka.classifiers.bayes.NaiveBayes",
-			"weka.classifiers.bayes.NaiveBayesMultinomial",
-			//Functions
-			"weka.classifiers.functions.Logistic",
-			"weka.classifiers.functions.MultilayerPerceptron",
+	private final String[] WEKACLASSNAMES = new String[]{
+			// Bayes
+			"weka.classifiers.bayes.NaiveBayes", "weka.classifiers.bayes.NaiveBayesMultinomial",
+			// Functions
+			"weka.classifiers.functions.Logistic", "weka.classifiers.functions.MultilayerPerceptron",
 			"weka.classifiers.functions.SMO",
-			//Lazy
+			// Lazy
 			"weka.classifiers.lazy.IBk",
-			//Rules
+			// Rules
 			"weka.classifiers.rules.ZeroR",
-			//Trees
-			"weka.classifiers.trees.J48",
-	};
+			// Trees
+			"weka.classifiers.trees.J48",};
 
-	//Variables
+	// Variables
 	protected PreProcessAdvancedDriver driver;
 	protected PreProcessWindow preProcessWindow;
 	protected GUIMain main;
@@ -83,9 +81,9 @@ public class PreProcessAdvancedWindow extends JDialog {
 	protected Hashtable<String, String> fullClassPath;
 	protected Hashtable<String, String> shortClassName;
 
-	//Swing components
+	// Swing components
 	protected JTabbedPane tabbedPane;
-	//========Features=========
+	// ========Features=========
 	protected JPanel featureMainPanel;
 	protected JLabel featureNameLabel;
 	protected JComboBox<String> featureChoice;
@@ -102,42 +100,42 @@ public class PreProcessAdvancedWindow extends JDialog {
 	protected JPanel featureMiddleSecondPanel;
 	protected JPanel featureCompleteBottomPanel;
 
-		//===========View Info Window===========
-		protected JDialog viewInfoFrame;
-		protected JPanel viewInfoMainPanel;
-		protected JPanel viewInfoBottomPanel;
-		protected JLabel viewInfoListLabel;
-		protected JLabel viewInfoExtractorLabel;
-		protected JLabel viewInfoFactorLabel;
-		protected JLabel viewInfoNormLabel;
-		protected JLabel viewInfoDescLabel;
-		protected JLabel viewInfoNameLabel;
-		protected JLabel viewInfoInfoLabel;
-		protected JLabel viewInfoCullLabel;
-		protected JLabel viewInfoCanonLabel;
-	
-		protected JList<String> viewInfoList;
-		protected DefaultComboBoxModel<String> viewInfoListModel;
-		protected JScrollPane viewInfoListScrollPane;
-	
-		protected JTextPane viewInfoNameTextPane;
-		protected JTextPane viewInfoDescTextPane;
-		protected JTextPane viewInfoNormTextPane;
-		protected JTextPane viewInfoFactorTextPane;
-		protected JTextPane viewInfoExtractorPane;
-		
-		protected JTable viewInfoExtractorConfigTable;
-		protected JTable viewInfoCanonTable;
-		protected JTable viewInfoCanonConfigTable;
-		protected JTable viewInfoCullTable;
-		protected JTable viewInfoCullConfigTable;
-		protected DefaultTableModel viewInfoExtractorConfigModel;
-		protected DefaultTableModel viewInfoCanonTableModel;
-		protected DefaultTableModel viewInfoCanonConfigTableModel;
-		protected DefaultTableModel viewInfoCullTableModel;
-		protected DefaultTableModel viewInfoCullConfigTableModel;
+	// ===========View Info Window===========
+	protected JDialog viewInfoFrame;
+	protected JPanel viewInfoMainPanel;
+	protected JPanel viewInfoBottomPanel;
+	protected JLabel viewInfoListLabel;
+	protected JLabel viewInfoExtractorLabel;
+	protected JLabel viewInfoFactorLabel;
+	protected JLabel viewInfoNormLabel;
+	protected JLabel viewInfoDescLabel;
+	protected JLabel viewInfoNameLabel;
+	protected JLabel viewInfoInfoLabel;
+	protected JLabel viewInfoCullLabel;
+	protected JLabel viewInfoCanonLabel;
 
-	//========Classifier=========
+	protected JList<String> viewInfoList;
+	protected DefaultComboBoxModel<String> viewInfoListModel;
+	protected JScrollPane viewInfoListScrollPane;
+
+	protected JTextPane viewInfoNameTextPane;
+	protected JTextPane viewInfoDescTextPane;
+	protected JTextPane viewInfoNormTextPane;
+	protected JTextPane viewInfoFactorTextPane;
+	protected JTextPane viewInfoExtractorPane;
+
+	protected JTable viewInfoExtractorConfigTable;
+	protected JTable viewInfoCanonTable;
+	protected JTable viewInfoCanonConfigTable;
+	protected JTable viewInfoCullTable;
+	protected JTable viewInfoCullConfigTable;
+	protected DefaultTableModel viewInfoExtractorConfigModel;
+	protected DefaultTableModel viewInfoCanonTableModel;
+	protected DefaultTableModel viewInfoCanonConfigTableModel;
+	protected DefaultTableModel viewInfoCullTableModel;
+	protected DefaultTableModel viewInfoCullConfigTableModel;
+
+	// ========Classifier=========
 	private JPanel classMainPanel;
 	private JPanel classMiddlePanel;
 	private JPanel classMiddleFirstPanel;
@@ -153,35 +151,31 @@ public class PreProcessAdvancedWindow extends JDialog {
 	private JLabel classDescLabel;
 	protected JTextPane classDescPane;
 	protected JScrollPane classDescScrollPane;
-	
-		//============Arguments Editor============
-		protected JTextArea argsField;
-		private JPanel argsBottomPanel;
-		private JPanel argsMainPanel;
-		protected JDialog argsFrame;
-		protected JButton argsOKButton;
-		protected JButton argsCancelButton;
-		private JScrollPane argsScrollPane;
 
-	/**
-	 * Constructor
-	 */
+	// ============Arguments Editor============
+	protected JTextArea argsField;
+	private JPanel argsBottomPanel;
+	private JPanel argsMainPanel;
+	protected JDialog argsFrame;
+	protected JButton argsOKButton;
+	protected JButton argsCancelButton;
+	private JScrollPane argsScrollPane;
+
+	/** Constructor */
 	public PreProcessAdvancedWindow(PreProcessWindow preProcessWindow, GUIMain main) {
 		super(ThePresident.startWindow, "Advanced Options", Dialog.ModalityType.APPLICATION_MODAL);
-		Logger.logln(NAME+"Initializing the pre-process advanced settings window");
+		Logger.logln(NAME + "Initializing the pre-process advanced settings window");
 		this.preProcessWindow = preProcessWindow;
 		this.main = main;
 
-		initComponents();	
+		initComponents();
 		initData();
 		initWindow();
 
 		setVisible(false);
 	}
 
-	/**
-	 * Initializes all our data used in the window
-	 */
+	/** Initializes all our data used in the window */
 	private void initData() {
 		driver = new PreProcessAdvancedDriver(this);
 		driver.cfd = new CumulativeFeatureDriver();
@@ -191,9 +185,7 @@ public class PreProcessAdvancedWindow extends JDialog {
 		initClassifiersList();
 	}
 
-	/**
-	 * Initializes the window and it's attributes
-	 */
+	/** Initializes the window and it's attributes */
 	private void initWindow() {
 		this.setLocationRelativeTo(null); // makes it form in the center of the screen
 		this.setResizable(false);
@@ -201,55 +193,44 @@ public class PreProcessAdvancedWindow extends JDialog {
 		this.setIconImage(ThePresident.logo);
 	}
 
-	/**
-	 * Displays the window
-	 */
+	/** Displays the window */
 	public void showWindow() {
-		Logger.logln(NAME+"Advanced Settings window displayed");
+		Logger.logln(NAME + "Advanced Settings window displayed");
 		this.setLocationRelativeTo(null); // makes it form in the center of the screen
 
 		if (tabbedPane.getSelectedIndex() == 0)
 			this.getRootPane().setDefaultButton(featureOKButton);
 		else
 			this.getRootPane().setDefaultButton(classOKButton);
-		
+
 		this.setVisible(true);
 	}
 
-	/**
-	 * Closes the window
-	 */
+	/** Closes the window */
 	public void closeWindow() {
-		Logger.logln(NAME+"Advanced Settings window closed");
+		Logger.logln(NAME + "Advanced Settings window closed");
 		WindowEvent wev = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
 		Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(wev);
 	}
-	
-	/**
-	 * Prepares all the Swing components for viewing
-	 */
+
+	/** Prepares all the Swing components for viewing */
 	private void initComponents() {
 		initFeatureTab();
 		initViewInfoFrame();
 		initClassifierTab();
 		initArgsFrame();
 
-		getContentPane().setLayout(new MigLayout(
-				"fill, ins 0, gap 0 0",
-				"fill, grow",
-				"fill, grow"));
+		getContentPane().setLayout(new MigLayout("fill, ins 0, gap 0 0", "fill, grow", "fill, grow"));
 		tabbedPane = new JTabbedPane();
 		tabbedPane.add("Feature Set", featureMainPanel);
 		tabbedPane.add("Classifier", classMainPanel);
 
 		getContentPane().add(tabbedPane, "grow");
 	}
-	
-	/**
-	 * Initializes all swing components in the "Feature Set" tab
-	 */
+
+	/** Initializes all swing components in the "Feature Set" tab */
 	private void initFeatureTab() {
-		//==============FEATURES=================
+		// ==============FEATURES=================
 		featureMainPanel = new JPanel();
 		featureMainPanel.setLayout(new BorderLayout(0, 0));
 		{
@@ -259,11 +240,11 @@ public class PreProcessAdvancedWindow extends JDialog {
 			{
 				featureMiddleFirstPanel = new JPanel();
 				featureMiddleFirstPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-				
+
 				featureNameLabel = new JLabel("Name: ");
 				featureChoice = new JComboBox<String>();
 				featureViewInfoButton = new JButton("View Info");
-				
+
 				featureMiddleFirstPanel.add(featureNameLabel);
 				featureMiddleFirstPanel.add(featureChoice);
 				featureMiddleFirstPanel.add(featureViewInfoButton);
@@ -272,7 +253,7 @@ public class PreProcessAdvancedWindow extends JDialog {
 				featureMiddleSecondPanel = new JPanel();
 				featureMiddleSecondPanel.setLayout(new BorderLayout(0, 2));
 				featureMiddleSecondPanel.setAlignmentX(LEFT_ALIGNMENT);
-				
+
 				featureDescLabel = new JLabel("Description: ");
 				featureDescPane = new JTextPane();
 				featureDescPane.setFocusable(false);
@@ -282,7 +263,7 @@ public class PreProcessAdvancedWindow extends JDialog {
 				featureDescScrollPane.setMaximumSize(new Dimension(100, 100));
 				featureDescScrollPane.setMinimumSize(new Dimension(100, 100));
 				featureDescScrollPane.setSize(new Dimension(100, 100));
-				
+
 				featureMiddleSecondPanel.add(featureDescLabel, BorderLayout.NORTH);
 				featureMiddleSecondPanel.add(featureDescScrollPane, BorderLayout.SOUTH);
 			}
@@ -291,23 +272,24 @@ public class PreProcessAdvancedWindow extends JDialog {
 
 			featureBottomPanel = new JPanel();
 			featureBottomPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
-			
+
 			featureOKButton = new JButton("Ok");
 			featureRestoreDefaultsButton = new JButton("Restore Defaults");
-			
+
 			featureBottomPanel.add(featureRestoreDefaultsButton);
 			featureBottomPanel.add(featureOKButton);
-			
+
 			featureCompleteBottomPanel = new JPanel();
 			featureCompleteBottomPanel.setLayout(new BorderLayout(0, 0));
 			featureCompleteBottomPanel.add(featureMiddlePanel, BorderLayout.NORTH);
 			featureCompleteBottomPanel.add(featureBottomPanel, BorderLayout.SOUTH);
 		}
-		featureMainPanel.add(featureCompleteBottomPanel, BorderLayout.CENTER);		
+		featureMainPanel.add(featureCompleteBottomPanel, BorderLayout.CENTER);
 	}
-	
+
 	/**
-	 * Initializes all swing components in the "View ${FEATURE_NAME} Info" window as well as the window itself
+	 * Initializes all swing components in the "View ${FEATURE_NAME} Info" window as
+	 * well as the window itself
 	 */
 	private void initViewInfoFrame() {
 		viewInfoFrame = new JDialog(this);
@@ -315,12 +297,10 @@ public class PreProcessAdvancedWindow extends JDialog {
 		viewInfoFrame.setSize(815, 470);
 		viewInfoFrame.setMinimumSize(new Dimension(660, 400));
 		viewInfoFrame.setLocationRelativeTo(null);
-		
+
 		viewInfoMainPanel = new JPanel();
-		viewInfoMainPanel.setLayout(new MigLayout(
-				"fill, wrap 4, gap 0 0",
-				"[200!]20[left, 100!][100%]",
-				"[]5[40!]5[]5[]20![100%, fill]"));
+		viewInfoMainPanel.setLayout(
+				new MigLayout("fill, wrap 4, gap 0 0", "[200!]20[left, 100!][100%]", "[]5[40!]5[]5[]20![100%, fill]"));
 		{
 			viewInfoListLabel = new JLabel("Features:");
 			viewInfoListLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -361,11 +341,11 @@ public class PreProcessAdvancedWindow extends JDialog {
 			viewInfoFactorTextPane.setEditable(false);
 
 			String[][] toolsTableFiller = new String[1][1];
-			toolsTableFiller[0] = new String[] {"N/A"};
+			toolsTableFiller[0] = new String[]{"N/A"};
 			String[] toolsTableHeaderFiller = {"Tools:"};
 
 			String[][] configTableFiller = new String[1][1];
-			configTableFiller[0] = new String[] {"N/A", "N/A"};
+			configTableFiller[0] = new String[]{"N/A", "N/A"};
 			String[] configTableHeaderFiller = {"Tool:", "Parameter:", "Value:"};
 
 			viewInfoExtractorLabel = new JLabel("Extractor:");
@@ -374,14 +354,14 @@ public class PreProcessAdvancedWindow extends JDialog {
 			viewInfoExtractorPane.setFocusable(false);
 			viewInfoExtractorPane.setEditable(false);
 
-			viewInfoExtractorConfigModel = new DefaultTableModel(configTableFiller, configTableHeaderFiller){
+			viewInfoExtractorConfigModel = new DefaultTableModel(configTableFiller, configTableHeaderFiller) {
 				private static final long serialVersionUID = 1L;
 
 				public boolean isCellEditable(int rowIndex, int mColIndex) {
 					return false;
 				}
 			};
-			
+
 			viewInfoExtractorConfigTable = new JTable(viewInfoExtractorConfigModel);
 			viewInfoExtractorConfigTable.setRowSelectionAllowed(false);
 			viewInfoExtractorConfigTable.setColumnSelectionAllowed(false);
@@ -389,10 +369,10 @@ public class PreProcessAdvancedWindow extends JDialog {
 			viewInfoExtractorConfigTable.setFocusable(true);
 			viewInfoExtractorConfigTable.setRowSelectionAllowed(true);
 			viewInfoExtractorConfigTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			
+
 			viewInfoCanonLabel = new JLabel("Pre-Processing:");
 
-			viewInfoCanonTableModel = new DefaultTableModel(toolsTableFiller, toolsTableHeaderFiller){
+			viewInfoCanonTableModel = new DefaultTableModel(toolsTableFiller, toolsTableHeaderFiller) {
 				private static final long serialVersionUID = 1L;
 
 				public boolean isCellEditable(int rowIndex, int mColIndex) {
@@ -408,7 +388,7 @@ public class PreProcessAdvancedWindow extends JDialog {
 			viewInfoCanonTable.setRowSelectionAllowed(true);
 			viewInfoCanonTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-			viewInfoCanonConfigTableModel = new DefaultTableModel(configTableFiller, configTableHeaderFiller){
+			viewInfoCanonConfigTableModel = new DefaultTableModel(configTableFiller, configTableHeaderFiller) {
 				private static final long serialVersionUID = 1L;
 
 				public boolean isCellEditable(int rowIndex, int mColIndex) {
@@ -426,7 +406,7 @@ public class PreProcessAdvancedWindow extends JDialog {
 
 			viewInfoCullLabel = new JLabel("Post-Processing:");
 
-			viewInfoCullTableModel = new DefaultTableModel(toolsTableFiller, toolsTableHeaderFiller){
+			viewInfoCullTableModel = new DefaultTableModel(toolsTableFiller, toolsTableHeaderFiller) {
 				private static final long serialVersionUID = 1L;
 
 				public boolean isCellEditable(int rowIndex, int mColIndex) {
@@ -441,8 +421,8 @@ public class PreProcessAdvancedWindow extends JDialog {
 			viewInfoCullTable.setFocusable(true);
 			viewInfoCullTable.setRowSelectionAllowed(true);
 			viewInfoCullTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			
-			viewInfoCullConfigTableModel = new DefaultTableModel(configTableFiller, configTableHeaderFiller){
+
+			viewInfoCullConfigTableModel = new DefaultTableModel(configTableFiller, configTableHeaderFiller) {
 				private static final long serialVersionUID = 1L;
 
 				public boolean isCellEditable(int rowIndex, int mColIndex) {
@@ -457,22 +437,21 @@ public class PreProcessAdvancedWindow extends JDialog {
 			viewInfoCullConfigTable.setFocusable(true);
 			viewInfoCullConfigTable.setRowSelectionAllowed(true);
 			viewInfoCullConfigTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			
-			JTable[] configTableArray = {viewInfoExtractorConfigTable, viewInfoCanonConfigTable, viewInfoCullConfigTable};
 
-			for (final JTable table: configTableArray) {
+			JTable[] configTableArray = {viewInfoExtractorConfigTable, viewInfoCanonConfigTable,
+					viewInfoCullConfigTable};
+
+			for (final JTable table : configTableArray) {
 				table.getModel().addTableModelListener(new TableModelListener() {
 					public void tableChanged(TableModelEvent e) {
 						ColumnsAutoSizer.sizeColumnsToFit(table);
 					}
 				});
 			}
-			
+
 			viewInfoBottomPanel = new JPanel();
-			viewInfoBottomPanel.setLayout(new MigLayout(
-				"fill, wrap 2, gap 0 0 0 0, ins 0",
-				"[150:45%:, fill][200:55%:, fill]",
-				"[][fill][][fill][][fill]"));
+			viewInfoBottomPanel.setLayout(new MigLayout("fill, wrap 2, gap 0 0 0 0, ins 0",
+					"[150:45%:, fill][200:55%:, fill]", "[][fill][][fill][][fill]"));
 			viewInfoBottomPanel.add(viewInfoExtractorLabel, "w 96!, split 2, span 2");
 			viewInfoBottomPanel.add(new JScrollPane(viewInfoExtractorPane), "w 100%, growx");
 			viewInfoBottomPanel.add(new JScrollPane(viewInfoExtractorConfigTable), "pad 3 0 0 0, span, grow, wrap");
@@ -497,11 +476,9 @@ public class PreProcessAdvancedWindow extends JDialog {
 		viewInfoFrame.add(viewInfoMainPanel);
 	}
 
-	/**
-	 * Initializes all swing components in the "Classifier" tab
-	 */
-	private void initClassifierTab() {			
-		//==============Classifier=================	
+	/** Initializes all swing components in the "Classifier" tab */
+	private void initClassifierTab() {
+		// ==============Classifier=================
 		classMainPanel = new JPanel();
 		classMainPanel.setLayout(new BorderLayout(0, 0));
 		{
@@ -512,7 +489,7 @@ public class PreProcessAdvancedWindow extends JDialog {
 				classMiddleFirstPanel = new JPanel();
 				classMiddleFirstPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
 				classMiddleFirstPanel.setAlignmentX(LEFT_ALIGNMENT);
-				
+
 				classNameLabel = new JLabel("Name: ");
 				classChoice = new JComboBox<String>();
 				classEditButton = new JButton("Edit");
@@ -534,7 +511,7 @@ public class PreProcessAdvancedWindow extends JDialog {
 				classDescScrollPane.setMaximumSize(new Dimension(100, 100));
 				classDescScrollPane.setMinimumSize(new Dimension(100, 100));
 				classDescScrollPane.setSize(new Dimension(100, 100));
-				
+
 				classMiddleSecondPanel.add(classDescLabel, BorderLayout.NORTH);
 				classMiddleSecondPanel.add(classDescScrollPane, BorderLayout.SOUTH);
 			}
@@ -557,9 +534,10 @@ public class PreProcessAdvancedWindow extends JDialog {
 		}
 		classMainPanel.add(classCompleteBottomPanel, BorderLayout.CENTER);
 	}
-	
+
 	/**
-	 * Initializes all swing components in the "Edit ${CLASSIFIER}'s Arguments" window as well as the window itself
+	 * Initializes all swing components in the "Edit ${CLASSIFIER}'s Arguments"
+	 * window as well as the window itself
 	 */
 	private void initArgsFrame() {
 		argsFrame = new JDialog(this);
@@ -568,7 +546,7 @@ public class PreProcessAdvancedWindow extends JDialog {
 		argsFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		argsFrame.setLocationRelativeTo(null);
 		argsFrame.setVisible(false);
-		
+
 		argsMainPanel = new JPanel();
 		argsMainPanel.setLayout(new MigLayout("gap 0 0, ins 0", "grow", "[100%, fill][]"));
 		argsMainPanel.setBorder(new EmptyBorder(8, 8, 3, 8));
@@ -577,26 +555,29 @@ public class PreProcessAdvancedWindow extends JDialog {
 			argsField.setLineWrap(true);
 			argsScrollPane = new JScrollPane(argsField);
 			argsScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-			
+
 			argsBottomPanel = new JPanel();
 			argsBottomPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
-			
+
 			argsCancelButton = new JButton("Cancel");
 			argsOKButton = new JButton("Ok");
-			
+
 			argsBottomPanel.add(argsCancelButton);
 			argsBottomPanel.add(argsOKButton);
 		}
 		argsMainPanel.add(argsScrollPane, "grow, wrap, gapbottom 4");
 		argsMainPanel.add(argsBottomPanel, "south");
-		
+
 		argsFrame.add(argsMainPanel);
 		argsFrame.getRootPane().setDefaultButton(argsOKButton);
 	}
 
 	/**
-	 * Initializes and fills the features combo box in the Features Tab with its respective data
-	 * @param main - GUIMain instance
+	 * Initializes and fills the features combo box in the Features Tab with its
+	 * respective data
+	 *
+	 * @param main
+	 *            - GUIMain instance
 	 */
 	protected void initFeaturesList() {
 		presetCFDs = new ArrayList<CumulativeFeatureDriver>();
@@ -609,7 +590,7 @@ public class PreProcessAdvancedWindow extends JDialog {
 			});
 
 			String path;
-			for (File f: featureSetFiles) {
+			for (File f : featureSetFiles) {
 				path = f.getAbsolutePath();
 				presetCFDs.add(new CumulativeFeatureDriver(path));
 			}
@@ -621,46 +602,53 @@ public class PreProcessAdvancedWindow extends JDialog {
 			featureChoiceModel = new DefaultComboBoxModel<String>(presetCFDsNames);
 			featureChoice.setModel(featureChoiceModel);
 		} catch (Exception e) {
-			Logger.logln(NAME+"Failed to read feature set files.",LogOut.STDERR);
+			Logger.logln(NAME + "Failed to read feature set files.", LogOut.STDERR);
 		}
 	}
 
 	/**
-	* Initializes and fills the classifier combo box in the Classifier Tab with its respective data
-	*/
+	 * Initializes and fills the classifier combo box in the Classifier Tab with its
+	 * respective data
+	 */
 	protected void initClassifiersList() {
 		classifierNames = new String[WEKACLASSNAMES.length];
 		fullClassPath = new Hashtable<String, String>();
 		shortClassName = new Hashtable<String, String>();
 		int curClassifier = 0;
 
-		//Add all classes
-		for (String className: WEKACLASSNAMES) {
+		// Add all classes
+		for (String className : WEKACLASSNAMES) {
 			String[] nameArr = className.split("\\.");
 
-			classifierNames[curClassifier] = nameArr[nameArr.length-1];
-			fullClassPath.put(nameArr[nameArr.length-1], className);
-			shortClassName.put(className,  nameArr[nameArr.length-1]);
-			
+			classifierNames[curClassifier] = nameArr[nameArr.length - 1];
+			fullClassPath.put(nameArr[nameArr.length - 1], className);
+			shortClassName.put(className, nameArr[nameArr.length - 1]);
+
 			curClassifier++;
 		}
-		
+
 		classChoiceModel = new DefaultComboBoxModel<String>(classifierNames);
 		classChoice.setModel(classChoiceModel);
 	}
-	
+
 	/**
-	 * Selects the classifier you want in the Classifier combo box and updates all relevant components
-	 * @param classifier - Short name of the classifier you want to select
+	 * Selects the classifier you want in the Classifier combo box and updates all
+	 * relevant components
+	 *
+	 * @param classifier
+	 *            - Short name of the classifier you want to select
 	 */
 	protected void setClassifier(String classifier) {
 		classChoice.setSelectedItem(classifier);
 		driver.updateClassifierTab();
 	}
-	
+
 	/**
-	 * Selects the feature you want in the Feature Set combo box and updates all relevant components
-	 * @param feature - Short name of the feature you want to select
+	 * Selects the feature you want in the Feature Set combo box and updates all
+	 * relevant components
+	 *
+	 * @param feature
+	 *            - Short name of the feature you want to select
 	 */
 	protected void setFeature(String feauture) {
 		featureChoice.setSelectedItem(feauture);
@@ -668,9 +656,11 @@ public class PreProcessAdvancedWindow extends JDialog {
 	}
 
 	/**
-	 * Checks to see if the classifier is set correctly.
-	 * NOTE: This isn't necessarily needed anymore since you can't not select one from the combo box (this was rolled over from the old
-	 * version with adding classifiers from a JTree), though I'm keeping it in as a precaution.
+	 * Checks to see if the classifier is set correctly. NOTE: This isn't
+	 * necessarily needed anymore since you can't not select one from the combo box
+	 * (this was rolled over from the old version with adding classifiers from a
+	 * JTree), though I'm keeping it in as a precaution.
+	 *
 	 * @return
 	 */
 	protected boolean classifierIsReady() {
@@ -687,9 +677,10 @@ public class PreProcessAdvancedWindow extends JDialog {
 	}
 
 	/**
-	 * Checks to see if the feature set is ready
-	 * NOTE: This isn't necessarily needed anymore since you can't not select one from the combo box (this was rolled over from the old
-	 * version), though I'm keeping it in as a precaution.
+	 * Checks to see if the feature set is ready NOTE: This isn't necessarily needed
+	 * anymore since you can't not select one from the combo box (this was rolled
+	 * over from the old version), though I'm keeping it in as a precaution.
+	 *
 	 * @return
 	 */
 	protected boolean featureSetIsReady() {
@@ -705,15 +696,13 @@ public class PreProcessAdvancedWindow extends JDialog {
 		return ready;
 	}
 
-	/**
-	 * Returns true if the given cumulative feature driver is effectively empty
-	 */
+	/** Returns true if the given cumulative feature driver is effectively empty */
 	protected boolean isFeatureDriversEmpty(CumulativeFeatureDriver featureDrivers) {
 		if (featureDrivers == null)
 			return true;
-		else if ((featureDrivers.getName() == null || featureDrivers.getName().matches("\\s*")) &&
-				(featureDrivers.getDescription() == null || featureDrivers.getDescription().matches("\\s*")) &&
-				featureDrivers.numOfFeatureDrivers() == 0)
+		else if ((featureDrivers.getName() == null || featureDrivers.getName().matches("\\s*"))
+				&& (featureDrivers.getDescription() == null || featureDrivers.getDescription().matches("\\s*"))
+				&& featureDrivers.numOfFeatureDrivers() == 0)
 			return true;
 		else
 			return false;
@@ -721,14 +710,16 @@ public class PreProcessAdvancedWindow extends JDialog {
 
 	/**
 	 * Obtains the "Short name" of the classifier from the long full version
-	 * @param path - The long "Full path" version of the classifier name
+	 *
+	 * @param path
+	 *            - The long "Full path" version of the classifier name
 	 * @return
 	 */
 	protected String getNameFromClassPath(String path) {
 		String[] classPath = path.split("\\.");
 		return classPath[classPath.length - 1];
 	}
-	
+
 	/**
 	 * Initializes a map of classifier class-names to their respective descriptions.
 	 */
@@ -753,14 +744,12 @@ public class PreProcessAdvancedWindow extends JDialog {
 			return "No description available.";
 		}
 	}
-	
-	/**
-	 * Creates a classifier options string.
-	 */
+
+	/** Creates a classifier options string. */
 	public String getOptionsStr(String[] options) {
 		String optionStr = "";
-		for (String option: options)
-			optionStr += option+" ";
+		for (String option : options)
+			optionStr += option + " ";
 		return optionStr;
 	}
 }

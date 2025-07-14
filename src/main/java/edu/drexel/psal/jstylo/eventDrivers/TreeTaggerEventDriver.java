@@ -1,30 +1,25 @@
-/**
- * 
- */
+/** */
 package edu.drexel.psal.jstylo.eventDrivers;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.annolab.tt4j.TokenHandler;
-import org.annolab.tt4j.TreeTaggerException;
-import org.annolab.tt4j.TreeTaggerWrapper;
 
 import com.jgaap.generics.Document;
 import com.jgaap.generics.Event;
 import com.jgaap.generics.EventDriver;
 import com.jgaap.generics.EventSet;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import org.annolab.tt4j.TokenHandler;
+import org.annolab.tt4j.TreeTaggerException;
+import org.annolab.tt4j.TreeTaggerWrapper;
 
 /**
- * This changes words into their parts of speech in a document, based on TreeTagger-a language independent POS tagger.
+ * This changes words into their parts of speech in a document, based on
+ * TreeTagger-a language independent POS tagger.
  * http://www.ims.uni-stuttgart.de/projekte/corplex/TreeTagger/
- * 
- * @author sadiaafroz
  *
+ * @author sadiaafroz
  */
-public class TreeTaggerEventDriver  extends EventDriver {
-
+public class TreeTaggerEventDriver extends EventDriver {
 
 	@Override
 	public String displayName() {
@@ -40,13 +35,13 @@ public class TreeTaggerEventDriver  extends EventDriver {
 	public boolean showInGUI() {
 		return false;
 	}
-	
+
 	protected static TreeTaggerWrapper<String> tagger = null;
-	//path of the parameter file
-    protected static String taggerPath = null; //"tree-tagger-MacOSX-3.2-intel/models/russian.par";
-    //path of the tree tagger binary
+	// path of the parameter file
+	protected static String taggerPath = null; // "tree-tagger-MacOSX-3.2-intel/models/russian.par";
+	// path of the tree tagger binary
 	protected static String taggerHome = null;
-	
+
 	public static String getTaggerHome() {
 		return taggerHome;
 	}
@@ -69,13 +64,14 @@ public class TreeTaggerEventDriver  extends EventDriver {
 		final EventSet es = new EventSet(doc.getAuthor());
 		char[] text = doc.getProcessedText();
 		String stringText = new String(text);
-		
-		//System.out.println(doc.getFilePath());
+
+		// System.out.println(doc.getFilePath());
 		// initialize tagger and return empty event set if encountered a problem
-		
+
 		if (tagger == null) {
 			tagger = initTagger();
-			if (tagger == null) return es;
+			if (tagger == null)
+				return es;
 		}
 		try {
 			tagger.setModel(taggerPath);
@@ -102,25 +98,27 @@ public class TreeTaggerEventDriver  extends EventDriver {
 
 		return es;
 	}
-	
+
 	/**
 	 * Initialize the tagger.
+	 *
 	 * @return
 	 */
 	public static TreeTaggerWrapper<String> initTagger() {
-		// Point TT4J to the TreeTagger installation directory. The executable is expected
-				// in the "bin" subdirectory - in this example at "/opt/treetagger/bin/tree-tagger"
-				System.setProperty("treetagger.home", "tree-tagger-MacOSX-3.2-intel/");
-				tagger = new TreeTaggerWrapper<String>();
-				try {
-					tagger.setModel(taggerPath);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return tagger;
+		// Point TT4J to the TreeTagger installation directory. The executable is
+		// expected
+		// in the "bin" subdirectory - in this example at
+		// "/opt/treetagger/bin/tree-tagger"
+		System.setProperty("treetagger.home", "tree-tagger-MacOSX-3.2-intel/");
+		tagger = new TreeTaggerWrapper<String>();
+		try {
+			tagger.setModel(taggerPath);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return tagger;
 	}
-	
 
 	/**
 	 * @param args
@@ -129,5 +127,4 @@ public class TreeTaggerEventDriver  extends EventDriver {
 		// TODO Auto-generated method stub
 
 	}
-
 }

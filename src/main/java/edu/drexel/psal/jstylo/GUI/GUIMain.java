@@ -1,5 +1,11 @@
 package edu.drexel.psal.jstylo.GUI;
 
+import edu.drexel.psal.ANONConstants;
+import edu.drexel.psal.jstylo.generics.Analyzer;
+import edu.drexel.psal.jstylo.generics.CumulativeFeatureDriver;
+import edu.drexel.psal.jstylo.generics.InstancesBuilder;
+import edu.drexel.psal.jstylo.generics.Logger;
+import edu.drexel.psal.jstylo.generics.ProblemSet;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -14,41 +20,27 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
-
-import edu.drexel.psal.ANONConstants;
-import edu.drexel.psal.jstylo.generics.Analyzer;
-import edu.drexel.psal.jstylo.generics.CumulativeFeatureDriver;
-import edu.drexel.psal.jstylo.generics.InstancesBuilder;
-import edu.drexel.psal.jstylo.generics.Logger;
-import edu.drexel.psal.jstylo.generics.ProblemSet;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.tree.*;
 
 /**
-* This code was edited or generated using CloudGarden's Jigloo
-* SWT/Swing GUI Builder, which is free for non-commercial
-* use. If Jigloo is being used commercially (ie, by a corporation,
-* company or business for any purpose whatever) then you
-* should purchase a license for each developer using Jigloo.
-* Please visit www.cloudgarden.com for details.
-* Use of Jigloo implies acceptance of these licensing terms.
-* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED FOR
-* THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
-* LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
-*/
+ * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI Builder, which is free
+ * for non-commercial use. If Jigloo is being used commercially (ie, by a corporation, company or
+ * business for any purpose whatever) then you should purchase a license for each developer using
+ * Jigloo. Please visit www.cloudgarden.com for details. Use of Jigloo implies acceptance of these
+ * licensing terms. A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED FOR THIS MACHINE, SO JIGLOO OR THIS
+ * CODE CANNOT BE USED LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
+ */
 /**
  * JStylo main GUI class.
- * 
+ *
  * @author Ariel Stolerman
  */
-@SuppressWarnings({ "unchecked", "rawtypes" })
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class GUIMain extends javax.swing.JFrame {
 
-	/**
-	 * 
-	 */
+	/** */
 	private static final long serialVersionUID = 1L;
 
 	// main instance
@@ -60,15 +52,15 @@ public class GUIMain extends javax.swing.JFrame {
 	protected ProblemSet ps;
 	protected CumulativeFeatureDriver cfd;
 	protected List<CumulativeFeatureDriver> presetCFDs;
-	//protected WekaInstancesBuilder wib;
+	// protected WekaInstancesBuilder wib;
 	protected InstancesBuilder ib;
 	protected Analyzer analysisDriver;
 	protected List<Analyzer> analyzers;
 	protected Thread analysisThread;
 	protected List<String> results;
 
-	protected String defaultTrainDocsTreeName = "Authors"; 
-	protected Font defaultLabelFont = new Font("Verdana",0,16);
+	protected String defaultTrainDocsTreeName = "Authors";
+	protected Font defaultLabelFont = new Font("Verdana", 0, 16);
 	protected static int cellPadding = 5;
 	protected String defaultLoadSaveDir = ".";
 
@@ -78,7 +70,7 @@ public class GUIMain extends javax.swing.JFrame {
 	protected JPanel featuresTab;
 	protected JPanel classTab;
 	protected JPanel analysisTab;
-	
+
 	// documents tab
 	protected JLabel testDocsJLabel;
 	protected JButton trainDocPreviewJButton;
@@ -95,9 +87,9 @@ public class GUIMain extends javax.swing.JFrame {
 	protected JButton removeTrainDocsJButton;
 	protected JButton addTrainDocsJButton;
 	protected JTree trainCorpusJTree;
-	//protected JTable testDocsJTable;
+	// protected JTable testDocsJTable;
 	protected JTree testDocsJTree;
-	//protected DefaultTableModel testDocsTableModel;
+	// protected DefaultTableModel testDocsTableModel;
 	protected JLabel featuresToolsJLabel;
 	protected JLabel docPreviewNameJLabel;
 	protected JLabel corpusJLabel;
@@ -109,7 +101,7 @@ public class GUIMain extends javax.swing.JFrame {
 	protected JTextPane docsInstructionPane;
 	protected JButton addTestAuthorJButton;
 	protected JButton removeTestAuthorJButton;
-	
+
 	// features tab
 	protected JButton featuresNextJButton;
 	protected JButton featuresBackJButton;
@@ -157,7 +149,7 @@ public class GUIMain extends javax.swing.JFrame {
 	protected JLabel featuresSetJLabel;
 	protected JButton featuresAboutJButton;
 	protected JTextPane featuresInstructionPane;
-	
+
 	// Classifiers tab
 	protected JTextField classAvClassArgsJTextField;
 	protected JLabel classAvClassArgsJLabel;
@@ -180,7 +172,7 @@ public class GUIMain extends javax.swing.JFrame {
 	protected JButton classRemoveJButton;
 	protected JButton classAboutJButton;
 	protected JTextPane classInstructionPane;
-	
+
 	// Analysis tab
 	protected JLabel analysisTypeJLabel;
 	protected JButton analysisBackJButton;
@@ -208,7 +200,7 @@ public class GUIMain extends javax.swing.JFrame {
 	protected JLabel analysisResultsJLabel;
 	protected JButton analysisAboutJButton;
 	protected JButton analysisRemoveResultTabJButton;
-	protected JTextField analysisKFoldJTextField; 
+	protected JTextField analysisKFoldJTextField;
 	protected JLabel analysisKFoldJLabel;
 	protected JLabel analysisNThreadJLabel;
 	protected JTextField analysisNThreadJTextField;
@@ -218,13 +210,11 @@ public class GUIMain extends javax.swing.JFrame {
 	protected JLabel analysisRelaxJLabel;
 	protected JTextField analysisRelaxJTextField;
 	protected JCheckBox analysisClassificationStatisticsJCheckBox;
-	
-	/**
-	 * Auto-generated main method to display this JFrame
-	 */
+
+	/** Auto-generated main method to display this JFrame */
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
-			public void run() { 
+			public void run() {
 				Logger.initLogFile();
 				try {
 					UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -256,141 +246,145 @@ public class GUIMain extends javax.swing.JFrame {
 		ib = new InstancesBuilder();
 		results = new ArrayList<String>();
 	}
-	
-	private void loadPreferences(){
-		
+
+	private void loadPreferences() {
+
 		File jProps = new File("./jsan_resources/JStylo_prop.prop");
-		
-		if (jProps.exists()){ //if it already exists, read the calc thread variable
-			
-			//create an array simply to check to see if all parameters have been found.
-			//will be checked at the end to ensure that they have, otherwise, will load a default file.
+
+		if (jProps.exists()) { // if it already exists, read the calc thread variable
+
+			// create an array simply to check to see if all parameters have been found.
+			// will be checked at the end to ensure that they have, otherwise, will load a
+			// default file.
 			boolean[] found = new boolean[2];
-			for (boolean b: found){
+			for (boolean b : found) {
 				b = false;
 			}
 			try {
 				FileReader fileReader = new FileReader(jProps);
 				BufferedReader reader = new BufferedReader(fileReader);
-				
-				//read the file and save the variable when it is found if for some reason it's not in the file, it'll default to 4
+
+				// read the file and save the variable when it is found if for some reason it's
+				// not in the
+				// file, it'll default to 4
 				String nextLine = reader.readLine();
-				
-				int i=0;
-				while (nextLine!=null){
-					if (nextLine.contains("numCalcThreads")){
-						String[] s = nextLine.split("="); //[0]="numCalcThreads" [1]=the number we're looking for
+
+				int i = 0;
+				while (nextLine != null) {
+					if (nextLine.contains("numCalcThreads")) {
+						String[] s = nextLine.split("="); // [0]="numCalcThreads" [1]=the number we're looking for
 						ib.setNumThreads(Integer.parseInt(s[1]));
-						found[i]=true;
+						found[i] = true;
 						i++;
 					}
-					if (nextLine.contains("useLogFile")){
+					if (nextLine.contains("useLogFile")) {
 						String[] s = nextLine.split("=");
-						if (s[1].equalsIgnoreCase("1")){
+						if (s[1].equalsIgnoreCase("1")) {
 							Logger.logFile = true;
 							File logDir = new File("./log/");
 							if (!logDir.exists())
 								logDir.mkdirs();
-						} else 
+						} else
 							Logger.logFile = false;
-						
-						found[i]=true;
+
+						found[i] = true;
 						i++;
 					}
-					//load default analysis tab args?
-						//perhaps use a series of 0 and 1 for simple on/offs?
-					
-					//load last feature set
-					
-					//load default directories
-					
+					// load default analysis tab args?
+					// perhaps use a series of 0 and 1 for simple on/offs?
+
+					// load last feature set
+
+					// load default directories
+
 					nextLine = reader.readLine();
 				}
 				reader.close();
 				fileReader.close();
 
 			} catch (FileNotFoundException e) {
-				Logger.logln("Failed to read properties file! numCalcThreads defaulting to 1! Generating new prop file...",Logger.LogOut.STDERR);
+				Logger.logln(
+						"Failed to read properties file! numCalcThreads defaulting to 1! Generating new prop file...",
+						Logger.LogOut.STDERR);
 				e.printStackTrace();
 				generateDefaultPropsFile();
 			} catch (IOException e) {
-				Logger.logln("Prop file empty! numCalcThreads defaulting to 1! Generating new prop file...",Logger.LogOut.STDERR);
+				Logger.logln("Prop file empty! numCalcThreads defaulting to 1! Generating new prop file...",
+						Logger.LogOut.STDERR);
 				e.printStackTrace();
 				generateDefaultPropsFile();
-			}	
-			//check to make sure all args were found
+			}
+			// check to make sure all args were found
 			boolean verified = true;
-			for (boolean b: found){
+			for (boolean b : found) {
 				verified = b;
 			}
-			//if not, then either an old or adjusted props file was found. Make a new one
-			if (!verified){
+			// if not, then either an old or adjusted props file was found. Make a new one
+			if (!verified) {
 				Logger.logln("Old version of properties file detected, generating a new one.");
 				generateDefaultPropsFile();
 			}
-			
-		} else { //if it doesn't exist, create it and give it defaultValues
+
+		} else { // if it doesn't exist, create it and give it defaultValues
 			Logger.logln("Could not find a properties file, generating default property file...");
 			generateDefaultPropsFile();
 		}
-		
-
 	}
 
-	public static void generateDefaultPropsFile(){
-	
+	public static void generateDefaultPropsFile() {
+
 		File resourceFolder = new File("./jsan_resources/");
 		resourceFolder.mkdirs();
-		
+
 		File jProps = new File("./jsan_resources/JStylo_prop.prop");
-		
+
 		try {
-			String[] contents ={"#JStylo Preferences",
-								"#Properties File Version: .2",
-								"numCalcThreads=4",
-								"useLogFile=0"};
-			
-			//Write to the file
-			FileWriter cleaner = new FileWriter(jProps,false);
+			String[] contents = {"#JStylo Preferences", "#Properties File Version: .2", "numCalcThreads=4",
+					"useLogFile=0"};
+
+			// Write to the file
+			FileWriter cleaner = new FileWriter(jProps, false);
 			cleaner.write("");
 			cleaner.close();
-			
-			FileWriter fwriter = new FileWriter(jProps,true);
+
+			FileWriter fwriter = new FileWriter(jProps, true);
 			BufferedWriter writer = new BufferedWriter(fwriter);
-			for(String s:contents){
+			for (String s : contents) {
 				writer.write(s);
 				writer.newLine();
 			}
 			writer.close();
 			fwriter.close();
 		} catch (FileNotFoundException e) {
-			Logger.logln("Failed to read properties file! numCalcThreads defaulting to 1! Generating new prop file...",Logger.LogOut.STDERR);
+			Logger.logln("Failed to read properties file! numCalcThreads defaulting to 1! Generating new prop file...",
+					Logger.LogOut.STDERR);
 			e.printStackTrace();
 			generateDefaultPropsFile();
 		} catch (IOException e) {
-			Logger.logln("Prop file empty! numCalcThreads defaulting to 1! Generating new prop file...",Logger.LogOut.STDERR);
+			Logger.logln("Prop file empty! numCalcThreads defaulting to 1! Generating new prop file...",
+					Logger.LogOut.STDERR);
 			e.printStackTrace();
 			generateDefaultPropsFile();
 		}
-		
 	}
-	
+
 	private void initGUI() {
 		try {
-			
+
 			setSize(1024, 768);
 			setTitle("JStylo");
-			setIconImage(new ImageIcon(Thread.currentThread().getClass().getResource(ANONConstants.GRAPHICS_PREFIX+"icon32.jpg")).getImage());
-			
+			setIconImage(new ImageIcon(
+					Thread.currentThread().getClass().getResource(ANONConstants.GRAPHICS_PREFIX + "icon32.jpg"))
+							.getImage());
+
 			{
 				mainJTabbedPane = new JTabbedPane();
 				getContentPane().add(mainJTabbedPane, BorderLayout.CENTER);
-				
-				/* =============
-				 * Documents tab
-				 * =============
+
+				/*
+				 * ============= Documents tab =============
 				 */
-				docsTab = new JPanel(new BorderLayout(cellPadding,cellPadding));
+				docsTab = new JPanel(new BorderLayout(cellPadding, cellPadding));
 				mainJTabbedPane.addTab("Documents", docsTab);
 
 				// problem set buttons
@@ -398,55 +392,56 @@ public class GUIMain extends javax.swing.JFrame {
 				{
 					JPanel topPanel = new JPanel(new BorderLayout());
 					JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-					
-					docsTab.add(topPanel,BorderLayout.NORTH);
-					
-					topPanel.add(panel,BorderLayout.CENTER);
-					
-						{
-							newProblemSetJButton = new JButton();
-							panel.add(newProblemSetJButton);
-							newProblemSetJButton.setText("New Problem Set");
-						}
-						{
-							saveProblemSetJButton = new JButton();
-							panel.add(saveProblemSetJButton);
-							saveProblemSetJButton.setText("Save Problem Set...");
-						}
-						{
-							loadProblemSetJButton = new JButton();
-							panel.add(loadProblemSetJButton);
-							loadProblemSetJButton.setText("Load Problem Set...");
-						}
-						{
-							docsInstructionPane = new JTextPane();
-							docsInstructionPane.setEditable(false);
-							docsInstructionPane.setPreferredSize(new java.awt.Dimension(500, 50));
-							docsInstructionPane.setText(" Step One: The Documents Tab\n" +
-									" In this tab, you will create your training corpus by adding known authors and documents they have written to it.\n" +
-									" You can also add documents and authors to test on. If you do not know the true author of a document, place it in the \"_Unknown_\" directory");		
-							docsInstructionPane.setBorder(new EmptyBorder(cellPadding/2, cellPadding/2, cellPadding/2, cellPadding/2));
-							docsInstructionPane.setBorder(BorderFactory.createLineBorder(Color.gray));
-							topPanel.add(docsInstructionPane,BorderLayout.NORTH);
-						}
+
+					docsTab.add(topPanel, BorderLayout.NORTH);
+
+					topPanel.add(panel, BorderLayout.CENTER);
+
+					{
+						newProblemSetJButton = new JButton();
+						panel.add(newProblemSetJButton);
+						newProblemSetJButton.setText("New Problem Set");
+					}
+					{
+						saveProblemSetJButton = new JButton();
+						panel.add(saveProblemSetJButton);
+						saveProblemSetJButton.setText("Save Problem Set...");
+					}
+					{
+						loadProblemSetJButton = new JButton();
+						panel.add(loadProblemSetJButton);
+						loadProblemSetJButton.setText("Load Problem Set...");
+					}
+					{
+						docsInstructionPane = new JTextPane();
+						docsInstructionPane.setEditable(false);
+						docsInstructionPane.setPreferredSize(new java.awt.Dimension(500, 50));
+						docsInstructionPane.setText(" Step One: The Documents Tab\n"
+								+ " In this tab, you will create your training corpus by adding known authors and documents they have written to it.\n"
+								+ " You can also add documents and authors to test on. If you do not know the true author of a document, place it in the \"_Unknown_\" directory");
+						docsInstructionPane.setBorder(
+								new EmptyBorder(cellPadding / 2, cellPadding / 2, cellPadding / 2, cellPadding / 2));
+						docsInstructionPane.setBorder(BorderFactory.createLineBorder(Color.gray));
+						topPanel.add(docsInstructionPane, BorderLayout.NORTH);
+					}
 				}
 				{
-					JPanel centerPanel = new JPanel(new GridLayout(2,1,cellPadding,cellPadding));
-					docsTab.add(centerPanel,BorderLayout.CENTER);
-					JPanel topPanel = new JPanel(new GridLayout(1,2,cellPadding,cellPadding));
+					JPanel centerPanel = new JPanel(new GridLayout(2, 1, cellPadding, cellPadding));
+					docsTab.add(centerPanel, BorderLayout.CENTER);
+					JPanel topPanel = new JPanel(new GridLayout(1, 2, cellPadding, cellPadding));
 					centerPanel.add(topPanel);
-					JPanel testDocsPanel = new JPanel(new BorderLayout(cellPadding,cellPadding));
-					JPanel trainDocsPanel = new JPanel(new BorderLayout(cellPadding,cellPadding));
+					JPanel testDocsPanel = new JPanel(new BorderLayout(cellPadding, cellPadding));
+					JPanel trainDocsPanel = new JPanel(new BorderLayout(cellPadding, cellPadding));
 					topPanel.add(trainDocsPanel);
 					topPanel.add(testDocsPanel);
-					JPanel bottomPanel = new JPanel(new BorderLayout(cellPadding,cellPadding));
+					JPanel bottomPanel = new JPanel(new BorderLayout(cellPadding, cellPadding));
 					centerPanel.add(bottomPanel);
 
 					// test documents
 					// ==============
 					{
 						testDocsJLabel = new JLabel();
-						testDocsPanel.add(testDocsJLabel,BorderLayout.NORTH);
+						testDocsPanel.add(testDocsJLabel, BorderLayout.NORTH);
 						testDocsJLabel.setText("Test Documents");
 						testDocsJLabel.setFont(defaultLabelFont);
 					}
@@ -456,11 +451,11 @@ public class GUIMain extends javax.swing.JFrame {
 						top.add(_Unknown_);
 						testDocsJTree = new JTree(top);
 						JScrollPane scrollPane = new JScrollPane(testDocsJTree);
-						testDocsPanel.add(scrollPane,BorderLayout.CENTER);
+						testDocsPanel.add(scrollPane, BorderLayout.CENTER);
 					}
 					{
-						JPanel buttons = new JPanel(new GridLayout(2,3,cellPadding,cellPadding));
-						testDocsPanel.add(buttons,BorderLayout.SOUTH);
+						JPanel buttons = new JPanel(new GridLayout(2, 3, cellPadding, cellPadding));
+						testDocsPanel.add(buttons, BorderLayout.SOUTH);
 						{
 							addTestAuthorJButton = new JButton();
 							buttons.add(addTestAuthorJButton);
@@ -487,8 +482,8 @@ public class GUIMain extends javax.swing.JFrame {
 							removeTestDocJButton.setText("Remove Document(s)");
 						}
 
-						//buttons.add(new JPanel());
-						//buttons.add(new JPanel());
+						// buttons.add(new JPanel());
+						// buttons.add(new JPanel());
 						buttons.add(new JPanel());
 					}
 
@@ -496,7 +491,7 @@ public class GUIMain extends javax.swing.JFrame {
 					// ==================
 					{
 						corpusJLabel = new JLabel();
-						trainDocsPanel.add(corpusJLabel,BorderLayout.NORTH);
+						trainDocsPanel.add(corpusJLabel, BorderLayout.NORTH);
 						corpusJLabel.setText("Training Corpus");
 						corpusJLabel.setFont(defaultLabelFont);
 					}
@@ -504,11 +499,11 @@ public class GUIMain extends javax.swing.JFrame {
 						DefaultMutableTreeNode top = new DefaultMutableTreeNode(ps.getTrainCorpusName());
 						trainCorpusJTree = new JTree(top);
 						JScrollPane scrollPane = new JScrollPane(trainCorpusJTree);
-						trainDocsPanel.add(scrollPane,BorderLayout.CENTER);
+						trainDocsPanel.add(scrollPane, BorderLayout.CENTER);
 					}
 					{
-						JPanel buttons = new JPanel(new GridLayout(2,3,cellPadding,cellPadding));
-						trainDocsPanel.add(buttons,BorderLayout.SOUTH);
+						JPanel buttons = new JPanel(new GridLayout(2, 3, cellPadding, cellPadding));
+						trainDocsPanel.add(buttons, BorderLayout.SOUTH);
 						{
 							addAuthorJButton = new JButton();
 							buttons.add(addAuthorJButton);
@@ -545,7 +540,7 @@ public class GUIMain extends javax.swing.JFrame {
 					// =================
 					{
 						JPanel preview = new JPanel(new FlowLayout(FlowLayout.LEFT));
-						bottomPanel.add(preview,BorderLayout.NORTH);
+						bottomPanel.add(preview, BorderLayout.NORTH);
 						{
 							docPreviewJLabel = new JLabel();
 							preview.add(docPreviewJLabel);
@@ -563,11 +558,11 @@ public class GUIMain extends javax.swing.JFrame {
 						docPreviewJTextPane.setEditable(false);
 						docPreviewJTextPane.setPreferredSize(new java.awt.Dimension(413, 261));
 						docPreviewJScrollPane = new JScrollPane(docPreviewJTextPane);
-						bottomPanel.add(docPreviewJScrollPane,BorderLayout.CENTER);
+						bottomPanel.add(docPreviewJScrollPane, BorderLayout.CENTER);
 					}
 					{
 						JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
-						bottomPanel.add(p,BorderLayout.SOUTH);
+						bottomPanel.add(p, BorderLayout.SOUTH);
 						clearDocPreviewJButton = new JButton();
 						p.add(clearDocPreviewJButton);
 						clearDocPreviewJButton.setText("Clear Preview");
@@ -577,8 +572,8 @@ public class GUIMain extends javax.swing.JFrame {
 				// bottom toolbar buttons
 				// ======================
 				{
-					JPanel bottomToolbar = new JPanel(new GridLayout(1,2,cellPadding,cellPadding));
-					docsTab.add(bottomToolbar,BorderLayout.SOUTH);
+					JPanel bottomToolbar = new JPanel(new GridLayout(1, 2, cellPadding, cellPadding));
+					docsTab.add(bottomToolbar, BorderLayout.SOUTH);
 					{
 						JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
 						bottomToolbar.add(p);
@@ -594,29 +589,29 @@ public class GUIMain extends javax.swing.JFrame {
 					}
 				}
 
-				/* ============
-				 * Features tab
-				 * ============
+				/*
+				 * ============ Features tab ============
 				 */
-				featuresTab = new JPanel(new BorderLayout(cellPadding,cellPadding));
+				featuresTab = new JPanel(new BorderLayout(cellPadding, cellPadding));
 				mainJTabbedPane.addTab("Features", featuresTab);
 				{
 					// top of the features tab
 					// =======================
 					JPanel topPanel = new JPanel(new BorderLayout());
-					JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT,cellPadding,cellPadding));
-					topPanel.add(panel,BorderLayout.CENTER);
-					
-					featuresTab.add(topPanel,BorderLayout.NORTH);
+					JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, cellPadding, cellPadding));
+					topPanel.add(panel, BorderLayout.CENTER);
+
+					featuresTab.add(topPanel, BorderLayout.NORTH);
 					{
 						featuresInstructionPane = new JTextPane();
 						featuresInstructionPane.setEditable(false);
 						featuresInstructionPane.setPreferredSize(new java.awt.Dimension(500, 50));
-						featuresInstructionPane.setText(" Step Two: The Features Tab\n" +
-								" In this tab, you will select the set of traits to use to evaluate the documents. " + 
-								" You can choose a pre-built feature set from the drop down menu, import one from an XML file, or make your own.\n" +
-								" If you are unsure of what to pick, we recommend selecting the Writeprints(Limited) feature set.");
-						featuresInstructionPane.setBorder(new EmptyBorder(cellPadding/2, cellPadding/2, cellPadding/2, cellPadding/2));
+						featuresInstructionPane.setText(" Step Two: The Features Tab\n"
+								+ " In this tab, you will select the set of traits to use to evaluate the documents. "
+								+ " You can choose a pre-built feature set from the drop down menu, import one from an XML file, or make your own.\n"
+								+ " If you are unsure of what to pick, we recommend selecting the Writeprints(Limited) feature set.");
+						featuresInstructionPane.setBorder(
+								new EmptyBorder(cellPadding / 2, cellPadding / 2, cellPadding / 2, cellPadding / 2));
 						featuresInstructionPane.setBorder(BorderFactory.createLineBorder(Color.gray));
 						topPanel.add(featuresInstructionPane, BorderLayout.NORTH);
 					}
@@ -629,8 +624,8 @@ public class GUIMain extends javax.swing.JFrame {
 					{
 						String[] presetCFDsNames = new String[presetCFDs.size() + 1];
 						presetCFDsNames[0] = "";
-						for (int i=0; i<presetCFDs.size(); i++)
-							presetCFDsNames[i+1] = presetCFDs.get(i).getName();
+						for (int i = 0; i < presetCFDs.size(); i++)
+							presetCFDsNames[i + 1] = presetCFDs.get(i).getName();
 
 						featuresSetJComboBoxModel = new DefaultComboBoxModel(presetCFDsNames);
 						featuresSetJComboBox = new JComboBox();
@@ -663,45 +658,46 @@ public class GUIMain extends javax.swing.JFrame {
 					// center of the features tab
 					// ==========================
 
-					JPanel main = new JPanel(new BorderLayout(cellPadding,cellPadding));
-					featuresTab.add(main,BorderLayout.CENTER);
+					JPanel main = new JPanel(new BorderLayout(cellPadding, cellPadding));
+					featuresTab.add(main, BorderLayout.CENTER);
 					{
 						// name and description
 						// ====================
 
-						JPanel nameDescPanel = new JPanel(new BorderLayout(cellPadding,cellPadding));
-						main.add(nameDescPanel,BorderLayout.NORTH);
+						JPanel nameDescPanel = new JPanel(new BorderLayout(cellPadding, cellPadding));
+						main.add(nameDescPanel, BorderLayout.NORTH);
 						{
-							JPanel north = new JPanel(new BorderLayout(cellPadding,cellPadding));
-							nameDescPanel.add(north,BorderLayout.NORTH);
+							JPanel north = new JPanel(new BorderLayout(cellPadding, cellPadding));
+							nameDescPanel.add(north, BorderLayout.NORTH);
 							{
 								featuresSetNameJLabel = new JLabel();
 								featuresSetNameJLabel.setVerticalAlignment(JLabel.TOP);
 								featuresSetNameJLabel.setFont(defaultLabelFont);
-								featuresSetNameJLabel.setPreferredSize(new Dimension(200,20));
-								north.add(featuresSetNameJLabel,BorderLayout.WEST);
+								featuresSetNameJLabel.setPreferredSize(new Dimension(200, 20));
+								north.add(featuresSetNameJLabel, BorderLayout.WEST);
 								featuresSetNameJLabel.setText("Feature Set Name");
 							}
 							{
 								featuresSetNameJTextField = new JTextField();
-								north.add(featuresSetNameJTextField,BorderLayout.CENTER);
+								north.add(featuresSetNameJTextField, BorderLayout.CENTER);
 							}
 						}
 						{
-							JPanel center = new JPanel(new BorderLayout(cellPadding,cellPadding));
-							nameDescPanel.add(center,BorderLayout.CENTER);
+							JPanel center = new JPanel(new BorderLayout(cellPadding, cellPadding));
+							nameDescPanel.add(center, BorderLayout.CENTER);
 							{
 								featuresSetDescJLabel = new JLabel();
 								featuresSetDescJLabel.setVerticalAlignment(JLabel.TOP);
-								center.add(featuresSetDescJLabel,BorderLayout.WEST);
+								center.add(featuresSetDescJLabel, BorderLayout.WEST);
 								featuresSetDescJLabel.setText("Feature Set Description");
 								featuresSetDescJLabel.setFont(defaultLabelFont);
-								featuresSetDescJLabel.setPreferredSize(new Dimension(200,20));
+								featuresSetDescJLabel.setPreferredSize(new Dimension(200, 20));
 							}
 							{
 								featuresSetDescJScrollPane = new JScrollPane();
-								featuresSetDescJScrollPane.setPreferredSize(new Dimension(featuresSetNameJTextField.getWidth(),100));
-								center.add(featuresSetDescJScrollPane,BorderLayout.CENTER);
+								featuresSetDescJScrollPane
+										.setPreferredSize(new Dimension(featuresSetNameJTextField.getWidth(), 100));
+								center.add(featuresSetDescJScrollPane, BorderLayout.CENTER);
 								{
 									featuresSetDescJTextPane = new JTextPane();
 									featuresSetDescJScrollPane.setViewportView(featuresSetDescJTextPane);
@@ -713,31 +709,30 @@ public class GUIMain extends javax.swing.JFrame {
 					{
 						// all the rest
 						// ============
-						JPanel remainderPanel = new JPanel(new BorderLayout(cellPadding,cellPadding));
-						main.add(remainderPanel,BorderLayout.CENTER);
+						JPanel remainderPanel = new JPanel(new BorderLayout(cellPadding, cellPadding));
+						main.add(remainderPanel, BorderLayout.CENTER);
 
 						{
 							// north - header
 							// ==============
 							{
 								featuresFeaturesJLabel = new JLabel();
-								remainderPanel.add(featuresFeaturesJLabel,BorderLayout.NORTH);
+								remainderPanel.add(featuresFeaturesJLabel, BorderLayout.NORTH);
 								featuresFeaturesJLabel.setText("Features");
 								featuresFeaturesJLabel.setFont(defaultLabelFont);
 							}
 						}
 						{
 							// west - feature list
-							//====================
+							// ====================
 
-							JPanel west = new JPanel(new BorderLayout(cellPadding,cellPadding));
-							remainderPanel.add(west,BorderLayout.WEST);
+							JPanel west = new JPanel(new BorderLayout(cellPadding, cellPadding));
+							remainderPanel.add(west, BorderLayout.WEST);
 							{
 								JScrollPane featuresListJScrollPane = new JScrollPane();
-								west.add(featuresListJScrollPane,BorderLayout.CENTER);
+								west.add(featuresListJScrollPane, BorderLayout.CENTER);
 								{
-									featuresJListModel = 
-											new DefaultComboBoxModel();
+									featuresJListModel = new DefaultComboBoxModel();
 									featuresJList = new JList();
 									featuresListJScrollPane.setViewportView(featuresJList);
 									featuresJList.setModel(featuresJListModel);
@@ -745,8 +740,8 @@ public class GUIMain extends javax.swing.JFrame {
 								}
 							}
 							{
-								JPanel buttons = new JPanel(new GridLayout(1,3,cellPadding,cellPadding));
-								west.add(buttons,BorderLayout.SOUTH);
+								JPanel buttons = new JPanel(new GridLayout(1, 3, cellPadding, cellPadding));
+								west.add(buttons, BorderLayout.SOUTH);
 								{
 									featuresAddJButton = new JButton();
 									buttons.add(featuresAddJButton);
@@ -769,36 +764,36 @@ public class GUIMain extends javax.swing.JFrame {
 							// ==============================
 
 							JPanel center = new JPanel();
-							center.setLayout(new BoxLayout(center,BoxLayout.Y_AXIS));
-							remainderPanel.add(center,BorderLayout.CENTER);
-							Dimension labelDim = new Dimension(200,20);
+							center.setLayout(new BoxLayout(center, BoxLayout.Y_AXIS));
+							remainderPanel.add(center, BorderLayout.CENTER);
+							Dimension labelDim = new Dimension(200, 20);
 
 							{
 								// feature name
 								// ============
 
-								JPanel name = new JPanel(new BorderLayout(cellPadding,cellPadding));
+								JPanel name = new JPanel(new BorderLayout(cellPadding, cellPadding));
 								center.add(name);
 								{
 									featuresFeatureNameJLabel = new JLabel();
 									featuresFeatureNameJLabel.setVerticalAlignment(JLabel.TOP);
 									featuresFeatureNameJLabel.setPreferredSize(labelDim);
-									name.add(featuresFeatureNameJLabel,BorderLayout.WEST);
+									name.add(featuresFeatureNameJLabel, BorderLayout.WEST);
 									featuresFeatureNameJLabel.setText("Feature Name");
 									featuresFeatureNameJLabel.setFont(defaultLabelFont);
 								}
 								{
 									featuresFeatureNameJTextField = new JTextField();
 									featuresFeatureNameJTextField.setEditable(false);
-									featuresFeatureNameJTextField.setPreferredSize(new Dimension(0,20));
-									name.add(featuresFeatureNameJTextField,BorderLayout.CENTER);
+									featuresFeatureNameJTextField.setPreferredSize(new Dimension(0, 20));
+									name.add(featuresFeatureNameJTextField, BorderLayout.CENTER);
 								}
 							}
 							{
 								// feature description
 								// ===================
 
-								JPanel desc = new JPanel(new BorderLayout(cellPadding,cellPadding));
+								JPanel desc = new JPanel(new BorderLayout(cellPadding, cellPadding));
 								center.add(desc);
 								{
 									featuresFeatureDescJLabel = new JLabel();
@@ -810,7 +805,7 @@ public class GUIMain extends javax.swing.JFrame {
 								}
 								{
 									featuresFeatureDescJScrollPane = new JScrollPane();
-									desc.add(featuresFeatureDescJScrollPane,BorderLayout.CENTER);
+									desc.add(featuresFeatureDescJScrollPane, BorderLayout.CENTER);
 									{
 										featuresFeatureDescJTextPane = new JTextPane();
 										featuresFeatureDescJTextPane.setEditable(false);
@@ -822,16 +817,16 @@ public class GUIMain extends javax.swing.JFrame {
 								// configuration headers
 								// =====================
 
-								JPanel configHeaders = new JPanel(new BorderLayout(cellPadding,cellPadding));
+								JPanel configHeaders = new JPanel(new BorderLayout(cellPadding, cellPadding));
 								center.add(configHeaders);
 								{
 									JLabel stub = new JLabel();
 									stub.setPreferredSize(new Dimension(labelDim));
-									configHeaders.add(stub,BorderLayout.WEST);
+									configHeaders.add(stub, BorderLayout.WEST);
 								}
 								{
-									JPanel headers = new JPanel(new GridLayout(1,2,cellPadding,cellPadding));
-									configHeaders.add(headers,BorderLayout.CENTER);
+									JPanel headers = new JPanel(new GridLayout(1, 2, cellPadding, cellPadding));
+									configHeaders.add(headers, BorderLayout.CENTER);
 									{
 										featuresToolsJLabel = new JLabel();
 										headers.add(featuresToolsJLabel);
@@ -850,26 +845,27 @@ public class GUIMain extends javax.swing.JFrame {
 								// feature extractor
 								// =================
 
-								JPanel extractor = new JPanel(new BorderLayout(cellPadding,cellPadding));
+								JPanel extractor = new JPanel(new BorderLayout(cellPadding, cellPadding));
 								center.add(extractor);
 								{
 									featuresFeatureExtractorJLabel = new JLabel();
 									featuresFeatureExtractorJLabel.setVerticalAlignment(JLabel.TOP);
 									featuresFeatureExtractorJLabel.setPreferredSize(labelDim);
-									extractor.add(featuresFeatureExtractorJLabel,BorderLayout.WEST);
+									extractor.add(featuresFeatureExtractorJLabel, BorderLayout.WEST);
 									featuresFeatureExtractorJLabel.setText("Feature Extractor");
 									featuresFeatureExtractorJLabel.setFont(defaultLabelFont);
 								}
 								{
-									JPanel config = new JPanel(new GridLayout(1,2,cellPadding,cellPadding));
-									extractor.add(config,BorderLayout.CENTER);
+									JPanel config = new JPanel(new GridLayout(1, 2, cellPadding, cellPadding));
+									extractor.add(config, BorderLayout.CENTER);
 									{
 										featuresFeatureExtractorJScrollPane = new JScrollPane();
 										config.add(featuresFeatureExtractorJScrollPane);
 										{
 											featuresFeatureExtractorContentJLabel = new JLabel();
 											featuresFeatureExtractorContentJLabel.setVerticalAlignment(JLabel.TOP);
-											featuresFeatureExtractorJScrollPane.setViewportView(featuresFeatureExtractorContentJLabel);
+											featuresFeatureExtractorJScrollPane
+													.setViewportView(featuresFeatureExtractorContentJLabel);
 										}
 									}
 									{
@@ -882,25 +878,24 @@ public class GUIMain extends javax.swing.JFrame {
 								// canonicizers
 								// ============
 
-								JPanel canons = new JPanel(new BorderLayout(cellPadding,cellPadding));
+								JPanel canons = new JPanel(new BorderLayout(cellPadding, cellPadding));
 								center.add(canons);
 								{
 									featuresCanonJLabel = new JLabel();
 									featuresCanonJLabel.setVerticalAlignment(JLabel.TOP);
 									featuresCanonJLabel.setPreferredSize(labelDim);
-									canons.add(featuresCanonJLabel,BorderLayout.WEST);
+									canons.add(featuresCanonJLabel, BorderLayout.WEST);
 									featuresCanonJLabel.setText("Text Pre-Processing");
 									featuresCanonJLabel.setFont(defaultLabelFont);
 								}
 								{
-									JPanel config = new JPanel(new GridLayout(1,2,cellPadding,cellPadding));
-									canons.add(config,BorderLayout.CENTER);
+									JPanel config = new JPanel(new GridLayout(1, 2, cellPadding, cellPadding));
+									canons.add(config, BorderLayout.CENTER);
 									{
 										featuresCanonListJScrollPane = new JScrollPane();
 										config.add(featuresCanonListJScrollPane);
 										{
-											featuresCanonJListModel = 
-													new DefaultComboBoxModel();
+											featuresCanonJListModel = new DefaultComboBoxModel();
 											featuresCanonJList = new JList();
 											featuresCanonListJScrollPane.setViewportView(featuresCanonJList);
 											featuresCanonJList.setModel(featuresCanonJListModel);
@@ -916,25 +911,24 @@ public class GUIMain extends javax.swing.JFrame {
 								// cullers
 								// =======
 
-								JPanel cullers = new JPanel(new BorderLayout(cellPadding,cellPadding));
+								JPanel cullers = new JPanel(new BorderLayout(cellPadding, cellPadding));
 								center.add(cullers);
 								{
 									featuresCullJLabel = new JLabel();
 									featuresCullJLabel.setVerticalAlignment(JLabel.TOP);
 									featuresCullJLabel.setPreferredSize(labelDim);
-									cullers.add(featuresCullJLabel,BorderLayout.WEST);
+									cullers.add(featuresCullJLabel, BorderLayout.WEST);
 									featuresCullJLabel.setText("Feature Post-Processing");
 									featuresCullJLabel.setFont(defaultLabelFont);
 								}
 								{
-									JPanel config = new JPanel(new GridLayout(1,2,cellPadding,cellPadding));
-									cullers.add(config,BorderLayout.CENTER);
+									JPanel config = new JPanel(new GridLayout(1, 2, cellPadding, cellPadding));
+									cullers.add(config, BorderLayout.CENTER);
 									{
 										featuresCullListJScrollPane = new JScrollPane();
 										config.add(featuresCullListJScrollPane);
 										{
-											featuresCullJListModel = 
-													new DefaultComboBoxModel();
+											featuresCullJListModel = new DefaultComboBoxModel();
 											featuresCullJList = new JList();
 											featuresCullListJScrollPane.setViewportView(featuresCullJList);
 											featuresCullJList.setModel(featuresCullJListModel);
@@ -950,19 +944,19 @@ public class GUIMain extends javax.swing.JFrame {
 								// normalization
 								// =============
 
-								JPanel norm = new JPanel(new BorderLayout(cellPadding,cellPadding));
+								JPanel norm = new JPanel(new BorderLayout(cellPadding, cellPadding));
 								center.add(norm);
 								{
 									featuresNormJLabel = new JLabel();
 									featuresNormJLabel.setVerticalAlignment(JLabel.TOP);
 									featuresNormJLabel.setPreferredSize(labelDim);
-									norm.add(featuresNormJLabel,BorderLayout.WEST);
+									norm.add(featuresNormJLabel, BorderLayout.WEST);
 									featuresNormJLabel.setText("Normalization");
 									featuresNormJLabel.setFont(defaultLabelFont);
 								}
 								{
 									featuresNormContentJLabel = new JLabel();
-									norm.add(featuresNormContentJLabel,BorderLayout.CENTER);
+									norm.add(featuresNormContentJLabel, BorderLayout.CENTER);
 									featuresNormContentJLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 								}
 							}
@@ -970,32 +964,31 @@ public class GUIMain extends javax.swing.JFrame {
 								// feature factor
 								// ==============
 
-								JPanel factor = new JPanel(new BorderLayout(cellPadding,cellPadding));
+								JPanel factor = new JPanel(new BorderLayout(cellPadding, cellPadding));
 								center.add(factor);
 								{
 									featuresFactorJLabel = new JLabel();
 									featuresFactorJLabel.setVerticalAlignment(JLabel.TOP);
 									featuresFactorJLabel.setPreferredSize(labelDim);
-									factor.add(featuresFactorJLabel,BorderLayout.WEST);
+									factor.add(featuresFactorJLabel, BorderLayout.WEST);
 									featuresFactorJLabel.setText("Factor");
 									featuresFactorJLabel.setFont(defaultLabelFont);
 								}
 								{
 									featuresFactorContentJLabel = new JLabel();
-									factor.add(featuresFactorContentJLabel,BorderLayout.CENTER);
+									factor.add(featuresFactorContentJLabel, BorderLayout.CENTER);
 									featuresFactorContentJLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 								}
 							}
 						}
 					}
-
 				}
 				{
 					// bottom toolbar buttons
 					// ======================
 					{
-						JPanel bottomToolbar = new JPanel(new GridLayout(1,2,cellPadding,cellPadding));
-						featuresTab.add(bottomToolbar,BorderLayout.SOUTH);
+						JPanel bottomToolbar = new JPanel(new GridLayout(1, 2, cellPadding, cellPadding));
+						featuresTab.add(bottomToolbar, BorderLayout.SOUTH);
 						{
 							JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
 							bottomToolbar.add(p);
@@ -1019,69 +1012,71 @@ public class GUIMain extends javax.swing.JFrame {
 					}
 				}
 
-				/* ===============
-				 * Classifiers tab
-				 * ===============
+				/*
+				 * =============== Classifiers tab ===============
 				 */
-				classTab = new JPanel(new BorderLayout(cellPadding,cellPadding));
+				classTab = new JPanel(new BorderLayout(cellPadding, cellPadding));
 				mainJTabbedPane.addTab("Classifiers", classTab);
 				{
 					// main center
 					// ===========
-					
-					JPanel center = new JPanel(new GridLayout(1,1,cellPadding,cellPadding));
-					//JPanel center = new JPanel(new BorderLayout());
+
+					JPanel center = new JPanel(new GridLayout(1, 1, cellPadding, cellPadding));
+					// JPanel center = new JPanel(new BorderLayout());
 					classTab.add(center);
-					
+
 					{
 						classInstructionPane = new JTextPane();
 						classInstructionPane.setEditable(false);
 						classInstructionPane.setPreferredSize(new java.awt.Dimension(500, 50));
-						classInstructionPane.setText(" Step Three: The Classifiers Tab\n" +
-								" In this tab, you will select the classifier(s) used for the machine learning algorithm. " + 
-								" You can select as many classifiers as you like, but if you are picking duplicates, they must have different arguments.\n" +
-								" Default arguments are provided for classifiers that take arguments. " +
-								" If you are unsure of what to pick, we recommend selecting the SMO classifier at \"weka -> classifiers -> functions -> SMO\".");
-						classInstructionPane.setBorder(new EmptyBorder(cellPadding/2, cellPadding/2, cellPadding/2, cellPadding/2));
+						classInstructionPane.setText(" Step Three: The Classifiers Tab\n"
+								+ " In this tab, you will select the classifier(s) used for the machine learning algorithm. "
+								+ " You can select as many classifiers as you like, but if you are picking duplicates, they must have different arguments.\n"
+								+ " Default arguments are provided for classifiers that take arguments. "
+								+ " If you are unsure of what to pick, we recommend selecting the SMO classifier at \"weka -> classifiers -> functions -> SMO\".");
+						classInstructionPane.setBorder(
+								new EmptyBorder(cellPadding / 2, cellPadding / 2, cellPadding / 2, cellPadding / 2));
 						classInstructionPane.setBorder(BorderFactory.createLineBorder(Color.gray));
-						classTab.add(classInstructionPane,BorderLayout.NORTH);
+						classTab.add(classInstructionPane, BorderLayout.NORTH);
 					}
 					{
 						// available and selected classifiers
 						// ==================================
-						
-						JPanel top = new JPanel(new GridLayout(1,2,cellPadding,cellPadding));
-						center.add(top,BorderLayout.CENTER);
-						
+
+						JPanel top = new JPanel(new GridLayout(1, 2, cellPadding, cellPadding));
+						center.add(top, BorderLayout.CENTER);
+
 						{
 							// available
 							// =========
-							JPanel av = new JPanel(new BorderLayout(cellPadding,cellPadding));
+							JPanel av = new JPanel(new BorderLayout(cellPadding, cellPadding));
 							top.add(av);
 							{
 								classAvClassJLabel = new JLabel();
 								classAvClassJLabel.setFont(defaultLabelFont);
-								av.add(classAvClassJLabel,BorderLayout.NORTH);
+								av.add(classAvClassJLabel, BorderLayout.NORTH);
 								classAvClassJLabel.setText("Available Classifiers");
 							}
 							{
 								classTreeScrollPane = new JScrollPane();
-								av.add(classTreeScrollPane,BorderLayout.CENTER);
+								av.add(classTreeScrollPane, BorderLayout.CENTER);
 								{
 									classJTree = new JTree();
-									classJTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+									classJTree.getSelectionModel()
+											.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 									classTreeScrollPane.setViewportView(classJTree);
 									ClassTabDriver.initWekaClassifiersTree(this);
 								}
 							}
 							{
-								JPanel config = new JPanel(new GridLayout(3,1,cellPadding,cellPadding));
-								av.add(config,BorderLayout.SOUTH);
+								JPanel config = new JPanel(new GridLayout(3, 1, cellPadding, cellPadding));
+								av.add(config, BorderLayout.SOUTH);
 								{
 									classAvClassArgsJLabel = new JLabel();
 									config.add(classAvClassArgsJLabel);
-									classAvClassArgsJLabel.setText("<html>Classifier Arguments&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" +
-											"<font size=2>(Click text field for details)</font></html>");
+									classAvClassArgsJLabel.setText(
+											"<html>Classifier Arguments&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"
+													+ "<font size=2>(Click text field for details)</font></html>");
 									classAvClassArgsJLabel.setFont(defaultLabelFont);
 								}
 								{
@@ -1099,20 +1094,19 @@ public class GUIMain extends javax.swing.JFrame {
 						{
 							// selected
 							// ========
-							JPanel sel = new JPanel(new BorderLayout(cellPadding,cellPadding));
+							JPanel sel = new JPanel(new BorderLayout(cellPadding, cellPadding));
 							top.add(sel);
 							{
 								classSelClassJLabel = new JLabel();
-								sel.add(classSelClassJLabel,BorderLayout.NORTH);
+								sel.add(classSelClassJLabel, BorderLayout.NORTH);
 								classSelClassJLabel.setText("Selected Classifiers");
 								classSelClassJLabel.setFont(defaultLabelFont);
 							}
 							{
 								classSelClassJScrollPane = new JScrollPane();
-								sel.add(classSelClassJScrollPane,BorderLayout.CENTER);
+								sel.add(classSelClassJScrollPane, BorderLayout.CENTER);
 								{
-									classSelClassJListModel = 
-											new DefaultComboBoxModel();
+									classSelClassJListModel = new DefaultComboBoxModel();
 									classJList = new JList();
 									classJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 									classSelClassJScrollPane.setViewportView(classJList);
@@ -1120,8 +1114,8 @@ public class GUIMain extends javax.swing.JFrame {
 								}
 							}
 							{
-								JPanel config = new JPanel(new GridLayout(3,1,cellPadding,cellPadding));
-								sel.add(config,BorderLayout.SOUTH);
+								JPanel config = new JPanel(new GridLayout(3, 1, cellPadding, cellPadding));
+								sel.add(config, BorderLayout.SOUTH);
 								{
 									classSelClassArgsJLabel = new JLabel();
 									config.add(classSelClassArgsJLabel);
@@ -1146,8 +1140,8 @@ public class GUIMain extends javax.swing.JFrame {
 					// bottom toolbar buttons
 					// ======================
 					{
-						JPanel bottomToolbar = new JPanel(new GridLayout(1,2,cellPadding,cellPadding));
-						classTab.add(bottomToolbar,BorderLayout.SOUTH);
+						JPanel bottomToolbar = new JPanel(new GridLayout(1, 2, cellPadding, cellPadding));
+						classTab.add(bottomToolbar, BorderLayout.SOUTH);
 						{
 							JPanel bottomLeft = new JPanel(new FlowLayout(FlowLayout.LEFT));
 							bottomToolbar.add(bottomLeft);
@@ -1156,7 +1150,7 @@ public class GUIMain extends javax.swing.JFrame {
 						}
 						{
 							JPanel bottomRight = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-							bottomToolbar.add(bottomRight,BorderLayout.SOUTH);
+							bottomToolbar.add(bottomRight, BorderLayout.SOUTH);
 							{
 								classBackJButton = new JButton();
 								bottomRight.add(classBackJButton);
@@ -1169,53 +1163,51 @@ public class GUIMain extends javax.swing.JFrame {
 							}
 						}
 					}
-					
-					
 				}
-				
-				/* ============
-				 * Analysis tab
-				 * ============
+
+				/*
+				 * ============ Analysis tab ============
 				 */
-				analysisTab = new JPanel(new BorderLayout(cellPadding,cellPadding));
+				analysisTab = new JPanel(new BorderLayout(cellPadding, cellPadding));
 				mainJTabbedPane.addTab("Analysis", analysisTab);
-				analysisTab.setLayout(new BorderLayout(cellPadding,cellPadding));
+				analysisTab.setLayout(new BorderLayout(cellPadding, cellPadding));
 				{
 					// header
 					// ======
 
 					JPanel topPanel = new JPanel(new BorderLayout());
-					JPanel header = new JPanel(new GridLayout(1,3,cellPadding,cellPadding));
-					topPanel.add(header,BorderLayout.CENTER);
-					analysisTab.add(topPanel,BorderLayout.NORTH);
+					JPanel header = new JPanel(new GridLayout(1, 3, cellPadding, cellPadding));
+					topPanel.add(header, BorderLayout.CENTER);
+					analysisTab.add(topPanel, BorderLayout.NORTH);
 					{
 						analysisInstructionPane = new JTextPane();
 						analysisInstructionPane.setEditable(false);
 						analysisInstructionPane.setPreferredSize(new java.awt.Dimension(500, 65));
-						analysisInstructionPane.setText(" Step Four: The Analysis Tab\n" +
-								" After completing all of the other steps, you can now evaluate your documents. If there is a document you want to identify, select \"Train on Training Corpus and Classify Documents\"\n" +
-								" Otherwise, leave the radio button at the default \"Perform K-fold Cross validation\" to evaluate the classifier(s) and features on your training set.\n" +
-								" Hover over the other options for more information on what each individual one does. The default settings provided will be desirable in most circumstances.");
-						analysisInstructionPane.setBorder(new EmptyBorder(cellPadding/2, cellPadding/2, cellPadding/2, cellPadding/2));
+						analysisInstructionPane.setText(" Step Four: The Analysis Tab\n"
+								+ " After completing all of the other steps, you can now evaluate your documents. If there is a document you want to identify, select \"Train on Training Corpus and Classify Documents\"\n"
+								+ " Otherwise, leave the radio button at the default \"Perform K-fold Cross validation\" to evaluate the classifier(s) and features on your training set.\n"
+								+ " Hover over the other options for more information on what each individual one does. The default settings provided will be desirable in most circumstances.");
+						analysisInstructionPane.setBorder(
+								new EmptyBorder(cellPadding / 2, cellPadding / 2, cellPadding / 2, cellPadding / 2));
 						analysisInstructionPane.setBorder(BorderFactory.createLineBorder(Color.gray));
-						topPanel.add(analysisInstructionPane,BorderLayout.NORTH);
+						topPanel.add(analysisInstructionPane, BorderLayout.NORTH);
 					}
 					// configuration
-					JPanel analysisConfPanel = new JPanel(new BorderLayout(cellPadding,cellPadding));
+					JPanel analysisConfPanel = new JPanel(new BorderLayout(cellPadding, cellPadding));
 					header.add(analysisConfPanel);
 					{
 						analysisConfigJLabel = new JLabel();
-						analysisConfPanel.add(analysisConfigJLabel,BorderLayout.NORTH);
+						analysisConfPanel.add(analysisConfigJLabel, BorderLayout.NORTH);
 						analysisConfigJLabel.setText("Configuration");
 						analysisConfigJLabel.setFont(defaultLabelFont);
-						
+
 						// options
-						JPanel options = new JPanel(new GridLayout(4,1,cellPadding,cellPadding));
-						analysisConfPanel.add(options,BorderLayout.CENTER);
+						JPanel options = new JPanel(new GridLayout(4, 1, cellPadding, cellPadding));
+						analysisConfPanel.add(options, BorderLayout.CENTER);
 						{
-							
 							analysisOutputFeatureVectorJCheckBox = new JCheckBox();
-							analysisOutputFeatureVectorJCheckBox.setToolTipText("Display the data collected from each document for each feature.");
+							analysisOutputFeatureVectorJCheckBox
+									.setToolTipText("Display the data collected from each document for each feature.");
 							analysisOutputFeatureVectorJCheckBox.setSelected(false);
 							options.add(analysisOutputFeatureVectorJCheckBox);
 							analysisOutputFeatureVectorJCheckBox.setText("Output feature vectors (ARFF format)");
@@ -1227,9 +1219,10 @@ public class GUIMain extends javax.swing.JFrame {
 							options.add(analysisSparseInstancesJCheckBox);
 							analysisSparseInstancesJCheckBox.setText("Use sparse representation for feature vectors");
 						}
-						{	
+						{
 							analysisCalcInfoGainJCheckBox = new JCheckBox();
-							analysisCalcInfoGainJCheckBox.setToolTipText("Display how much information each feature taught the computer.");
+							analysisCalcInfoGainJCheckBox
+									.setToolTipText("Display how much information each feature taught the computer.");
 							analysisCalcInfoGainJCheckBox.setSelected(true);
 							options.add(analysisCalcInfoGainJCheckBox);
 							analysisCalcInfoGainJCheckBox.setText("Calculate InfoGain on feature set");
@@ -1238,9 +1231,9 @@ public class GUIMain extends javax.swing.JFrame {
 							JPanel applyIG = new JPanel(new FlowLayout(FlowLayout.LEFT));
 							options.add(applyIG);
 							{
-								
 								analysisApplyInfoGainJCheckBox = new JCheckBox();
-								analysisApplyInfoGainJCheckBox.setToolTipText("Limit the display to the top N features");
+								analysisApplyInfoGainJCheckBox
+										.setToolTipText("Limit the display to the top N features");
 								applyIG.add(analysisApplyInfoGainJCheckBox);
 								analysisApplyInfoGainJCheckBox.setText("Apply InfoGain on top N features:");
 							}
@@ -1254,107 +1247,110 @@ public class GUIMain extends javax.swing.JFrame {
 						{
 							int numCalcThreads = ib.getNumThreads();
 							JPanel analysisNPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-							analysisNThreadJTextField = new JTextField(""+numCalcThreads);
+							analysisNThreadJTextField = new JTextField("" + numCalcThreads);
 							analysisNThreadJTextField.setColumns(5);
-							analysisNThreadJTextField.setToolTipText("The number of processing threads to use.\n" +
-									" With a more powerful computer, a higher number will speed up the program.");
+							analysisNThreadJTextField.setToolTipText("The number of processing threads to use.\n"
+									+ " With a more powerful computer, a higher number will speed up the program.");
 							analysisNThreadJLabel = new JLabel(" Use N Calculation Threads: ");
-							analysisNThreadJTextField.setPreferredSize(new Dimension(25,20));
+							analysisNThreadJTextField.setPreferredSize(new Dimension(25, 20));
 							analysisNPanel.add(analysisNThreadJLabel);
 							analysisNPanel.add(analysisNThreadJTextField);
-							analysisConfPanel.add(analysisNPanel,BorderLayout.SOUTH);		
+							analysisConfPanel.add(analysisNPanel, BorderLayout.SOUTH);
 						}
-					}					
-					
-					
+					}
+
 					// analysis type
-					JPanel analysisTypePanel = new JPanel(new BorderLayout(cellPadding,cellPadding));
+					JPanel analysisTypePanel = new JPanel(new BorderLayout(cellPadding, cellPadding));
 					header.add(analysisTypePanel);
 					{
 						analysisTypeJLabel = new JLabel();
 						analysisTypeJLabel.setFont(defaultLabelFont);
-						analysisTypePanel.add(analysisTypeJLabel,BorderLayout.NORTH);
+						analysisTypePanel.add(analysisTypeJLabel, BorderLayout.NORTH);
 						analysisTypeJLabel.setText("Analysis Type");
-						
+
 						// options
-						JPanel options = new JPanel(new GridLayout(2,1,cellPadding,cellPadding));
-						analysisTypePanel.add(options,BorderLayout.CENTER);
+						JPanel options = new JPanel(new GridLayout(2, 1, cellPadding, cellPadding));
+						analysisTypePanel.add(options, BorderLayout.CENTER);
 						analysisTypeButtonGroup = new ButtonGroup();
-						{																			
-							analysisTrainCVJPanel = new JPanel(new BorderLayout(cellPadding,cellPadding));
-							options.add(analysisTrainCVJPanel,BorderLayout.CENTER);
+						{
+							analysisTrainCVJPanel = new JPanel(new BorderLayout(cellPadding, cellPadding));
+							options.add(analysisTrainCVJPanel, BorderLayout.CENTER);
 							{
 								analysisTrainCVJRadioButton = new JRadioButton();
 								analysisTrainCVJRadioButton.setSelected(true);
-								analysisTrainCVJPanel.add(analysisTrainCVJRadioButton,BorderLayout.CENTER);
+								analysisTrainCVJPanel.add(analysisTrainCVJRadioButton, BorderLayout.CENTER);
 								analysisTypeButtonGroup.add(analysisTrainCVJRadioButton);
 								analysisTrainCVJRadioButton.setText("Run K-fold cross validation on training corpus");
 							}
 							{
 								analysisTrainCVoptionsJPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-								analysisTrainCVJPanel.add(analysisTrainCVoptionsJPanel,BorderLayout.SOUTH);
+								analysisTrainCVJPanel.add(analysisTrainCVoptionsJPanel, BorderLayout.SOUTH);
 								{
 									analysisKFoldJTextField = new JTextField("10");
-									analysisKFoldJTextField.setPreferredSize(new Dimension(25,20));
+									analysisKFoldJTextField.setPreferredSize(new Dimension(25, 20));
 									analysisKFoldJLabel = new JLabel("K Folds: ");
-									analysisKFoldJTextField.setToolTipText("The number of groups to split the documents into. Must be larger then one and can't be larger then the number of documents you have." );
-									
+									analysisKFoldJTextField.setToolTipText(
+											"The number of groups to split the documents into. Must be larger then one and can't be larger then the number of documents you have.");
+
 									analysisRelaxJLabel = new JLabel("     Relaxation Factor: ");
-									analysisRelaxJTextField=new JTextField("1");
-									analysisRelaxJTextField.setPreferredSize(new Dimension(25,20));
-									analysisRelaxJTextField.setToolTipText("Sets the relaxation factor. If an answer is in the top <relax factor> of predictions, it will be counted as correct.");
-									
+									analysisRelaxJTextField = new JTextField("1");
+									analysisRelaxJTextField.setPreferredSize(new Dimension(25, 20));
+									analysisRelaxJTextField.setToolTipText(
+											"Sets the relaxation factor. If an answer is in the top <relax factor> of predictions, it will be counted as correct.");
+
 									analysisTrainCVoptionsJPanel.add(analysisKFoldJLabel);
 									analysisTrainCVoptionsJPanel.add(analysisKFoldJTextField);
-									
+
 									analysisTrainCVoptionsJPanel.add(analysisRelaxJLabel);
-									analysisTrainCVoptionsJPanel.add(analysisRelaxJTextField);									
+									analysisTrainCVoptionsJPanel.add(analysisRelaxJTextField);
 								}
 							}
 						}
 						{
-							JPanel analysisClassTestJPanel = new JPanel(new BorderLayout(cellPadding,cellPadding));
+							JPanel analysisClassTestJPanel = new JPanel(new BorderLayout(cellPadding, cellPadding));
 							analysisClassTestDocsJRadioButton = new JRadioButton();
-							analysisClassTestJPanel.add(analysisClassTestDocsJRadioButton,BorderLayout.CENTER);
+							analysisClassTestJPanel.add(analysisClassTestDocsJRadioButton, BorderLayout.CENTER);
 							analysisTypeButtonGroup.add(analysisClassTestDocsJRadioButton);
-							analysisClassTestDocsJRadioButton.setText("Train on training corpus and classify test documents");
+							analysisClassTestDocsJRadioButton
+									.setText("Train on training corpus and classify test documents");
 							{
 								JPanel analysisClassStatisticsJPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-								
+
 								analysisClassificationStatisticsJCheckBox = new JCheckBox();
 								analysisClassificationStatisticsJCheckBox.setSelected(false);
-								analysisClassificationStatisticsJCheckBox.setToolTipText("<html>JStylo will provide a confusion matrix and supplementary statistics.<br>" +
-										"Not recommended by default.<br>Only use if the true authors of each document are known and appear in the test document filename in the same" +
-										" format as the author name.<br>" +
-										"Intended for research purposes, not for deanonymization attempts.</html>");
+								analysisClassificationStatisticsJCheckBox.setToolTipText(
+										"<html>JStylo will provide a confusion matrix and supplementary statistics.<br>"
+												+ "Not recommended by default.<br>Only use if the true authors of each document are known and appear in the test document filename in the same"
+												+ " format as the author name.<br>"
+												+ "Intended for research purposes, not for deanonymization attempts.</html>");
 								analysisClassificationStatisticsJCheckBox.setText("Enable Classification Statistics");
 								analysisClassificationStatisticsJCheckBox.setEnabled(false);
 
 								analysisClassStatisticsJPanel.add(analysisClassificationStatisticsJCheckBox);
-								analysisClassTestJPanel.add(analysisClassStatisticsJPanel,BorderLayout.SOUTH);
+								analysisClassTestJPanel.add(analysisClassStatisticsJPanel, BorderLayout.SOUTH);
 							}
-							options.add(analysisClassTestJPanel,BorderLayout.CENTER);
+							options.add(analysisClassTestJPanel, BorderLayout.CENTER);
 						}
 					}
 
 					// post-analysis
-					JPanel postAnalysisPanel = new JPanel(new BorderLayout(cellPadding,cellPadding));
+					JPanel postAnalysisPanel = new JPanel(new BorderLayout(cellPadding, cellPadding));
 					header.add(postAnalysisPanel);
 					{
 						analysisPostAnalysisJLabel = new JLabel();
-						postAnalysisPanel.add(analysisPostAnalysisJLabel,BorderLayout.NORTH);
+						postAnalysisPanel.add(analysisPostAnalysisJLabel, BorderLayout.NORTH);
 						analysisPostAnalysisJLabel.setText("Post Analysis");
 						analysisPostAnalysisJLabel.setFont(defaultLabelFont);
-						
+
 						// options
-						JPanel options = new JPanel(new GridLayout(2,1,cellPadding,cellPadding));
-						postAnalysisPanel.add(options,BorderLayout.CENTER);
+						JPanel options = new JPanel(new GridLayout(2, 1, cellPadding, cellPadding));
+						postAnalysisPanel.add(options, BorderLayout.CENTER);
 						{
-							JPanel trainButtons = new JPanel(new GridLayout(2,1,cellPadding,cellPadding));
+							JPanel trainButtons = new JPanel(new GridLayout(2, 1, cellPadding, cellPadding));
 							options.add(trainButtons);
 							{
 								trainButtons.add(new JLabel("Training corpus features:"));
-								JPanel buttons = new JPanel(new GridLayout(1,2,cellPadding,cellPadding));
+								JPanel buttons = new JPanel(new GridLayout(1, 2, cellPadding, cellPadding));
 								trainButtons.add(buttons);
 								{
 									analysisExportTrainToARFFJButton = new JButton();
@@ -1367,11 +1363,11 @@ public class GUIMain extends javax.swing.JFrame {
 									analysisExportTrainToCSVJButton.setText("Save to CSV...");
 								}
 							}
-							JPanel testButtons = new JPanel(new GridLayout(2,1,cellPadding,cellPadding));
+							JPanel testButtons = new JPanel(new GridLayout(2, 1, cellPadding, cellPadding));
 							options.add(testButtons);
 							{
 								testButtons.add(new JLabel("Test documents features:"));
-								JPanel buttons = new JPanel(new GridLayout(1,2,cellPadding,cellPadding));
+								JPanel buttons = new JPanel(new GridLayout(1, 2, cellPadding, cellPadding));
 								testButtons.add(buttons);
 								{
 									analysisExportTestToARFFJButton = new JButton();
@@ -1386,97 +1382,90 @@ public class GUIMain extends javax.swing.JFrame {
 							}
 						}
 					}
-					
+
 					/*
-					// line 4
-					header.add(new JPanel());
-					header.add(new JPanel());
-					{
-						analysisOutputConfusionMatrixJCheckBox = new JCheckBox();
-						analysisOutputConfusionMatrixJCheckBox.setSelected(true);
-						header.add(analysisOutputConfusionMatrixJCheckBox);
-						analysisOutputConfusionMatrixJCheckBox.setText("Output Weka confusion matrix");
-					}
-					header.add(new JPanel());
-					
-					// line 5
-					header.add(new JPanel());
-					{
-						analysisOutputAccByClassJCheckBox = new JCheckBox();
-						analysisOutputAccByClassJCheckBox.setSelected(true);
-						header.add(analysisOutputAccByClassJCheckBox);
-						analysisOutputAccByClassJCheckBox.setText("Output Weka detailed accuracy by class");
-					}
-					header.add(new JPanel());
-					*/
+					 * // line 4 header.add(new JPanel()); header.add(new JPanel()); {
+					 * analysisOutputConfusionMatrixJCheckBox = new JCheckBox();
+					 * analysisOutputConfusionMatrixJCheckBox.setSelected(true);
+					 * header.add(analysisOutputConfusionMatrixJCheckBox);
+					 * analysisOutputConfusionMatrixJCheckBox.setText("Output Weka confusion matrix"
+					 * ); } header.add(new JPanel());
+					 * 
+					 * // line 5 header.add(new JPanel()); { analysisOutputAccByClassJCheckBox = new
+					 * JCheckBox(); analysisOutputAccByClassJCheckBox.setSelected(true);
+					 * header.add(analysisOutputAccByClassJCheckBox);
+					 * analysisOutputAccByClassJCheckBox.
+					 * setText("Output Weka detailed accuracy by class"); } header.add(new
+					 * JPanel());
+					 */
 				}
 				{
 					// main
 					// ====
-					
-					JPanel main = new JPanel(new BorderLayout(cellPadding,cellPadding));
-					analysisTab.add(main,BorderLayout.CENTER);
+
+					JPanel main = new JPanel(new BorderLayout(cellPadding, cellPadding));
+					analysisTab.add(main, BorderLayout.CENTER);
 					{
-						JPanel mainHeader = new JPanel(new BorderLayout(cellPadding,cellPadding));
-						main.add(mainHeader,BorderLayout.NORTH);
-						
+						JPanel mainHeader = new JPanel(new BorderLayout(cellPadding, cellPadding));
+						main.add(mainHeader, BorderLayout.NORTH);
+
 						// buttons
 						JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER));
-						mainHeader.add(buttons,BorderLayout.NORTH);
+						mainHeader.add(buttons, BorderLayout.NORTH);
 						{
 							analysisRunJButton = new JButton();
-							analysisRunJButton.setPreferredSize(new Dimension(175,50));
+							analysisRunJButton.setPreferredSize(new Dimension(175, 50));
 							buttons.add(analysisRunJButton);
 							analysisRunJButton.setText("Run Analysis");
 						}
 						{
 							analysisStopJButton = new JButton();
-							analysisStopJButton.setPreferredSize(new Dimension(100,50));
+							analysisStopJButton.setPreferredSize(new Dimension(100, 50));
 							buttons.add(analysisStopJButton);
 							analysisStopJButton.setText("Stop");
 							analysisStopJButton.setEnabled(false);
 						}
-						
+
 						// results header
 						{
 							analysisResultsJLabel = new JLabel();
 							analysisResultsJLabel.setText("Results");
 							analysisResultsJLabel.setHorizontalAlignment(JLabel.LEFT);
 							analysisResultsJLabel.setFont(defaultLabelFont);
-							mainHeader.add(analysisResultsJLabel,BorderLayout.CENTER);
+							mainHeader.add(analysisResultsJLabel, BorderLayout.CENTER);
 						}
 					}
 					{
 						analysisResultsJTabbedPane = new JTabbedPane();
 						analysisResultsJTabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-						main.add(analysisResultsJTabbedPane,BorderLayout.CENTER);
+						main.add(analysisResultsJTabbedPane, BorderLayout.CENTER);
 					}
 					{
-						JPanel resultsBottom = new JPanel(new GridLayout(1,3,cellPadding,cellPadding));
-						main.add(resultsBottom,BorderLayout.SOUTH);
+						JPanel resultsBottom = new JPanel(new GridLayout(1, 3, cellPadding, cellPadding));
+						main.add(resultsBottom, BorderLayout.SOUTH);
 						{
 							JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
 							resultsBottom.add(p);
 							analysisSaveResultsJButton = new JButton("Save Results...");
-							analysisRemoveResultTabJButton = new JButton("Remove Selected Tab");	//TD analysisRemoveTabJButton
+							analysisRemoveResultTabJButton = new JButton("Remove Selected Tab"); // TD
+																									// analysisRemoveTabJButton
 							p.add(analysisSaveResultsJButton);
 							p.add(analysisRemoveResultTabJButton);
 						}
 						{
 							analysisJProgressBar = new JProgressBar();
-							resultsBottom.add(analysisJProgressBar,BorderLayout.SOUTH);
+							resultsBottom.add(analysisJProgressBar, BorderLayout.SOUTH);
 						}
-						
+
 						resultsBottom.add(new JPanel());
-						
 					}
 				}
 				{
 					// bottom toolbar buttons
 					// ======================
 					{
-						JPanel bottomToolbar = new JPanel(new GridLayout(1,2,cellPadding,cellPadding));
-						analysisTab.add(bottomToolbar,BorderLayout.SOUTH);
+						JPanel bottomToolbar = new JPanel(new GridLayout(1, 2, cellPadding, cellPadding));
+						analysisTab.add(bottomToolbar, BorderLayout.SOUTH);
 						{
 							JPanel bottomLeft = new JPanel(new FlowLayout(FlowLayout.LEFT));
 							bottomToolbar.add(bottomLeft);
@@ -1485,7 +1474,7 @@ public class GUIMain extends javax.swing.JFrame {
 						}
 						{
 							JPanel bottomRight = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-							bottomToolbar.add(bottomRight,BorderLayout.SOUTH);
+							bottomToolbar.add(bottomRight, BorderLayout.SOUTH);
 							{
 								analysisBackJButton = new JButton();
 								bottomRight.add(analysisBackJButton);
