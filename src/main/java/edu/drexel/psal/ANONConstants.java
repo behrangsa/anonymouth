@@ -22,7 +22,7 @@ public class ANONConstants {
 	// public static final String LOG_DIR =
 	// System.getProperty("user.home")+"/Desktop/anonymouth_log";
 	public static final String LOG_DIR = WORKING_DIR + "anonymouth_log";
-	public static final String RESOURCE_PACKAGE = "/edu/drexel/psal/resources/";
+	public static final String RESOURCE_PACKAGE = "/";
 	public static final String GRAPHICS_PREFIX = RESOURCE_PACKAGE + "graphics/";
 	public static final String EXTERNAL_RESOURCE_PACKAGE = ANONConstants.WORKING_DIR + "jsan_resources/";
 	public static final String CORPORA_PREFIX = EXTERNAL_RESOURCE_PACKAGE + "corpora/";
@@ -32,7 +32,7 @@ public class ANONConstants {
 	public static final String DOC_MAGICIAN_WRITE_DIR = WORKING_DIR + ".edited_documents/";
 	public static final String KOPPEL_FUNCTION_WORDS = EXTERNAL_RESOURCE_PACKAGE + "koppel_function_words.txt";
 	public static final String SER_DIR = WORKING_DIR + ".serialized_objects/";
-	public static final String GRAPHICS = "/edu/drexel/psal/resources/graphics/";
+	public static final String GRAPHICS = "/graphics/";
 	public static final String PATH_TO_CLASSIFIER = SER_DIR + "saved_classifier.model";
 	public static final String ABBREVIATIONS_FILE = EXTERNAL_RESOURCE_PACKAGE + "abbreviations.txt";
 

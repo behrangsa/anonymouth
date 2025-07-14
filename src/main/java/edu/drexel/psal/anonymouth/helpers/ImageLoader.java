@@ -31,7 +31,7 @@ public class ImageLoader {
 		ImageIcon icon = null;
 
 		try {
-			icon = new ImageIcon(ImageLoader.class.getClass().getResource(ANONConstants.GRAPHICS + name));
+			icon = new ImageIcon(ImageLoader.class.getResource(ANONConstants.GRAPHICS + name));
 		} catch (Exception e) {
 			Logger.logln(NAME + "Error loading Image Icon " + name, LogOut.STDERR);
 		}
@@ -50,7 +50,7 @@ public class ImageLoader {
 		Image image = null;
 
 		try {
-			image = ImageIO.read(ImageLoader.class.getClass().getResource(ANONConstants.GRAPHICS + name));
+			image = ImageIO.read(ImageLoader.class.getResource(ANONConstants.GRAPHICS + name));
 		} catch (IOException e) {
 			e.printStackTrace();
 			Logger.logln(NAME + "Error loading Image " + name, LogOut.STDERR);
@@ -70,7 +70,7 @@ public class ImageLoader {
 		BufferedImage bufImage = null;
 
 		try {
-			bufImage = ImageIO.read(ImageLoader.class.getClass().getResource(ANONConstants.GRAPHICS + name));
+			bufImage = ImageIO.read(ImageLoader.class.getResource(ANONConstants.GRAPHICS + name));
 		} catch (IOException e) {
 			Logger.logln(NAME + "Error loading the Buffered Image " + name, LogOut.STDERR);
 		}
@@ -90,7 +90,7 @@ public class ImageLoader {
 		Icon icon = null;
 
 		try {
-			icon = new ImageIcon(ImageLoader.class.getClass().getResource(ANONConstants.GRAPHICS + name));
+			icon = new ImageIcon(ImageLoader.class.getResource(ANONConstants.GRAPHICS + name));
 		} catch (Exception e) {
 			Logger.logln(NAME + "Error loading Image Icon " + name, LogOut.STDERR);
 		}
