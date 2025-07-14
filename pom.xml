@@ -22,11 +22,15 @@
     </properties>
 
     <dependencies>
+        <!-- All dependencies using local JAR files from lib/ directory -->
+        
         <!-- Weka for machine learning -->
         <dependency>
-            <groupId>nz.ac.waikato.cms.weka</groupId>
-            <artifactId>weka-stable</artifactId>
-            <version>3.8.6</version>
+            <groupId>weka</groupId>
+            <artifactId>weka</artifactId>
+            <version>3.7.9</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/weka_3_7_9.jar</systemPath>
         </dependency>
 
         <!-- JFreeChart for data visualization -->
@@ -34,6 +38,8 @@
             <groupId>org.jfree</groupId>
             <artifactId>jfreechart</artifactId>
             <version>1.0.14</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/jfreechart-1.0.14.jar</systemPath>
         </dependency>
 
         <!-- JCommon (required by JFreeChart) -->
@@ -41,41 +47,53 @@
             <groupId>org.jfree</groupId>
             <artifactId>jcommon</artifactId>
             <version>1.0.17</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/jcommon-1.0.17.jar</systemPath>
         </dependency>
 
         <!-- MigLayout for GUI layout -->
         <dependency>
             <groupId>com.miglayout</groupId>
-            <artifactId>miglayout-swing</artifactId>
+            <artifactId>miglayout</artifactId>
             <version>4.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/miglayout-4.0-swing.jar</systemPath>
         </dependency>
 
         <!-- JAMA for matrix computations -->
         <dependency>
-            <groupId>gov.nist.math</groupId>
+            <groupId>jama</groupId>
             <artifactId>jama</artifactId>
             <version>1.0.3</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Jama-1.0.3.jar</systemPath>
         </dependency>
 
         <!-- TreeTagger for Java -->
         <dependency>
             <groupId>org.annolab.tt4j</groupId>
-            <artifactId>org.annolab.tt4j</artifactId>
+            <artifactId>tt4j</artifactId>
             <version>1.0.15</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/org.annolab.tt4j-1.0.15.jar</systemPath>
         </dependency>
 
         <!-- Stanford POS Tagger -->
         <dependency>
             <groupId>edu.stanford.nlp</groupId>
             <artifactId>stanford-postagger</artifactId>
-            <version>3.9.2</version>
+            <version>2012-01-06</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/stanford-postagger-2012-01-06.jar</systemPath>
         </dependency>
 
         <!-- Microsoft Translator API -->
         <dependency>
             <groupId>com.memetix</groupId>
             <artifactId>microsoft-translator-java-api</artifactId>
-            <version>0.6.2</version>
+            <version>0.6.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/microsoft-translator-java-api-0.6.1-jar-with-dependencies.jar</systemPath>
         </dependency>
 
         <!-- Local JAR dependencies that need to be installed manually -->
