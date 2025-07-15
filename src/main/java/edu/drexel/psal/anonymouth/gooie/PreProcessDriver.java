@@ -35,6 +35,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -183,24 +184,7 @@ public class PreProcessDriver {
 				Logger.logln(NAME + "'+' button clicked in the Test Doc section of the set-up wizard");
 				preProcessWindow.saved = false;
 
-				/**
-				 * In case something starts to go wrong with the FileDialogs (they are older and
-				 * may be deprecated as some point). If this be the case, just swap in this code
-				 * instead
-				 */
-				/*
-				 * FileHelper.load = setOpeningDir(FileHelper.load, false);
-				 * FileHelper.load.setName("Load Your Document To Anonymize");
-				 * FileHelper.load.setFileFilter(ANONConstants.TXT);
-				 * FileHelper.load.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				 * FileHelper.load.setMultiSelectionEnabled(false);
-				 * FileHelper.load.setVisible(true); int answer =
-				 * FileHelper.load.showOpenDialog(preProcessWindow);
-				 * 
-				 * if (answer == JFileChooser.APPROVE_OPTION) { File file =
-				 * FileHelper.load.getSelectedFile();
-				 */
-
+				// Show file dialog on EDT (file dialogs are safe on EDT)
 				FileHelper.goodLoad.setTitle("Load Your Document To Anonymize");
 				FileHelper.goodLoad = setOpeningDir(FileHelper.goodLoad, false);
 				FileHelper.goodLoad.setMultipleMode(false);
@@ -213,25 +197,52 @@ public class PreProcessDriver {
 					File file = new File(FileHelper.goodLoad.getDirectory() + fileName);
 					Logger.log(NAME + "Trying to load test documents: \n" + "\t\t> " + file.getAbsolutePath() + "\n");
 
-					String path = file.getAbsolutePath();
+					// Disable UI during loading
+					preProcessWindow.testAddButton.setEnabled(false);
+					
+					// Use SwingWorker for file I/O operations
+					SwingWorker<Boolean, Void> loadWorker = new SwingWorker<Boolean, Void>() {
+						@Override
+						protected Boolean doInBackground() throws Exception {
+							String path = file.getAbsolutePath();
+							
+							// Add document (this is safe as it doesn't do I/O yet)
+							preProcessWindow.ps.addTestDoc(ProblemSet.getDummyAuthor(),
+									new Document(path, ProblemSet.getDummyAuthor(), file.getName()));
+							
+							// Load document content in background thread
+							return loadTestDocumentInBackground();
+						}
+						
+						@Override
+						protected void done() {
+							try {
+								boolean noIssue = get();
+								
+								// Update UI on EDT
+								updateOpeningDir(file.getAbsolutePath(), false);
+								updateBar(preProcessWindow.testBarPanel);
+								preProcessWindow.revalidate();
+								preProcessWindow.repaint();
 
-					preProcessWindow.ps.addTestDoc(ProblemSet.getDummyAuthor(),
-							new Document(path, ProblemSet.getDummyAuthor(), file.getName()));
-					boolean noIssue = updateTestDocPane();
-					updateOpeningDir(path, false);
-					updateBar(preProcessWindow.testBarPanel);
-					preProcessWindow.revalidate();
-					preProcessWindow.repaint();
-
-					if (noIssue) {
-						preProcessWindow.testAddButton.setEnabled(false);
-						preProcessWindow.testRemoveButton.setEnabled(true);
-						preProcessWindow.testNextButton.setEnabled(true);
-						preProcessWindow.getRootPane().setDefaultButton(preProcessWindow.testNextButton);
-						preProcessWindow.testNextButton.requestFocusInWindow();
-
-						// main.updateDocLabel(file.getName(), 0);
-					}
+								if (noIssue) {
+									preProcessWindow.testRemoveButton.setEnabled(true);
+									preProcessWindow.testNextButton.setEnabled(true);
+									preProcessWindow.getRootPane().setDefaultButton(preProcessWindow.testNextButton);
+									preProcessWindow.testNextButton.requestFocusInWindow();
+								} else {
+									// Re-enable add button if loading failed
+									preProcessWindow.testAddButton.setEnabled(true);
+								}
+							} catch (Exception ex) {
+								Logger.logln(NAME + "Error loading test document: " + ex.getMessage(), LogOut.STDERR);
+								// Re-enable add button on error
+								preProcessWindow.testAddButton.setEnabled(true);
+							}
+						}
+					};
+					
+					loadWorker.execute();
 				} else {
 					Logger.logln(NAME + "Load test documents canceled");
 				}
@@ -1214,6 +1225,96 @@ public class PreProcessDriver {
 				main.mainDocPreview = new Document();
 				passed = false;
 			}
+		}
+
+		return passed;
+	}
+
+	/**
+	 * Background method to load test document content (called from SwingWorker)
+	 * This method safely performs file I/O operations in a background thread
+	 * and delegates UI updates to the EDT.
+	 * @return true if successful, false otherwise
+	 */
+	protected boolean loadTestDocumentInBackground() {
+		boolean passed = true;
+
+		if (preProcessWindow.mainDocReady()) {
+			main.mainDocPreview = preProcessWindow.ps.getAllTestDocs().get(0);
+
+			try {
+				// This file I/O operation is now safely in background thread
+				main.mainDocPreview.load();
+			} catch (Exception e) {
+				passed = false;
+				
+				// Show error dialogs on EDT
+				SwingUtilities.invokeLater(() -> {
+					if (e.getMessage().equals("Empty Document Error")) {
+						Logger.logln(NAME + "User tried to load empty document, will not allow", LogOut.STDERR);
+						JOptionPane.showOptionDialog(preProcessWindow,
+								"You can't anonymize a blank document, please only\n"
+										+ "choose a document that contains text.",
+								"Empty Document", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE, null, null, null);
+					} else {
+						Logger.logln(NAME + "Error updating test doc table", LogOut.STDERR);
+						JOptionPane.showOptionDialog(preProcessWindow,
+								"An error occurred while tring to load your test document\n"
+										+ "Perhaps Anonymouth doesn't have correct permissions,\n"
+										+ "try moving the document to somewhere else and trying again.",
+								"Error While Adding Document to Anonymize", JOptionPane.DEFAULT_OPTION,
+								JOptionPane.ERROR_MESSAGE, null, null, null);
+					}
+
+					// Clean up UI state on EDT
+					preProcessWindow.testDocPane.setText("");
+					preProcessWindow.ps.removeTestAuthor(ANONConstants.DUMMY_NAME);
+					preProcessWindow.testAddButton.setEnabled(true);
+					preProcessWindow.testRemoveButton.setEnabled(false);
+					preProcessWindow.testNextButton.setEnabled(false);
+					preProcessWindow.getRootPane().setDefaultButton(preProcessWindow.testAddButton);
+					preProcessWindow.testAddButton.requestFocusInWindow();
+					preProcessWindow.ps.removeTestDocAt(main.mainDocPreview.getAuthor(), main.mainDocPreview.getTitle());
+					main.mainDocPreview = new Document();
+				});
+				return false;
+			}
+
+			// Update UI content on EDT if loading succeeded
+			SwingUtilities.invokeLater(() -> {
+				try {
+					String testDocText = main.mainDocPreview.stringify();
+					main.editorDriver.ignoreChanges = true;
+					main.documentPane.setText(testDocText);
+					main.editorDriver.ignoreChanges = false;
+					main.originalDocPane.setText(testDocText);
+					preProcessWindow.testDocPane.setText(testDocText);
+					if (titles.get(ANONConstants.DUMMY_NAME) == null)
+						titles.put(ANONConstants.DUMMY_NAME, new ArrayList<String>());
+					titles.get(ANONConstants.DUMMY_NAME).add(main.mainDocPreview.getTitle());
+
+					// To Set the Scroll pane vertical bar to the top instead of bottom
+					SwingUtilities.invokeLater(new ScrollToTop(new Point(0, 0), preProcessWindow.testDocScrollPane));
+				} catch (Exception e) {
+					e.printStackTrace();
+					Logger.logln(NAME + "Error setting text of test document in editor", LogOut.STDERR);
+					JOptionPane.showOptionDialog(preProcessWindow,
+							"An error occurred while tring to load your test document\n"
+									+ "Perhaps Anonymouth doesn't have correct permissions,\n"
+									+ "try moving the document to somewhere else and trying again.",
+							"Error While Adding Document to Anonymize", JOptionPane.DEFAULT_OPTION,
+							JOptionPane.ERROR_MESSAGE, null, null, null);
+					preProcessWindow.testDocPane.setText("");
+					preProcessWindow.ps.removeTestAuthor(ANONConstants.DUMMY_NAME);
+					preProcessWindow.testAddButton.setEnabled(true);
+					preProcessWindow.testRemoveButton.setEnabled(false);
+					preProcessWindow.testNextButton.setEnabled(false);
+					preProcessWindow.getRootPane().setDefaultButton(preProcessWindow.testAddButton);
+					preProcessWindow.testAddButton.requestFocusInWindow();
+					preProcessWindow.ps.removeTestDocAt(main.mainDocPreview.getAuthor(), main.mainDocPreview.getTitle());
+					main.mainDocPreview = new Document();
+				}
+			});
 		}
 
 		return passed;

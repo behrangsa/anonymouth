@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -150,9 +151,35 @@ public class MenuDriver {
 					if (!path.toLowerCase().endsWith(".txt"))
 						path += ".txt";
 
-					FileHelper.writeToFile(path, main.documentPane.getText());
-					main.documentSaved = true;
-					savedPath = path;
+					// Use SwingWorker for file I/O operations
+					final String finalPath = path;
+					SwingWorker<Void, Void> saveAsWorker = new SwingWorker<Void, Void>() {
+						@Override
+						protected Void doInBackground() throws Exception {
+							// Perform file I/O in background thread
+							FileHelper.writeToFile(finalPath, main.documentPane.getText());
+							return null;
+						}
+						
+						@Override
+						protected void done() {
+							try {
+								get(); // Check for exceptions
+								// Update UI on EDT
+								main.documentSaved = true;
+								savedPath = finalPath;
+								Logger.logln(NAME + "Document saved successfully to: " + finalPath);
+							} catch (Exception e) {
+								Logger.logln(NAME + "Error saving document: " + e.getMessage(), LogOut.STDERR);
+								JOptionPane.showMessageDialog(main, 
+									"Error saving document: " + e.getMessage(),
+									"Save Error", 
+									JOptionPane.ERROR_MESSAGE);
+							}
+						}
+					};
+					
+					saveAsWorker.execute();
 				} else
 					Logger.logln(NAME + "Save As contents of current tab canceled");
 			}
@@ -376,8 +403,33 @@ public class MenuDriver {
 			saveAsTestDocListener.actionPerformed(
 					new ActionEvent(main.fileSaveAsTestDocMenuItem, ActionEvent.ACTION_PERFORMED, "Save As..."));
 		} else {
-			FileHelper.writeToFile(savedPath, main.documentPane.getText());
-			main.documentSaved = true;
+			// Use SwingWorker for file I/O operations
+			SwingWorker<Void, Void> saveWorker = new SwingWorker<Void, Void>() {
+				@Override
+				protected Void doInBackground() throws Exception {
+					// Perform file I/O in background thread
+					FileHelper.writeToFile(savedPath, main.documentPane.getText());
+					return null;
+				}
+				
+				@Override
+				protected void done() {
+					try {
+						get(); // Check for exceptions
+						// Update UI on EDT
+						main.documentSaved = true;
+						Logger.logln(NAME + "Document saved successfully to: " + savedPath);
+					} catch (Exception e) {
+						Logger.logln(NAME + "Error saving document: " + e.getMessage(), LogOut.STDERR);
+						JOptionPane.showMessageDialog(main, 
+							"Error saving document: " + e.getMessage(),
+							"Save Error", 
+							JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			};
+			
+			saveWorker.execute();
 		}
 	}
 }

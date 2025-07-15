@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
 
 import com.jgaap.JGAAPConstants;
 
@@ -78,41 +79,59 @@ public class DictionaryBinding {
 			public void actionPerformed(ActionEvent e) {
 				currentWord = dc.wordField.getText();
 				Logger.logln(NAME + "preparing to search for user string: '" + currentWord + "' in dictionary.");
+				
 				if (currentWord.trim().equals("") == false) {
-					wordSynSetResult = "";
-					WordNetDatabase wnd = WordNetDatabase.getFileInstance();
-					Synset[] testSet = wnd.getSynsets(currentWord);
-					int synNumber = 1;
-					int i;
-					for (i = 0; i < testSet.length; i++) {
-						String[] wfs = testSet[i].getWordForms();
-						// String def = testSet[i].getDefinition();
-						String[] use = testSet[i].getUsageExamples();
-						int j;
-						// wordSynSetResult = wordSynSetResult+"Synonym set "+(i+1)+" for entered search
-						// '"+currentWord+"' :\n";
-						// if(def.equals("") == false)
-						// wordSynSetResult= wordSynSetResult +"Definition of synonym set "+(i+1)+" is:
-						// "+def+"\n";
-						// else
-						// wordSynSetResult=wordSynSetResult+"Synonym set "+i+" does not appear to have
-						// a defintion attached\n";
-						for (j = 0; j < wfs.length; j++) {
+					// Disable search button during lookup
+					dc.wordSearchButton.setEnabled(false);
+					
+					// Use SwingWorker for WordNet database operations
+					SwingWorker<String, Void> dictionaryWorker = new SwingWorker<String, Void>() {
+						@Override
+						protected String doInBackground() throws Exception {
+							// Perform database operations in background thread
+							String result = "";
+							WordNetDatabase wnd = WordNetDatabase.getFileInstance();
+							Synset[] testSet = wnd.getSynsets(currentWord);
+							int synNumber = 1;
+							
+							for (int i = 0; i < testSet.length; i++) {
+								String[] wfs = testSet[i].getWordForms();
+								String[] use = testSet[i].getUsageExamples();
+								
+								for (int j = 0; j < wfs.length; j++) {
+									try {
+										result = result + "(" + synNumber + "): " + wfs[j] + " => " + use[j] + "\n";
+										synNumber++;
+									} catch (ArrayIndexOutOfBoundsException aioobe) {
+										// Ignore missing usage examples
+									}
+								}
+							}
+							
+							return result;
+						}
+						
+						@Override
+						protected void done() {
 							try {
-								// wordSynSetResult = wordSynSetResult+"Synonym number ("+(j+1)+"): "+wfs[j]+"
-								// => usage (if specified): "+use[j]+"\n";
-								wordSynSetResult = wordSynSetResult + "(" + synNumber + "): " + wfs[j] + " => " + use[j]
-										+ "\n";
-								synNumber++;
-							} catch (ArrayIndexOutOfBoundsException aioobe) {
+								// Update UI on EDT
+								wordSynSetResult = get();
+								wordSynSetUpdated = true;
+								Logger.logln(NAME + "Dictionary search completed for: " + currentWord);
+							} catch (Exception ex) {
+								Logger.logln(NAME + "Error searching dictionary: " + ex.getMessage());
+								JOptionPane.showMessageDialog(dc, 
+									"Error searching dictionary: " + ex.getMessage(),
+									"Dictionary Error", 
+									JOptionPane.ERROR_MESSAGE);
+							} finally {
+								// Re-enable search button
+								dc.wordSearchButton.setEnabled(true);
 							}
 						}
-						// wordSynSetResult = wordSynSetResult+"\n";
-					}
-					// vtg = new ViewerTabGenerator().generateTab(wordSynSetResult);
-					wordSynSetUpdated = true;
-					// dc.viewerTP.addTab("syn: "+currentWord, null, vtg.jScrollPane1, null);
-					// dc.viewerTP.setSelectedComponent(vtg.jScrollPane1);
+					};
+					
+					dictionaryWorker.execute();
 				}
 			}
 		});

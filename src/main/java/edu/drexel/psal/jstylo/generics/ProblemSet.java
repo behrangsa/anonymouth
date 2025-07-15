@@ -552,7 +552,7 @@ public class ProblemSet {
         int size = docs.size();
 
         for (int i = 0; i < size; i++) {
-            if (docs.get(i).equals(oldName)) {
+            if (docs.get(i).getTitle().equals(oldName)) {
                 String path = docs.get(i).getFilePath();
                 docs.remove(i);
                 docs.add(i, new Document(path, author, newName));

@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 
 /**
@@ -106,11 +107,16 @@ public class TranslationsDriver implements MouseListener {
 					translator.reset();
 					main.editorDriver.taggedDoc.clearAllTranslations();
 
-					try {
-						Thread.sleep(500);
-					} catch (InterruptedException e1) {
-						e1.printStackTrace();
-					}
+					// Use Timer instead of Thread.sleep() to avoid blocking EDT
+					Timer delayTimer = new Timer(500, new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							// Any additional delayed actions can go here
+							((Timer) e.getSource()).stop();
+						}
+					});
+					delayTimer.setRepeats(false);
+					delayTimer.start();
 				}
 			}
 		};
