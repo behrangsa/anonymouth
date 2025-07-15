@@ -2,6 +2,7 @@ package edu.drexel.psal.jstylo.eventDrivers;
 
 import com.jgaap.generics.*;
 import com.jgaap.generics.Document;
+import edu.drexel.psal.anonymouth.utils.Tagger;
 import edu.drexel.psal.jstylo.generics.Logger;
 import edu.drexel.psal.jstylo.generics.Logger.LogOut;
 import edu.stanford.nlp.ling.*;
@@ -52,18 +53,26 @@ public class MaxentPOSTagsEventDriver extends EventDriver {
 		char[] text = doc.getProcessedText();
 		String stringText = new String(text);
 
-		// initialize tagger and return empty event set if encountered a problem
+		// Use centralized Tagger initialization instead of local tagger
+		if (!Tagger.initTagger()) {
+			Logger.logln("ERROR: Failed to initialize Stanford POS tagger", LogOut.STDERR);
+			return es;
+		}
+		
+		MaxentTagger tagger = Tagger.getTagger();
 		if (tagger == null) {
-			tagger = initTagger();
-			if (tagger == null)
-				return es;
+			Logger.logln("ERROR: Stanford POS tagger is null after initialization", LogOut.STDERR);
+			return es;
 		}
 
-		List<List<HasWord>> sentences = tagger.tokenizeText(new BufferedReader(new StringReader(stringText)));
-		for (List<HasWord> sentence : sentences) {
-			ArrayList<TaggedWord> tSentence = tagger.tagSentence(sentence);
-			for (TaggedWord tw : tSentence)
-				es.addEvent(new Event(tw.tag()));
+		// Synchronize access to Stanford POS tagger for thread safety
+		synchronized (Tagger.class) {
+			List<List<HasWord>> sentences = tagger.tokenizeText(new BufferedReader(new StringReader(stringText)));
+			for (List<HasWord> sentence : sentences) {
+				ArrayList<TaggedWord> tSentence = tagger.tagSentence(sentence);
+				for (TaggedWord tw : tSentence)
+					es.addEvent(new Event(tw.tag()));
+			}
 		}
 
 		return es;

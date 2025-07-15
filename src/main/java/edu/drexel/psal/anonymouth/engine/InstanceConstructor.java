@@ -102,10 +102,10 @@ public class InstanceConstructor {
 		int eye = 0;
 		if (printStuff == true) {
 			char[] cRay = testDocs.get(0).getProcessedText();
-			System.out.println("PRE-INSTANCE BUILDING:\n");
+			Logger.logln("PRE-INSTANCE BUILDING:");
 			for (eye = 0; eye < cRay.length; eye++)
-				System.out.print(cRay[eye]);
-			System.out.println();
+				Logger.log(String.valueOf(cRay[eye]));
+			Logger.logln("");
 		}
 
 		try {
@@ -119,16 +119,27 @@ public class InstanceConstructor {
 		// (attributes and data)
 		trainingDat = wid.getTrainingSet();
 		testingDat = wid.getTestSet();
+		
+		// Check if feature extraction was successful
+		if (trainingDat == null) {
+			Logger.logln(NAME + "ERROR: Training dataset is null - feature extraction failed");
+			return false;
+		}
+		if (testingDat == null) {
+			Logger.logln(NAME + "ERROR: Testing dataset is null - feature extraction failed");
+			return false;
+		}
+		
 		setAttributes = getAttributes(trainingDat);
 		trainingInstances = getInstances(trainingDat);
 		testingInstances = getInstances(testingDat);
 		if (printStuff == true) {
 			char[] cRay = testDocs.get(0).getProcessedText();
-			System.out.println("POST-INSTANCE BUILDING:\n");
+			Logger.logln("POST-INSTANCE BUILDING:");
 			for (eye = 0; eye < cRay.length; eye++)
-				System.out.print(cRay[eye]);
-			System.out.println();
-			System.out.println(testingDat.toString());
+				Logger.log(String.valueOf(cRay[eye]));
+			Logger.logln("");
+			Logger.logln(testingDat.toString());
 			System.exit(7);
 		}
 		return true;
@@ -147,6 +158,13 @@ public class InstanceConstructor {
 		}
 
 		trainingDat = wid.getTrainingSet();
+		
+		// Check if feature extraction was successful
+		if (trainingDat == null) {
+			Logger.logln(NAME + "ERROR: Training dataset is null - feature extraction failed in onlyBuildTrain");
+			return false;
+		}
+		
 		setAttributes = getAttributes(trainingDat);
 		trainingInstances = getInstances(trainingDat);
 		return true;
@@ -181,6 +199,11 @@ public class InstanceConstructor {
 	 * @return
 	 */
 	public ArrayList<String> getAttributes(Instances currentInstance) {
+		if (currentInstance == null) {
+			Logger.logln(NAME + "ERROR: Instances object is null in getAttributes()");
+			return new ArrayList<String>();
+		}
+		
 		int i = 0;
 		String tempString;
 		ArrayList<String> tempAttrib = new ArrayList<String>(currentInstance.numAttributes());
@@ -204,6 +227,15 @@ public class InstanceConstructor {
 	 * @return
 	 */
 	public Double[][] getInstances(Instances currentInstance) {
+		if (currentInstance == null) {
+			Logger.logln(NAME + "ERROR: Instances object is null in getInstances()");
+			return new Double[0][0];
+		}
+		if (setAttributes == null) {
+			Logger.logln(NAME + "ERROR: setAttributes is null in getInstances()");
+			return new Double[0][0];
+		}
+		
 		int i = 0;
 		int j = 0;
 		int placeHolder;

@@ -187,8 +187,14 @@ public class DocumentProcessor {
 			Map<String, Map<String, Double>> wekaResults = documentMagician.getWekaResultList();
 			Logger.logln(NAME + " ****** WEKA RESULTS for session '" + ThePresident.sessionName + " process number : "
 					+ DocumentMagician.numProcessRequests);
-			Logger.logln(NAME + wekaResults.toString());
-			sendResultsToResultsChart(wekaResults);
+			
+			if (wekaResults != null) {
+				Logger.logln(NAME + wekaResults.toString());
+				sendResultsToResultsChart(wekaResults);
+			} else {
+				Logger.logln(NAME + "ERROR: wekaResults is null - feature extraction or classification failed");
+				return;
+			}
 
 			main.anonymityBar.updateBar();
 			if (!main.processed)

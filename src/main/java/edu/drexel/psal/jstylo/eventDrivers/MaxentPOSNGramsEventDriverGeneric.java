@@ -2,6 +2,7 @@ package edu.drexel.psal.jstylo.eventDrivers;
 
 import com.jgaap.generics.*;
 import com.jgaap.generics.Document;
+import edu.drexel.psal.anonymouth.utils.Tagger;
 import edu.drexel.psal.jstylo.generics.Logger;
 import edu.drexel.psal.jstylo.generics.Logger.LogOut;
 import edu.stanford.nlp.ling.*;
@@ -50,19 +51,25 @@ public class MaxentPOSNGramsEventDriverGeneric extends EventDriver {
 		char[] text = doc.getProcessedText();
 		String stringText = new String(text);
 
-		// use MaxentPOSTagsEventDriver's tagger
-		// initialize tagger and return empty event set if encountered a problem
+		// Use centralized Tagger initialization instead of local tagger
+		if (!Tagger.initTagger()) {
+			Logger.logln("ERROR: Failed to initialize Stanford POS tagger", LogOut.STDERR);
+			return es;
+		}
+		
+		MaxentTagger tagger = Tagger.getTagger();
 		if (tagger == null) {
-
-			tagger = initTagger();
-			if (tagger == null)
-				return es;
+			Logger.logln("ERROR: Stanford POS tagger is null after initialization", LogOut.STDERR);
+			return es;
 		}
 
-		List<List<HasWord>> sentences = tagger.tokenizeText(new BufferedReader(new StringReader(stringText)));
+		// Synchronize access to Stanford POS tagger for thread safety
 		ArrayList<TaggedWord> tagged = new ArrayList<TaggedWord>();
-		for (List<HasWord> sentence : sentences)
-			tagged.addAll(tagger.tagSentence(sentence));
+		synchronized (Tagger.class) {
+			List<List<HasWord>> sentences = tagger.tokenizeText(new BufferedReader(new StringReader(stringText)));
+			for (List<HasWord> sentence : sentences)
+				tagged.addAll(tagger.tagSentence(sentence));
+		}
 
 		int i, j, n;
 		try {
@@ -98,7 +105,7 @@ public class MaxentPOSNGramsEventDriverGeneric extends EventDriver {
 				if (currentTaggerPath != null || currentTaggerPath != "")
 					taggerPath = currentTaggerPath;
 			}
-			System.out.println(taggerPath);
+			Logger.logln(taggerPath);
 			t = new MaxentTagger(taggerPath);
 
 		} catch (Exception e) {
@@ -118,9 +125,9 @@ public class MaxentPOSNGramsEventDriverGeneric extends EventDriver {
 		m.setParameter("N", 1);
 		EventSet es = m.createEventSet(doc);
 		for (int i = 0; i < es.size(); i++) {
-			System.out.print(es.eventAt(i) + " ");
+			Logger.log(es.eventAt(i) + " ");
 			if (i % 30 == 0)
-				System.out.println();
+				Logger.logln("");
 		}
 	}
 }

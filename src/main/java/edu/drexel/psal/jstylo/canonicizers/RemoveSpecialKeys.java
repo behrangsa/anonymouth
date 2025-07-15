@@ -1,6 +1,7 @@
 package edu.drexel.psal.jstylo.canonicizers;
 
 import com.jgaap.generics.Canonicizer;
+import edu.drexel.psal.jstylo.generics.Logger;
 import java.io.*;
 import java.util.*;
 
@@ -85,10 +86,10 @@ public class RemoveSpecialKeys extends Canonicizer {
 				+ "rebphotographpyΒβββhy@yahoo.com	ΔΔ		\n"
 				+ "eβrebphotography@yahoo.com	rebphotography@yahoo.com\n" + "mail.uahβββyahoo.cm\n" + "ββom\n"
 				+ "rebphotography	cricket01\n" + "mail.yahoo.com\n" + "rebphotography	cricket01\n";
-		System.out.println("before");
-		System.out.println(test);
-		System.out.println();
-		System.out.println("after");
-		System.out.println(new String(new RemoveSpecialKeys().process(test.toCharArray())));
+		Logger.logln("before");
+		Logger.logln(test);
+		Logger.logln("");
+		Logger.logln("after");
+		Logger.logln(new String(new RemoveSpecialKeys().process(test.toCharArray())));
 	}
 }

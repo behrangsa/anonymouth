@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Scanner;
+import edu.drexel.psal.jstylo.generics.Logger;
 
 /**
  * 
@@ -53,10 +54,10 @@ public class TranslatedSentenceReader {
 		String desiredDir = translated_location + endOfPath;
 		transedDir = new File(desiredDir);
 		File[] docs = transedDir.listFiles();
-		System.out.println("pre-sort");
+		Logger.logln("pre-sort");
 		int numDocs = docs.length;
 		for (i = 0; i < numDocs; i++)
-			System.out.println(docs[i]);
+			Logger.logln(docs[i].toString());
 		// must sort the array so that the files are read in in the order that the
 		// corresponding sentences are in in the document.
 		Arrays.sort(docs, new Comparator<File>() {
@@ -68,9 +69,9 @@ public class TranslatedSentenceReader {
 				return ((Integer) num1).compareTo((Integer) num2);
 			}
 		});
-		System.out.println("post-sort");
+		Logger.logln("post-sort");
 		for (i = 0; i < numDocs; i++)
-			System.out.println(docs[i]);
+			Logger.logln(docs[i].toString());
 		return docs;
 	}
 
@@ -94,7 +95,7 @@ public class TranslatedSentenceReader {
 				optionNumber = 0;
 				while ((currentLine = bufRead.readLine()) != null) {
 					if (currentLine.contains("Original:")) {
-						// System.out.println("Found 'Original:'...");
+						// Logger.logln("Found 'Original:'...");
 						continue;
 					}
 					// System.out.printf("Replacement pre-trim: %s\n",currentLine);
@@ -111,7 +112,7 @@ public class TranslatedSentenceReader {
 																											// lines at
 																											// the end.
 					thisSentsReplacements.remove(thisSentsReplacements.size() - 1);
-				// System.out.println("Num sents in ArrayList: "+thisSentsReplacements.size());
+				// Logger.logln("Num sents in ArrayList: "+thisSentsReplacements.size());
 				theReplacements.add(i, thisSentsReplacements);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();

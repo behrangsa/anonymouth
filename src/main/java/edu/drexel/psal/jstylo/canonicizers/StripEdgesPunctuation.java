@@ -1,6 +1,7 @@
 package edu.drexel.psal.jstylo.canonicizers;
 
 import com.jgaap.generics.Canonicizer;
+import edu.drexel.psal.jstylo.generics.Logger;
 import java.util.Scanner;
 
 /** Removes punctuation that is at an end or beginning of a word. */
@@ -59,7 +60,7 @@ public class StripEdgesPunctuation extends Canonicizer {
 	public static void main(String[] args) {
 		String s = " Hi there! how are you, man?. I haven't been , here before, have I? hi .again.";
 		String res = String.valueOf((new StripEdgesPunctuation()).process(s.toCharArray()));
-		System.out.println(s);
-		System.out.println(res);
+		Logger.logln(s);
+		Logger.logln(res);
 	}
 }

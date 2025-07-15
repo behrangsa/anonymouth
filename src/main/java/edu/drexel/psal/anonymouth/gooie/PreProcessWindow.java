@@ -477,8 +477,16 @@ public class PreProcessWindow extends JDialog {
 			String author = docs.get(d).getAuthor();
 			int addNum = 1;
 
-			// we don't want to do anything below unless it's a duplicate
-			if (docTitles.contains(newTitle)) {
+			// Count how many times this title appears in the list
+			int titleCount = 0;
+			for (String title : docTitles) {
+				if (title.equals(oldTitle)) {
+					titleCount++;
+				}
+			}
+
+			// we don't want to do anything below unless it's actually a duplicate
+			if (titleCount > 1) {
 				while (docTitles.contains(newTitle)) {
 					newTitle = newTitle.replaceAll(" copy_\\d*.[Tt][Xx][Tt]|.[Tt][Xx][Tt]", "");
 					newTitle = newTitle.concat(" copy_" + Integer.toString(addNum) + ".txt");
@@ -780,14 +788,14 @@ public class PreProcessWindow extends JDialog {
 		Set<String> test = driver.titles.keySet();
 		Iterator<String> it = test.iterator();
 
-		System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+		Logger.logln("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 		while (it.hasNext()) {
 			String name = (String) it.next();
 			List<String> docs = driver.titles.get(name);
-			System.out.println("Author = " + name + " Docs = " + Integer.toString(driver.titles.get(name).size()));
+			Logger.logln("Author = " + name + " Docs = " + Integer.toString(driver.titles.get(name).size()));
 
 			for (int i = 0; i < docs.size(); i++) {
-				System.out.println("---" + docs.get(i));
+				Logger.logln("---" + docs.get(i));
 			}
 		}
 	}

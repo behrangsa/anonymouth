@@ -2,6 +2,7 @@ package edu.drexel.psal.jstylo.canonicizers;
 
 import com.jgaap.generics.Canonicizer;
 import com.jgaap.generics.Document;
+import edu.drexel.psal.jstylo.generics.Logger;
 import java.util.*;
 
 /**
@@ -212,7 +213,7 @@ public class ApplySpecialKeys extends Canonicizer {
 				pos++;
 			}
 			if (pos > len) {
-				System.out.println(">>> pos: " + pos + ", len: " + len + ", c: " + c);
+				Logger.logln(">>> pos: " + pos + ", len: " + len + ", c: " + c);
 			}
 		}
 
@@ -252,10 +253,10 @@ public class ApplySpecialKeys extends Canonicizer {
 				"");
 		d.load();
 		String text = d.stringify();
-		System.out.println("before");
-		System.out.println(text);
-		System.out.println();
-		System.out.println("after");
-		System.out.println(new String(a.process(text.toCharArray())));
+		Logger.logln("before");
+		Logger.logln(text);
+		Logger.logln("");
+		Logger.logln("after");
+		Logger.logln(new String(a.process(text.toCharArray())));
 	}
 }

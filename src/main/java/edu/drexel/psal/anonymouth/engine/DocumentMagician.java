@@ -259,12 +259,21 @@ public class DocumentMagician {
 		noAuthorTrainInstanceConstructor = new InstanceConstructor(isSparse, theseFeaturesCfd, false);
 		int i;
 		int authSampleSetSize = authorSamplesSet.size();
-		noAuthorTrainInstanceConstructor.onlyBuildTrain(noAuthorTrainSet, false);
+		
+		// Build no-author training instances
+		if (!noAuthorTrainInstanceConstructor.onlyBuildTrain(noAuthorTrainSet, false)) {
+			Logger.logln(NAME + "ERROR: Failed to build no-author training instances");
+			return;
+		}
 		noAuthorTrainAttributeSet = noAuthorTrainInstanceConstructor.getAttributeSet();
 		trainingInstances = noAuthorTrainInstanceConstructor.getTrainingInstances();
 		noAuthorTrainDat = noAuthorTrainInstanceConstructor.getFullTrainData();
 
-		authorInstanceConstructor.onlyBuildTrain(authorSamplesSet, true);
+		// Build author training instances
+		if (!authorInstanceConstructor.onlyBuildTrain(authorSamplesSet, true)) {
+			Logger.logln(NAME + "ERROR: Failed to build author training instances");
+			return;
+		}
 		authorAttributeSet = authorInstanceConstructor.getAttributeSet();
 		authorInstances = authorInstanceConstructor.getTrainingInstances();
 		authorOnlyDat = authorInstanceConstructor.getFullTrainData();

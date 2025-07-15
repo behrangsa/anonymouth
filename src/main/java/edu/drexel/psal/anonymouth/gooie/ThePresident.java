@@ -77,6 +77,20 @@ public class ThePresident {
 			Logger.logln(NAME + "Required resources missing - exiting application");
 			System.exit(1);
 		}
+		
+		// Initialize Stanford POS tagger early to catch any initialization issues
+		Logger.logln(NAME + "Initializing Stanford POS tagger...");
+		if (!edu.drexel.psal.anonymouth.utils.Tagger.initTagger()) {
+			Logger.logln(NAME + "CRITICAL ERROR: Failed to initialize Stanford POS tagger");
+			splash.hideSplashScreen();
+			javax.swing.JOptionPane.showMessageDialog(null, 
+				"Failed to initialize Stanford POS tagger.\n" +
+				"Please ensure the jsan_resources directory contains the required model files.",
+				"Initialization Error", 
+				javax.swing.JOptionPane.ERROR_MESSAGE);
+			System.exit(1);
+		}
+		Logger.logln(NAME + "Stanford POS tagger initialized successfully");
 
 		logo = ImageLoader.getImage(ANONYMOUTH_LOGO_LARGE);
 		aboutLogo = ImageLoader.getImageIcon(ANONYMOUTH_LOGO);
@@ -131,7 +145,7 @@ public class ThePresident {
 	 * @return
 	 */
 	public String read(String sayThis) {
-		System.out.println(sayThis);
+		Logger.logln(sayThis);
 		return in.nextLine();
 	}
 
@@ -142,7 +156,7 @@ public class ThePresident {
 	 * @return
 	 */
 	public String read() {
-		System.out.println("System waiting for user input:");
+		Logger.logln("System waiting for user input:");
 		return in.nextLine();
 	}
 

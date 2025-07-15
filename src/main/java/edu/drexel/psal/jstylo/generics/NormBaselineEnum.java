@@ -107,6 +107,6 @@ public enum NormBaselineEnum {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(NormBaselineEnum.valueOf("NONE").getDescription());
+		Logger.logln(NormBaselineEnum.valueOf("NONE").getDescription());
 	}
 }

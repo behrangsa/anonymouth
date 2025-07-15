@@ -151,7 +151,7 @@ public class WriteprintsAnalyzer extends Analyzer {
 		try {
 			IG = calcInfoGain(trainingSet, numFeatures);
 		} catch (Exception e) {
-			System.err.println("Error evaluating information gain.");
+			Logger.logln("Error evaluating information gain.", Logger.LogOut.STDERR);
 			e.printStackTrace();
 			return null;
 		}
@@ -471,7 +471,7 @@ public class WriteprintsAnalyzer extends Analyzer {
 		try {
 			IG1 = calcInfoGain(dataset1, numFeatures);
 		} catch (Exception e) {
-			System.err.println("Error evaluating information gain.");
+			Logger.logln("Error evaluating information gain.", Logger.LogOut.STDERR);
 			e.printStackTrace();
 			return null;
 		}
@@ -480,7 +480,7 @@ public class WriteprintsAnalyzer extends Analyzer {
 		try {
 			IG2 = calcInfoGain(dataset2, numFeatures);
 		} catch (Exception e) {
-			System.err.println("Error evaluating information gain.");
+			Logger.logln("Error evaluating information gain.", Logger.LogOut.STDERR);
 			e.printStackTrace();
 			return null;
 		}

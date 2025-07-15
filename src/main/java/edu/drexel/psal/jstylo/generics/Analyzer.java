@@ -489,7 +489,7 @@ public abstract class Analyzer {
 			return resultsString;
 
 		} catch (Exception e) {
-			System.out.println("Failed to get train/test statistics string");
+			Logger.logln("Failed to get train/test statistics string");
 			e.printStackTrace();
 			return "";
 		}

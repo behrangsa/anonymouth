@@ -225,10 +225,10 @@ public class ConsolidationStation {
 					optionNumber += 1;
 					continue;
 				}
-				System.out.println("The next sentence is: " + tempSent);
+				Logger.logln("The next sentence is: " + tempSent);
 				TaggedSentence ts = new TaggedSentence(tempSent);
 				ts.tagAndGetFeatures();
-				System.out.println("Features tagged and gotten...");
+				Logger.logln("Features tagged and gotten...");
 				anonymityIndices[optionNumber][0] = ts.getSentenceAnonymityIndex();
 				anonymityIndices[optionNumber][1] = optionNumber; // need a way to keep track of the indices of the
 																	// actual replacement sentences

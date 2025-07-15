@@ -1,5 +1,7 @@
 package edu.drexel.psal.anonymouth.utils;
 
+import edu.drexel.psal.jstylo.generics.Logger;
+
 /**
  * Implements a Trie. Currenly only supports lowercase letters (upper case gets
  * converted to lowercase), and apostrophes. Appends a '{' onto the end of each
@@ -91,8 +93,8 @@ public class Trie {
 		Trie tt = new Trie();
 		tt.trie = new TrieNode();
 		tt.addWords(new String[]{"and", "soup", "coffee", "basketball"});
-		System.out.println(tt.find("and"));
-		System.out.println(tt.find("was"));
+		Logger.logln(String.valueOf(tt.find("and")));
+		Logger.logln(String.valueOf(tt.find("was")));
 	}
 	/**
 	 * checks the char for odd values that throw the function off

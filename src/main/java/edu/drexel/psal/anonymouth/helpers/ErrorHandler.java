@@ -115,19 +115,19 @@ public class ErrorHandler {
 	/** Main method for testing */
 	public static void main(String[] args) {
 		// ==========TESTING STANDFORD POS ERROR===========
-		System.out.println("StanfordPOSError()...");
+		Logger.logln("StanfordPOSError()...");
 		StanfordPOSError();
 
 		// ==========TESTING FATAL ERROR==========
-		System.out.println("fatalError()...");
+		Logger.logln("fatalError()...");
 		fatalError(null, null);
-		System.out.println("Didn't choose to quit");
+		Logger.logln("Didn't choose to quit");
 
 		// ==========TESTING FATAL PROCESSING ERROR==========
-		System.out.println("fatalProcessingError()...");
+		Logger.logln("fatalProcessingError()...");
 		fatalProcessingError(null);
-		System.out.println("Didn't choose to quit");
+		Logger.logln("Didn't choose to quit");
 
-		System.out.println("Done!");
+		Logger.logln("Done!");
 	}
 }

@@ -86,7 +86,7 @@ public class MisspelledWords {
 			mWord.searchListFor(findStr);
 		}
 		endTime = System.currentTimeMillis();
-		System.out.println("Trie Test Time: " + (endTime - startTime));// strList.size());
+		Logger.logln("Trie Test Time: " + (endTime - startTime));// strList.size());
 		startTime = System.currentTimeMillis();
 		for (int i = 0; i < mWord.misspelledWordList.size(); i++) {
 			num = Math.abs(randomGen.nextInt() % mWord.misspelledWordList.size());
@@ -94,7 +94,7 @@ public class MisspelledWords {
 			mWord.misspelledWordList.contains(findStr);
 		}
 		endTime = System.currentTimeMillis();
-		System.out.println("Linear Search Time: " + (endTime - startTime));
+		Logger.logln("Linear Search Time: " + (endTime - startTime));
 		// findStr="scholarstic";
 		// System.out.println(mWord.searchListFor(findStr));
 		startTime = System.currentTimeMillis();
@@ -103,6 +103,6 @@ public class MisspelledWords {
 			findStr = mWord.misspelledWordList.get(num);
 		}
 		endTime = System.currentTimeMillis();
-		System.out.println("Overhead Time: " + (endTime - startTime));
+		Logger.logln("Overhead Time: " + (endTime - startTime));
 	}
 }

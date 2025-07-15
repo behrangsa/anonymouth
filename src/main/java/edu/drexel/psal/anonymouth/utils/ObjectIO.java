@@ -38,7 +38,7 @@ public class ObjectIO {
 	 */
 	public static boolean writeObject(Object o, String id, String dir) {
 		ObjectOutputStream outObject = null;
-		System.out.println(NAME + "Place to write: " + dir + id + ".ser");
+		Logger.logln(NAME + "Place to write: " + dir + id + ".ser");
 		try {
 			outObject = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(dir + id + ".ser")));
 			try {
@@ -92,7 +92,7 @@ public class ObjectIO {
 			e.printStackTrace();
 		}
 		if (printData == true && tdHash != null) {
-			System.out.println(tdHash.toString());
+			Logger.logln(tdHash.toString());
 		}
 		return tdHash;
 
@@ -118,7 +118,7 @@ public class ObjectIO {
 			e.printStackTrace();
 		}
 		if (printData == true && td != null) {
-			System.out.println(td.toString());
+			Logger.logln(td.toString());
 		}
 		return td;
 

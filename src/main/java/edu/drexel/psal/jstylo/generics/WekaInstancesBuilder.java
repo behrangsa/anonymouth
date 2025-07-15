@@ -182,7 +182,13 @@ public class WekaInstancesBuilder {
 					list.add(cfd.createEventSets(knownDocs.get(i)));
 				} catch (Exception e) {
 					Logger.logln("Error extracting features!", LogOut.STDERR);
-					Logger.logln(e.getMessage(), LogOut.STDERR);
+					Logger.logln("Document: " + (i < knownDocs.size() ? knownDocs.get(i).getTitle() : "Unknown"), LogOut.STDERR);
+					Logger.logln("Error: " + e.getClass().getSimpleName() + ": " + e.getMessage(), LogOut.STDERR);
+					Logger.logln("Stack trace:", LogOut.STDERR);
+					java.io.StringWriter sw = new java.io.StringWriter();
+					java.io.PrintWriter pw = new java.io.PrintWriter(sw);
+					e.printStackTrace(pw);
+					Logger.logln(sw.toString(), LogOut.STDERR);
 				}
 			}
 		}

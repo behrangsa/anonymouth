@@ -103,7 +103,7 @@ public class FeatureSwapper {
 			Map<String, Map<String, Double>> wekaResultMap = waz.classifyWithPretrainedClassifier(
 					hopefullyAnonymizedInstances, toAnonymizeTitlesList, trainSetAuthors);
 			keyIter = (wekaResultMap.keySet()).iterator();
-			System.out.println(wekaResultMap.keySet().toString() + " -- current cluster group num: " + i);
+			Logger.logln(wekaResultMap.keySet().toString() + " -- current cluster group num: " + i);
 			if (keyIter.hasNext()) {
 				wekaResultsArray[i] = new WekaResults(wekaResultMap.get(keyIter.next()), i); // there should never be
 																								// more that one key in

@@ -3,6 +3,7 @@ package edu.drexel.psal.jstylo.GUI;
 import com.jgaap.generics.*;
 import edu.drexel.psal.ANONConstants;
 import edu.drexel.psal.jstylo.generics.FeatureDriver;
+import edu.drexel.psal.jstylo.generics.Logger;
 import edu.drexel.psal.jstylo.generics.NormBaselineEnum;
 import java.awt.*;
 import java.util.*;
@@ -122,7 +123,7 @@ public class FeatureWizard extends javax.swing.JFrame {
 				try {
 					UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 				} catch (Exception e) {
-					System.err.println("Look-and-Feel error!");
+					Logger.logln("Look-and-Feel error!", Logger.LogOut.STDERR);
 				}
 				FeatureWizard inst = new FeatureWizard(new GUIMain());
 				inst.setLocationRelativeTo(null);

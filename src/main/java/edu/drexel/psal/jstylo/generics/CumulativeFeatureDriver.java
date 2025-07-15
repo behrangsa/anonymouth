@@ -107,6 +107,10 @@ public class CumulativeFeatureDriver {
 		int size = features.size();
 		for (int i = 0; i < size; i++) {
 			EventDriver ed = features.get(i).getUnderlyingEventDriver();
+			if (ed == null) {
+				throw new Exception("EventDriver is null for feature: " + features.get(i).getName());
+			}
+			
 			Document currDoc = doc instanceof StringDocument
 					? new StringDocument((StringDocument) doc)
 					: new Document(doc.getFilePath(), doc.getAuthor(), doc.getTitle());
@@ -118,20 +122,32 @@ public class CumulativeFeatureDriver {
 			} catch (NullPointerException e) {
 				// no canonicizers
 			}
-			currDoc.load();
-			currDoc.processCanonicizers();
+			
+			try {
+				currDoc.load();
+				currDoc.processCanonicizers();
+			} catch (Exception e) {
+				throw new Exception("Failed to load/process document: " + doc.getTitle() + " for feature: " + features.get(i).getName(), e);
+			}
 
 			// extract event set
 			String prefix = features.get(i).displayName().replace(" ", "-");
-			EventSet tmpEs = ed.createEventSet(currDoc);
-			tmpEs.setEventSetID(features.get(i).getName());
-			EventSet es = new EventSet();
-			es.setAuthor(doc.getAuthor());
-			es.setDocumentName(doc.getTitle());
-			es.setEventSetID(tmpEs.getEventSetID());
-			for (Event e : tmpEs)
-				es.addEvent(new Event(prefix + "{" + e.getEvent() + "}"));
-			esl.add(es);
+			try {
+				EventSet tmpEs = ed.createEventSet(currDoc);
+				if (tmpEs == null) {
+					throw new Exception("EventSet is null for feature: " + features.get(i).getName());
+				}
+				tmpEs.setEventSetID(features.get(i).getName());
+				EventSet es = new EventSet();
+				es.setAuthor(doc.getAuthor());
+				es.setDocumentName(doc.getTitle());
+				es.setEventSetID(tmpEs.getEventSetID());
+				for (Event e : tmpEs)
+					es.addEvent(new Event(prefix + "{" + e.getEvent() + "}"));
+				esl.add(es);
+			} catch (Exception e) {
+				throw new Exception("Failed to create EventSet for feature: " + features.get(i).getName() + " on document: " + doc.getTitle(), e);
+			}
 		}
 		return esl;
 	}

@@ -379,6 +379,16 @@ public class TaggedDocument implements Serializable {
 				TaggedSentence taggedSentence = new TaggedSentence(tempSent);
 				toke = tlp.getTokenizerFactory().getTokenizer(new StringReader(tempSent));
 				sentenceTokenized = toke.tokenize();
+				
+				// Ensure Stanford POS tagger is initialized
+				if (Tagger.mt == null) {
+					Logger.logln("( TaggedDocument ) - Stanford POS tagger not initialized, attempting to initialize...", Logger.LogOut.STDERR);
+					if (!Tagger.initTagger()) {
+						Logger.logln("( TaggedDocument ) - CRITICAL ERROR: Failed to initialize Stanford POS tagger", Logger.LogOut.STDERR);
+						throw new RuntimeException("Stanford POS tagger initialization failed");
+					}
+				}
+				
 				taggedSentence.setTaggedSentence(Tagger.mt.tagSentence(sentenceTokenized));
 				consolidateFeatures(taggedSentence);
 

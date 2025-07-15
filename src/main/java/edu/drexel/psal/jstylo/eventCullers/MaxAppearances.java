@@ -3,6 +3,7 @@ package edu.drexel.psal.jstylo.eventCullers;
 import com.jgaap.canonicizers.UnifyCase;
 import com.jgaap.eventDrivers.NaiveWordEventDriver;
 import com.jgaap.generics.*;
+import edu.drexel.psal.jstylo.generics.Logger;
 import java.util.*;
 
 /**
@@ -67,8 +68,8 @@ public class MaxAppearances extends FrequencyEventsExtended {
 		l = c.cull(l);
 		es = l.get(0);
 		if (es.size() > 0)
-			System.out.println(es);
+			Logger.logln(es.toString());
 		else
-			System.out.println("no events!");
+			Logger.logln("no events!");
 	}
 }

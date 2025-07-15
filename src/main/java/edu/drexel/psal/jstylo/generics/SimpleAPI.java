@@ -143,7 +143,7 @@ public class SimpleAPI {
 			ib.createTestInstancesThreaded(); // creates test Instances (if present)
 			ib.calculateInfoGain(); // calculates infoGain
 		} catch (Exception e) {
-			System.out.println("Failed to prepare instances");
+			Logger.logln("Failed to prepare instances");
 			e.printStackTrace();
 		}
 	}
@@ -161,7 +161,7 @@ public class SimpleAPI {
 				analysisDriver = new WriteprintsAnalyzer();
 			}
 		} catch (Exception e) {
-			System.out.println("Failed to prepare Analyzer");
+			Logger.logln("Failed to prepare Analyzer");
 			e.printStackTrace();
 		}
 	}
@@ -176,7 +176,7 @@ public class SimpleAPI {
 		try {
 			ib.applyInfoGain(n);
 		} catch (Exception e) {
-			System.out.println("Failed to apply infoGain");
+			Logger.logln("Failed to apply infoGain");
 			e.printStackTrace();
 		}
 	}
@@ -207,7 +207,7 @@ public class SimpleAPI {
 
 			// should not occur
 			default :
-				System.out.println("Unreachable. Something went wrong somewhere.");
+				Logger.logln("Unreachable. Something went wrong somewhere.");
 				break;
 		}
 	}
@@ -296,7 +296,7 @@ public class SimpleAPI {
 			return resultsString;
 
 		} catch (Exception e) {
-			System.out.println("Failed to get cross validation statistics string");
+			Logger.logln("Failed to get cross validation statistics string");
 			e.printStackTrace();
 			return "";
 		}
@@ -428,7 +428,7 @@ public class SimpleAPI {
 		test.prepareAnalyzer();
 		test.run();
 
-		System.out.println(test.getCrossValEval().weightedAreaUnderROC());
+		Logger.logln(String.valueOf(test.getCrossValEval().weightedAreaUnderROC()));
 
 		// test.writeArff("./training.arff",test.getTrainingInstances());
 		// test.writeArff("./testing.arff",test.getTestInstances());

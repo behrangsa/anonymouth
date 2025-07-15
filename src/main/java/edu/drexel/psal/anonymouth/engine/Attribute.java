@@ -98,7 +98,7 @@ public class Attribute {
 			Matcher m = findDigit.matcher(fullName);
 			m.find();
 			tempFeatName = fullName.substring(fullName.indexOf("'") + 1, m.start() - 1);
-			System.out.println(fullName.substring(fullName.indexOf("'") + 1, m.start() - 1));
+			Logger.logln(fullName.substring(fullName.indexOf("'") + 1, m.start() - 1));
 		} catch (Exception e) {
 		}
 

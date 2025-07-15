@@ -3,6 +3,7 @@ package edu.drexel.psal.jstylo.eventDrivers;
 import com.jgaap.eventDrivers.NaiveWordEventDriver;
 import com.jgaap.generics.*;
 import edu.drexel.psal.jstylo.eventCullers.FrequencyEventsExtended;
+import edu.drexel.psal.jstylo.generics.Logger;
 import java.io.*;
 import java.util.*;
 
@@ -130,6 +131,9 @@ public class ListEventDriver extends EventDriver {
 						// look in resources
 
 						InputStream in = getClass().getClassLoader().getResourceAsStream(filename);
+						if (in == null) {
+							throw new IOException("Resource file not found: " + filename);
+						}
 						br = new BufferedReader(new InputStreamReader(in));
 					}
 
@@ -138,7 +142,7 @@ public class ListEventDriver extends EventDriver {
 					}
 
 				} catch (IOException e) {
-					System.err.println("Error reading file " + filename);
+					Logger.logln("Error reading file " + filename, Logger.LogOut.STDERR);
 					e.printStackTrace();
 
 				} finally {

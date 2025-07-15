@@ -57,21 +57,21 @@ public class GZReader {
 		long start = System.currentTimeMillis();
 		while ((temp = buff.readLine()) != null) {
 			if (temp.toLowerCase().contains(string.toLowerCase()))
-				System.out.println(temp);
-			// System.out.println(temp.substring(0,firstCut+1)+temp.substring(secondCut,thirdCut)+temp.substring(fourthCut));
+				Logger.logln(temp);
+			// Logger.logln(temp.substring(0,firstCut+1)+temp.substring(secondCut,thirdCut)+temp.substring(fourthCut));
 			// osw.write(temp.substring(0,firstCut)+"\n");
-			// System.out.println(temp.substring(0,firstCut));
+			// Logger.logln(temp.substring(0,firstCut));
 			// in.nextLine();
 			// numLines++;
 			// if (numLines == 10000){
 			// numTenThousands ++;
-			// System.out.println((numTenThousands*10000)+" lines complete.");
+			// Logger.logln((numTenThousands*10000)+" lines complete.");
 			// numLines = 0;
 			// }
 		}
 		long stop = System.currentTimeMillis();
 		long elapsed = stop - start;
-		System.out.println(elapsed);
+		Logger.logln(String.valueOf(elapsed));
 		buff.close();
 		// osw.close();
 
@@ -98,23 +98,23 @@ public class GZReader {
 				// int thirdCut = temp.indexOf("Lexical=")-1;
 				// int fourthCut = temp.indexOf("WordCountDiff=");
 				// lenTempSplit = tempSplit.length;
-				// System.out.println(temp.substring(0,firstCut+1)+temp.substring(secondCut,thirdCut)+temp.substring(fourthCut));
+				// Logger.logln(temp.substring(0,firstCut+1)+temp.substring(secondCut,thirdCut)+temp.substring(fourthCut));
 				osw.write(temp + "\n");// .substring(0,firstCut)+"\n");
 			} else
 				osw_two.write(temp + "\n");
-			// System.out.println(temp);//.substring(0,firstCut));
+			// Logger.logln(temp);//.substring(0,firstCut));
 
 			// in.nextLine();
 			numLines++;
 			if (numLines == 1000000) {
 				numMillions++;
-				System.out.println((numMillions * 1000000) + " lines complete.");
+				Logger.logln((numMillions * 1000000) + " lines complete.");
 				numLines = 0;
 			}
 		}
 		long stop = System.currentTimeMillis();
 		long elapsed = stop - start;
-		System.out.println(elapsed);
+		Logger.logln(String.valueOf(elapsed));
 		buff.close();
 		osw.close();
 		osw_two.close();
@@ -130,7 +130,7 @@ public class GZReader {
 			gzr.gzSearch("|");
 			// gzr.gzSearchCutSave(new int[]{2,3},new String[]{"a","b"});
 		} catch (IOException e) {
-			System.out.println("Oh no. It isn't working.");
+			Logger.logln("Oh no. It isn't working.");
 			e.printStackTrace();
 		}
 		/*
@@ -138,9 +138,9 @@ public class GZReader {
 		 * 
 		 * 
 		 * 
-		 * String temp; //System.out.println(fc.size()); fc. long start =
+		 * String temp; //Logger.logln(fc.size()); fc. long start =
 		 * System.currentTimeMillis(); while((temp = buff.readLine()) != null){ } long
-		 * stop = System.currentTimeMillis(); System.out.println((stop-start)+" ms");
+		 * stop = System.currentTimeMillis(); Logger.logln((stop-start)+" ms");
 		 * 
 		 * } catch (UnsupportedEncodingException e) { // TODO Auto-generated catch block
 		 * e.printStackTrace(); } catch (FileNotFoundException e) { // TODO

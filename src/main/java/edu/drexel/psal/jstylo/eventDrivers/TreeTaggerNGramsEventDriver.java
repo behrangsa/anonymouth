@@ -5,6 +5,7 @@ import com.jgaap.generics.Document;
 import com.jgaap.generics.Event;
 import com.jgaap.generics.EventDriver;
 import com.jgaap.generics.EventSet;
+import edu.drexel.psal.jstylo.generics.Logger;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +111,7 @@ public class TreeTaggerNGramsEventDriver extends EventDriver {
 		// "/opt/treetagger/bin/tree-tagger"
 		taggerHome = getParameter("taggerHome");
 		taggerPath = getParameter("taggerPath");
-		System.out.println("taggerHome->" + taggerHome);
+		Logger.logln("taggerHome->" + taggerHome);
 		System.setProperty("treetagger.home", taggerHome);
 		tagger = new TreeTaggerWrapper<String>();
 		return tagger;

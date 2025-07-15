@@ -17,6 +17,8 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import edu.drexel.psal.jstylo.generics.Logger;
+
 import edu.stanford.nlp.trees.Tree;
 
 /**
@@ -102,7 +104,7 @@ public class TreeProcessor {
 					// System.out.println("char at next index: "+treeString.charAt(tempStart));
 					if (treeString.charAt(tempStart) == '(') {
 						// System.out.println(treeString);
-						System.out.println((treeString));
+						Logger.logln((treeString));
 						if (matchPre.find(tempStart) == true)
 							;
 						tempStart = matchPre.end();

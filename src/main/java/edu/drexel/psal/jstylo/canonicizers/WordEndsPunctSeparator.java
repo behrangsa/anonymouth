@@ -1,6 +1,7 @@
 package edu.drexel.psal.jstylo.canonicizers;
 
 import com.jgaap.generics.Canonicizer;
+import edu.drexel.psal.jstylo.generics.Logger;
 import java.util.Scanner;
 
 /**
@@ -67,7 +68,7 @@ public class WordEndsPunctSeparator extends Canonicizer {
 	public static void main(String[] args) {
 		String s = " Hi there! how are you, man? I haven't been here before, have I? hi .again.";
 		String res = String.valueOf((new WordEndsPunctSeparator()).process(s.toCharArray()));
-		System.out.println(s);
-		System.out.println(res);
+		Logger.logln(s);
+		Logger.logln(res);
 	}
 }

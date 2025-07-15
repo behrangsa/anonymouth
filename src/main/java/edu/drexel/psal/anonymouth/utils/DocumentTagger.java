@@ -24,7 +24,7 @@ public class DocumentTagger {
 		for (Document d : docs) {
 			currentAuthor = d.getAuthor();
 			docTitle = d.getTitle();
-			System.out.println("Author: " + currentAuthor + " Title: docTitle");
+			Logger.logln("Author: " + currentAuthor + " Title: docTitle");
 			TaggedDocument td = null;
 			/*
 			 * if(ObjectIO.objectExists(currentAuthor+"_"+docTitle,ThePresident.GRAMMAR_DIR)

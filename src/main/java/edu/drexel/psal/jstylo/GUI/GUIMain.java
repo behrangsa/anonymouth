@@ -219,7 +219,7 @@ public class GUIMain extends javax.swing.JFrame {
 				try {
 					UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 				} catch (Exception e) {
-					System.err.println("Look-and-Feel error!");
+					Logger.logln("Look-and-Feel error!", Logger.LogOut.STDERR);
 				}
 				inst = new GUIMain();
 				inst.setDefaultCloseOperation(EXIT_ON_CLOSE);

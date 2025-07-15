@@ -107,13 +107,13 @@ public class FunctionWords implements Runnable {
 	 * displays results.
 	 */
 	public static void main(String[] args) {
-		System.out.println("Testing initializing and running class");
+		Logger.logln("Testing initializing and running class");
 		FunctionWords functionWords = new FunctionWords();
 		functionWords.run();
-		System.out.println("   >>> Success");
+		Logger.logln("   >>> Success");
 
-		System.out.println("Testing words added to Trie succesfully and isWordInTrie function");
-		System.out.println("(All results should be true)");
+		Logger.logln("Testing words added to Trie succesfully and isWordInTrie function");
+		Logger.logln("(All results should be true)");
 		String wordToFind;
 		boolean success = true;
 		int size = functionWords.functionWordList.size();
@@ -122,12 +122,12 @@ public class FunctionWords implements Runnable {
 		for (int i = 0; i < size; i++) {
 			wordToFind = functionWords.getWordAt(i);
 			success = functionWords.isWordInTrie(wordToFind);
-			System.out.println("   >>> " + success);
+			Logger.logln("   >>> " + success);
 			if (!success)
 				break;
 		}
 		endTime = System.currentTimeMillis();
-		System.out.println("Time to search Trie: " + (endTime - startTime));
-		System.out.println("Was successful? " + success);
+		Logger.logln("Time to search Trie: " + (endTime - startTime));
+		Logger.logln("Was successful? " + success);
 	}
 }

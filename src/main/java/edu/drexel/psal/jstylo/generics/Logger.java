@@ -1,261 +1,247 @@
 package edu.drexel.psal.jstylo.generics;
 
-import edu.drexel.psal.ANONConstants;
-import java.io.*;
-import java.text.*;
-import java.util.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.config.Configurator;
+import java.io.File;
 
 /**
- * Takes output that would normally just be printing out via stdout and in
- * addition to printing also writes the output to a log file, and also provides
- * functionality for setting the name and location for these logs.
+ * Log4J 2 based logger that maintains API compatibility with the original Logger class.
+ * Provides the same logging functionality but uses Log4J 2 under the hood.
  *
- * @author Ariel Stolerman
- * @author Marc Barrowclift
+ * @author Claude (Log4J 2 migration)
+ * @author Ariel Stolerman (original implementation)
+ * @author Marc Barrowclift (original implementation)
  */
 public class Logger {
 
-	private static String NAME = "( Logger ) - ";
-	public static final boolean loggerFlag = true;
-	public static boolean logFile = false;
+    private static final String NAME = "( Logger ) - ";
+    public static final boolean loggerFlag = true;
+    public static boolean logFile = true; // Always true with Log4J 2
+    
+    private static org.apache.logging.log4j.Logger log4jLogger;
+    private static boolean initialized = false;
 
-	// time
-	private static SimpleDateFormat tf = new SimpleDateFormat("HH-mm-ss");
-	private static SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-	private static Calendar cal = null;
+    /** Enumerator for logger output. */
+    public enum LogOut {
+        STDOUT, STDERR
+    }
 
-	// file
-	private static String fileDirPath = ANONConstants.LOG_DIR;
-	private static String filePrefix = "anonymouth";
-	private static String out;
-	private static BufferedWriter bw = null;
-	private static String printBuffer = ""; // So we can store output even before the logger file is made
+    /**
+     * Initialize Log4J 2 logger
+     */
+    private static synchronized void initialize() {
+        if (!initialized) {
+            try {
+                // Ensure log directory exists
+                File logDir = new File("./anonymouth_log");
+                if (!logDir.exists()) {
+                    logDir.mkdirs();
+                }
+                
+                // Get Log4J 2 logger for Anonymouth
+                log4jLogger = LogManager.getLogger("edu.drexel.psal.anonymouth");
+                initialized = true;
+                
+                // Don't call logln here to avoid infinite recursion
+                if (log4jLogger != null) {
+                    log4jLogger.info(NAME + "Log4J 2 logger initialized, session name = Anonymouth");
+                }
+            } catch (Exception e) {
+                // Fallback to console output if Log4J 2 fails
+                System.err.println("Failed to initialize Log4J 2 logger: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
 
-	/**
-	 * Reutrns the current time.
-	 *
-	 * @return The current time.
-	 */
-	public static String time() {
-		cal = Calendar.getInstance();
-		return tf.format(cal.getTime());
-	}
+    /**
+     * Returns current time (for backward compatibility)
+     * @return The current time
+     */
+    public static String time() {
+        return java.time.LocalTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH-mm-ss"));
+    }
 
-	/**
-	 * Returns the current date.
-	 *
-	 * @return The current date.
-	 */
-	public static String date() {
-		cal = Calendar.getInstance();
-		return df.format(cal.getTime());
-	}
+    /**
+     * Returns current date (for backward compatibility)
+     * @return The current date
+     */
+    public static String date() {
+        return java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    }
 
-	/** Initializes the file we will be printing our output to */
-	public static void initLogFile() {
-		if (loggerFlag && logFile) {
-			out = fileDirPath + "/" + filePrefix + "_" + date() + "_" + time() + ".txt";
-			String msg = NAME + "Started log " + out + "\n"
-					+ "=======================ALL PREVIOUS OUTPUT WRITTEN TO LOG FILE============================\n";
-			System.out.println(time() + ": " + msg);
+    /**
+     * Initialize logger with session name (for backward compatibility)
+     * @param sessionName The session name
+     */
+    public static void initializeSession(String sessionName) {
+        // With Log4J 2, this is handled by the configuration
+        logln(NAME + "Logger initialized, session name = " + sessionName);
+    }
 
-			try {
-				if (logFile) {
-					bw = new BufferedWriter(new FileWriter(out));
-					bw.write(msg);
+    /**
+     * Prints output (no new line) to the log
+     * @param msg The message to log
+     */
+    public static void log(String msg) {
+        if (loggerFlag) {
+            if (!initialized) {
+                initialize();
+            }
+            if (log4jLogger != null) {
+                // Use info level and remove newlines since we're mimicking the original behavior
+                log4jLogger.info(msg.replace("\n", ""));
+            }
+        }
+    }
 
-					if (!printBuffer.equals("")) {
-						bw.write(msg);
-						bw.flush();
-						printBuffer = "";
-					}
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-				System.out.println(NAME + "Failed opening log file!");
-				System.exit(0);
-			}
-		}
-	}
+    /**
+     * Prints output (no new line) to the specified target
+     * @param msg The message to log
+     * @param target Output target (STDOUT or STDERR)
+     */
+    public static void log(String msg, LogOut target) {
+        if (loggerFlag) {
+            if (!initialized) {
+                initialize();
+            }
+            if (log4jLogger != null) {
+                String cleanMsg = msg.replace("\n", "");
+                switch (target) {
+                    case STDOUT:
+                        log4jLogger.info(cleanMsg);
+                        break;
+                    case STDERR:
+                        log4jLogger.error(cleanMsg);
+                        break;
+                    default:
+                        log4jLogger.info(cleanMsg);
+                        break;
+                }
+            }
+        }
+    }
 
-	/** Enumerator for logger output. */
-	public enum LogOut {
-		STDOUT, STDERR
-	}
+    /**
+     * Prints output with new line to the log
+     * @param msg The message to log
+     */
+    public static void logln(String msg) {
+        if (loggerFlag) {
+            if (!initialized) {
+                initialize();
+            }
+            if (log4jLogger != null) {
+                log4jLogger.info(msg);
+            }
+        }
+    }
 
-	/**
-	 * Prints output (no new line) to the file and to standard output
-	 *
-	 * @param msg
-	 */
-	public static void log(String msg) {
-		if (loggerFlag) {
-			// String timedMsg = time()+": "+msg;
+    /**
+     * Prints output with new line to the specified target
+     * @param msg The message to log
+     * @param target Output target (STDOUT or STDERR)
+     */
+    public static void logln(String msg, LogOut target) {
+        if (loggerFlag) {
+            if (!initialized) {
+                initialize();
+            }
+            if (log4jLogger != null) {
+                switch (target) {
+                    case STDOUT:
+                        log4jLogger.info(msg);
+                        break;
+                    case STDERR:
+                        log4jLogger.error(msg);
+                        break;
+                    default:
+                        log4jLogger.info(msg);
+                        break;
+                }
+            }
+        }
+    }
 
-			// write to screen
-			System.out.print(msg);
-			// write to file
-			try {
-				if (logFile) {
-					bw.write(msg);
-					bw.flush();
-				} else {
-					printBuffer.concat(msg);
-				}
-			} catch (IOException e) {
-				System.err.println("Failed writing to log file!");
-			}
-		}
-	}
+    /**
+     * Logs an exception with stack trace
+     * @param e The exception to log
+     */
+    public static void logln(Exception e) {
+        if (loggerFlag) {
+            if (!initialized) {
+                initialize();
+            }
+            if (log4jLogger != null) {
+                log4jLogger.error(">>>>>>>>>>>>>>>>>>>>>>>   LOGGING STACK TRACE   <<<<<<<<<<<<<<<<<<<<<<<<<");
+                log4jLogger.error(e.getMessage(), e);
+            }
+        }
+    }
 
-	/**
-	 * Prints a single line to the file and to standard output
-	 *
-	 * @param msg
-	 */
-	public static void logln(String msg) {
-		if (loggerFlag) {
-			log(msg);
-			System.out.println();
+    /**
+     * Logs an exception with stack trace to specified target
+     * @param e The exception to log
+     * @param target Output target (STDOUT or STDERR)
+     */
+    public static void logln(Exception e, LogOut target) {
+        if (loggerFlag) {
+            if (!initialized) {
+                initialize();
+            }
+            if (log4jLogger != null) {
+                switch (target) {
+                    case STDOUT:
+                        log4jLogger.info(">>>>>>>>>>>>>>>>>>>>>>>   LOGGING STACK TRACE   <<<<<<<<<<<<<<<<<<<<<<<<<");
+                        log4jLogger.info(e.getMessage(), e);
+                        break;
+                    case STDERR:
+                        log4jLogger.error(">>>>>>>>>>>>>>>>>>>>>>>   LOGGING STACK TRACE   <<<<<<<<<<<<<<<<<<<<<<<<<");
+                        log4jLogger.error(e.getMessage(), e);
+                        break;
+                    default:
+                        log4jLogger.error(">>>>>>>>>>>>>>>>>>>>>>>   LOGGING STACK TRACE   <<<<<<<<<<<<<<<<<<<<<<<<<");
+                        log4jLogger.error(e.getMessage(), e);
+                        break;
+                }
+            }
+        }
+    }
 
-			try {
-				if (logFile) {
-					bw.write("\n");
-					bw.flush();
-				} else {
-					printBuffer.concat("\n");
-				}
-			} catch (IOException e) {
-				System.err.println(NAME + "Failed writing to log file!");
-			}
-		}
-	}
+    /**
+     * Close logger (for backward compatibility)
+     */
+    public static void close() {
+        if (log4jLogger != null) {
+            logln(NAME + "Logger shutting down");
+            LogManager.shutdown();
+        }
+    }
 
-	/**
-	 * Prints output (no new line) to the file and to standard output OR standard
-	 * error output, depending on passed value.
-	 *
-	 * @param msg
-	 * @param target
-	 */
-	public static void log(String msg, LogOut target) {
-		if (loggerFlag) {
-			// String timedMsg = time()+": "+msg;
+    /**
+     * Flush logger (for backward compatibility)
+     */
+    public static void flush() {
+        // Log4J 2 handles flushing automatically
+    }
 
-			// write to logger
-			switch (target) {
-				case STDOUT :
-					System.out.print(msg);
-					break;
-				case STDERR :
-					System.err.print(msg);
-					break;
-			}
+    /**
+     * Initialize log file (for backward compatibility)
+     */
+    public static void initLogFile() {
+        // With Log4J 2, this is handled by configuration
+        if (!initialized) {
+            initialize();
+        }
+    }
 
-			// write to file
-			try {
-				if (logFile) {
-					bw.write(msg);
-					bw.flush();
-				} else {
-					printBuffer.concat(msg);
-				}
-			} catch (IOException e) {
-				System.err.println(NAME + "Failed writing to log file!");
-			}
-		}
-	}
-
-	/**
-	 * Prints output (no new line) to the file and to standard output or standard
-	 * error output, depending on passed value
-	 *
-	 * @param msg
-	 * @param target
-	 */
-	public static void logln(String msg, LogOut target) {
-		if (loggerFlag) {
-			log(msg, target);
-
-			switch (target) {
-				case STDOUT :
-					System.out.println();
-					break;
-				case STDERR :
-					System.err.println();
-					break;
-			}
-
-			// Write to file
-			try {
-				if (logFile) {
-					bw.write("\n");
-					bw.flush();
-				} else {
-					printBuffer.concat("\n");
-				}
-			} catch (IOException e) {
-				System.err.println(NAME + "Failed writing to log file!");
-			}
-		}
-	}
-
-	/**
-	 * Prints a stack trace for an exception to the log file as well as to Standard
-	 * Error Output
-	 *
-	 * @param e
-	 *            The StackTraceElement array from the thread where the error
-	 *            occurred.
-	 */
-	public static void logln(Exception e) {
-		if (loggerFlag) {
-			StackTraceElement[] stack = e.getStackTrace();
-
-			log(">>>>>>>>>>>>>>>>>>>>>>>   LOGGING STACK TRACE   <<<<<<<<<<<<<<<<<<<<<<<<<\n", LogOut.STDERR);
-			log(e.toString() + "\n", LogOut.STDERR);
-			for (int i = 0; i < stack.length; i++) {
-				log(stack[i].toString() + "\n", LogOut.STDERR);
-			}
-
-			System.err.println();
-			try {
-				if (logFile) {
-					bw.write("\n");
-					bw.flush();
-				} else {
-					printBuffer.concat("\n");
-				}
-			} catch (IOException e1) {
-				System.err.println(NAME + "Failed writing to log file!");
-			}
-		}
-	}
-
-	/** Safely closes the file */
-	public static void close() {
-		if (loggerFlag) {
-			try {
-				bw.close();
-			} catch (IOException e) {
-				System.err.println(NAME + "Failed closing log file!");
-			}
-		}
-	}
-
-	public static String getFileDirPath() {
-		return fileDirPath;
-	}
-
-	public static void setFileDirPath(String fileDirPath) {
-		Logger.fileDirPath = fileDirPath;
-	}
-
-	public static String getFilePrefix() {
-		return filePrefix;
-	}
-
-	public static void setFilePrefix(String filePrefix) {
-		Logger.filePrefix = filePrefix;
-	}
+    /**
+     * Set file prefix (for backward compatibility)
+     * @param prefix The file prefix to set
+     */
+    public static void setFilePrefix(String prefix) {
+        // With Log4J 2, filename is configured in log4j2.xml
+        // This method is kept for compatibility but has no effect
+        logln(NAME + "File prefix set to: " + prefix + " (managed by Log4J 2)");
+    }
 }

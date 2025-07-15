@@ -1,5 +1,6 @@
 package edu.drexel.psal.anonymouth.engine;
 
+import edu.drexel.psal.jstylo.generics.Logger;
 import java.io.*;
 import java.util.*;
 
@@ -1193,7 +1194,7 @@ public strictfp class MersenneTwisterFast implements Serializable, Cloneable {
 		// COMPARE WITH http://www.math.keio.ac.jp/matumoto/CODES/MT2002/mt19937ar.out
 
 		r = new MersenneTwisterFast(new int[]{0x123, 0x234, 0x345, 0x456});
-		System.out.println("Output of MersenneTwisterFast with new (2002/1/26) seeding mechanism");
+		Logger.logln("Output of MersenneTwisterFast with new (2002/1/26) seeding mechanism");
 		for (j = 0; j < 1000; j++) {
 			// first, convert the int from signed to "unsigned"
 			long l = (long) r.nextInt();
@@ -1202,9 +1203,9 @@ public strictfp class MersenneTwisterFast implements Serializable, Cloneable {
 			String s = String.valueOf(l);
 			while (s.length() < 10)
 				s = " " + s; // buffer
-			System.out.print(s + " ");
+			Logger.log(s + " ");
 			if (j % 5 == 4)
-				System.out.println();
+				Logger.logln("");
 		}
 
 		// SPEED TEST
@@ -1213,167 +1214,167 @@ public strictfp class MersenneTwisterFast implements Serializable, Cloneable {
 
 		int xx;
 		long ms;
-		System.out.println("\nTime to test grabbing 100000000 ints");
+		Logger.logln("\nTime to test grabbing 100000000 ints");
 
 		Random rr = new Random(SEED);
 		xx = 0;
 		ms = System.currentTimeMillis();
 		for (j = 0; j < 100000000; j++)
 			xx += rr.nextInt();
-		System.out.println("java.util.Random: " + (System.currentTimeMillis() - ms) + "          Ignore this: " + xx);
+		Logger.logln("java.util.Random: " + (System.currentTimeMillis() - ms) + "          Ignore this: " + xx);
 
 		r = new MersenneTwisterFast(SEED);
 		ms = System.currentTimeMillis();
 		xx = 0;
 		for (j = 0; j < 100000000; j++)
 			xx += r.nextInt();
-		System.out.println(
+		Logger.logln(
 				"Mersenne Twister Fast: " + (System.currentTimeMillis() - ms) + "          Ignore this: " + xx);
 
 		// TEST TO COMPARE TYPE CONVERSION BETWEEN
 		// MersenneTwisterFast.java AND MersenneTwister.java
 
-		System.out.println("\nGrab the first 1000 booleans");
+		Logger.logln("\nGrab the first 1000 booleans");
 		r = new MersenneTwisterFast(SEED);
 		for (j = 0; j < 1000; j++) {
-			System.out.print(r.nextBoolean() + " ");
+			Logger.log(r.nextBoolean() + " ");
 			if (j % 8 == 7)
-				System.out.println();
+				Logger.logln("");
 		}
 		if (!(j % 8 == 7))
-			System.out.println();
+			Logger.logln("");
 
-		System.out.println("\nGrab 1000 booleans of increasing probability using nextBoolean(double)");
+		Logger.logln("\nGrab 1000 booleans of increasing probability using nextBoolean(double)");
 		r = new MersenneTwisterFast(SEED);
 		for (j = 0; j < 1000; j++) {
-			System.out.print(r.nextBoolean((double) (j / 999.0)) + " ");
+			Logger.log(r.nextBoolean((double) (j / 999.0)) + " ");
 			if (j % 8 == 7)
-				System.out.println();
+				Logger.logln("");
 		}
 		if (!(j % 8 == 7))
-			System.out.println();
+			Logger.logln("");
 
-		System.out.println("\nGrab 1000 booleans of increasing probability using nextBoolean(float)");
+		Logger.logln("\nGrab 1000 booleans of increasing probability using nextBoolean(float)");
 		r = new MersenneTwisterFast(SEED);
 		for (j = 0; j < 1000; j++) {
-			System.out.print(r.nextBoolean((float) (j / 999.0f)) + " ");
+			Logger.log(r.nextBoolean((float) (j / 999.0f)) + " ");
 			if (j % 8 == 7)
-				System.out.println();
+				Logger.logln("");
 		}
 		if (!(j % 8 == 7))
-			System.out.println();
+			Logger.logln("");
 
 		byte[] bytes = new byte[1000];
-		System.out.println("\nGrab the first 1000 bytes using nextBytes");
+		Logger.logln("\nGrab the first 1000 bytes using nextBytes");
 		r = new MersenneTwisterFast(SEED);
 		r.nextBytes(bytes);
 		for (j = 0; j < 1000; j++) {
-			System.out.print(bytes[j] + " ");
+			Logger.log(bytes[j] + " ");
 			if (j % 16 == 15)
-				System.out.println();
+				Logger.logln("");
 		}
 		if (!(j % 16 == 15))
-			System.out.println();
+			Logger.logln("");
 
 		byte b;
-		System.out.println("\nGrab the first 1000 bytes -- must be same as nextBytes");
+		Logger.logln("\nGrab the first 1000 bytes -- must be same as nextBytes");
 		r = new MersenneTwisterFast(SEED);
 		for (j = 0; j < 1000; j++) {
-			System.out.print((b = r.nextByte()) + " ");
+			Logger.log((b = r.nextByte()) + " ");
 			if (b != bytes[j])
-				System.out.print("BAD ");
+				Logger.log("BAD ");
 			if (j % 16 == 15)
-				System.out.println();
+				Logger.logln("");
 		}
 		if (!(j % 16 == 15))
-			System.out.println();
+			Logger.logln("");
 
-		System.out.println("\nGrab the first 1000 shorts");
+		Logger.logln("\nGrab the first 1000 shorts");
 		r = new MersenneTwisterFast(SEED);
 		for (j = 0; j < 1000; j++) {
-			System.out.print(r.nextShort() + " ");
+			Logger.log(r.nextShort() + " ");
 			if (j % 8 == 7)
-				System.out.println();
+				Logger.logln("");
 		}
 		if (!(j % 8 == 7))
-			System.out.println();
+			Logger.logln("");
 
-		System.out.println("\nGrab the first 1000 ints");
+		Logger.logln("\nGrab the first 1000 ints");
 		r = new MersenneTwisterFast(SEED);
 		for (j = 0; j < 1000; j++) {
-			System.out.print(r.nextInt() + " ");
+			Logger.log(r.nextInt() + " ");
 			if (j % 4 == 3)
-				System.out.println();
+				Logger.logln("");
 		}
 		if (!(j % 4 == 3))
-			System.out.println();
+			Logger.logln("");
 
-		System.out.println("\nGrab the first 1000 ints of different sizes");
+		Logger.logln("\nGrab the first 1000 ints of different sizes");
 		r = new MersenneTwisterFast(SEED);
 		int max = 1;
 		for (j = 0; j < 1000; j++) {
-			System.out.print(r.nextInt(max) + " ");
+			Logger.log(r.nextInt(max) + " ");
 			max *= 2;
 			if (max <= 0)
 				max = 1;
 			if (j % 4 == 3)
-				System.out.println();
+				Logger.logln("");
 		}
 		if (!(j % 4 == 3))
-			System.out.println();
+			Logger.logln("");
 
-		System.out.println("\nGrab the first 1000 longs");
+		Logger.logln("\nGrab the first 1000 longs");
 		r = new MersenneTwisterFast(SEED);
 		for (j = 0; j < 1000; j++) {
-			System.out.print(r.nextLong() + " ");
+			Logger.log(r.nextLong() + " ");
 			if (j % 3 == 2)
-				System.out.println();
+				Logger.logln("");
 		}
 		if (!(j % 3 == 2))
-			System.out.println();
+			Logger.logln("");
 
-		System.out.println("\nGrab the first 1000 longs of different sizes");
+		Logger.logln("\nGrab the first 1000 longs of different sizes");
 		r = new MersenneTwisterFast(SEED);
 		long max2 = 1;
 		for (j = 0; j < 1000; j++) {
-			System.out.print(r.nextLong(max2) + " ");
+			Logger.log(r.nextLong(max2) + " ");
 			max2 *= 2;
 			if (max2 <= 0)
 				max2 = 1;
 			if (j % 4 == 3)
-				System.out.println();
+				Logger.logln("");
 		}
 		if (!(j % 4 == 3))
-			System.out.println();
+			Logger.logln("");
 
-		System.out.println("\nGrab the first 1000 floats");
+		Logger.logln("\nGrab the first 1000 floats");
 		r = new MersenneTwisterFast(SEED);
 		for (j = 0; j < 1000; j++) {
-			System.out.print(r.nextFloat() + " ");
+			Logger.log(r.nextFloat() + " ");
 			if (j % 4 == 3)
-				System.out.println();
+				Logger.logln("");
 		}
 		if (!(j % 4 == 3))
-			System.out.println();
+			Logger.logln("");
 
-		System.out.println("\nGrab the first 1000 doubles");
+		Logger.logln("\nGrab the first 1000 doubles");
 		r = new MersenneTwisterFast(SEED);
 		for (j = 0; j < 1000; j++) {
-			System.out.print(r.nextDouble() + " ");
+			Logger.log(r.nextDouble() + " ");
 			if (j % 3 == 2)
-				System.out.println();
+				Logger.logln("");
 		}
 		if (!(j % 3 == 2))
-			System.out.println();
+			Logger.logln("");
 
-		System.out.println("\nGrab the first 1000 gaussian doubles");
+		Logger.logln("\nGrab the first 1000 gaussian doubles");
 		r = new MersenneTwisterFast(SEED);
 		for (j = 0; j < 1000; j++) {
-			System.out.print(r.nextGaussian() + " ");
+			Logger.log(r.nextGaussian() + " ");
 			if (j % 3 == 2)
-				System.out.println();
+				Logger.logln("");
 		}
 		if (!(j % 3 == 2))
-			System.out.println();
+			Logger.logln("");
 	}
 }
