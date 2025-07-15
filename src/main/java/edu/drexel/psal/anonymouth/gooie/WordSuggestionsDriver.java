@@ -155,7 +155,7 @@ public class WordSuggestionsDriver {
 			removeSize = topToRemove.size();
 
 			for (int i = 0; i < removeSize; i++) {
-				if (!topToRemove.get(i).equals("''") && !topToRemove.get(i).equals("``")) {
+				if (!topToRemove.get(i)[0].equals("''") && !topToRemove.get(i)[0].equals("``")) {
 					String left, right;
 
 					// The element to remove
