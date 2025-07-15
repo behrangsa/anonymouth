@@ -135,6 +135,18 @@
             <artifactId>log4j-jul</artifactId>
             <version>2.17.1</version>
         </dependency>
+
+        <!-- AspectJ dependencies for AOP -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>1.8.14</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.8.14</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -486,6 +498,37 @@
                         <java.awt.headless>true</java.awt.headless>
                     </systemPropertyVariables>
                 </configuration>
+            </plugin>
+
+            <!-- AspectJ Maven Plugin - Compile-time weaving -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>aspectj-maven-plugin</artifactId>
+                <version>1.11</version>
+                <configuration>
+                    <complianceLevel>1.8</complianceLevel>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <showWeaveInfo>true</showWeaveInfo>
+                    <verbose>true</verbose>
+                    <Xlint>ignore</Xlint>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjtools</artifactId>
+                        <version>1.8.14</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
