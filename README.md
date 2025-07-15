@@ -1,11 +1,11 @@
 # Anonymouth
 
-![](src/edu/drexel/psal/resources/graphics/readme_Logo.png)
+![](src/main/resources/graphics/readme_Logo.png)
 
 Document Anonymization Tool, Version 0.5
 
-The Privacy, Security and Automation Lab (PSAL)  
-Drexel University, Philadelphia PA  
+The Privacy, Security and Automation Lab (PSAL)
+Drexel University, Philadelphia PA
 <http://psal.cs.drexel.edu/>
 
 ## Table of Contents
