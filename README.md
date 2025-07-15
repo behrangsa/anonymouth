@@ -1,6 +1,6 @@
 # Anonymouth
 
-![](src/main/resources/graphics/readme_Logo.png)
+![Anonymouth Logo](src/main/resources/graphics/readme_Logo.png)
 
 Document Anonymization Tool, Version 0.5
 
