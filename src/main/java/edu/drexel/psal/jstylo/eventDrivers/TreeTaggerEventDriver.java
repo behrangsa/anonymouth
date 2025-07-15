@@ -58,7 +58,6 @@ public class TreeTaggerEventDriver extends EventDriver {
 		TreeTaggerEventDriver.taggerPath = taggerPath;
 	}
 
-	@SuppressWarnings("static-access")
 	@Override
 	public EventSet createEventSet(Document doc) {
 		final EventSet es = new EventSet(doc.getAuthor());
@@ -69,7 +68,7 @@ public class TreeTaggerEventDriver extends EventDriver {
 		// initialize tagger and return empty event set if encountered a problem
 
 		if (tagger == null) {
-			tagger = initTagger();
+			tagger = TreeTaggerEventDriver.initTagger();
 			if (tagger == null)
 				return es;
 		}

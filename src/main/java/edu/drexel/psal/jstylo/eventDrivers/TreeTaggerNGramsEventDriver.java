@@ -42,7 +42,6 @@ public class TreeTaggerNGramsEventDriver extends EventDriver {
 	// path of the tree tagger binary
 	protected String taggerHome = null;
 
-	@SuppressWarnings("static-access")
 	@Override
 	public EventSet createEventSet(Document doc) {
 		EventSet es = new EventSet(doc.getAuthor());
@@ -51,7 +50,7 @@ public class TreeTaggerNGramsEventDriver extends EventDriver {
 
 		// use TreeTaggerEventDriver tagger
 		if (tagger == null) {
-			tagger = initTagger();
+			tagger = TreeTaggerEventDriver.initTagger();
 			if (tagger == null)
 				return es;
 		}
